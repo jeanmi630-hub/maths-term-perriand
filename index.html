@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminale Mathématiques - Lycée Charlotte Perriand</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 2px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .top-bar {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-logo-container {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      flex-shrink: 0;
+    }
+
+    .brand-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .brand-logo-fallback {
+      color: white;
+      font-size: 1.4rem;
+      font-weight: 800;
+    }
+
+    .brand-title h1 { font-size: 1.15rem; font-weight: 800; color: #1e1b4b; }
+    .brand-title p { font-size: 0.8rem; color: var(--muted); }
+
+    .sync-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .sync-badge.online {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    nav {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: flex;
+      gap: 0.35rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    nav::-webkit-scrollbar { display: none; }
+
+    .nav-btn {
+      padding: 0.85rem 1.05rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover { color: var(--primary); }
+    .nav-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    main {
+      max-width: 1240px;
+      margin: 1.5rem auto 2.5rem;
+      padding: 0 1.5rem;
+      flex: 1;
+      width: 100%;
+    }
+
+    .hero-banner {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 2rem;
+      min-height: 230px;
+      display: flex;
+      align-items: center;
+      padding: 2.5rem 2rem;
+      box-shadow: var(--shadow);
+      background-color: #1e1b4b;
+    }
+
+    .hero-banner-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      z-index: 1;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(15, 23, 42, 0.90) 0%, rgba(30, 27, 75, 0.78) 50%, rgba(15, 23, 42, 0.45) 100%);
+      z-index: 2;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      max-width: 650px;
+      color: white;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .hero-content h2 { font-size: 1.7rem; font-weight: 800; line-height: 1.25; margin-bottom: 0.5rem; }
+    .hero-content p { font-size: 0.95rem; color: #e2e8f0; line-height: 1.5; }
+
+    .page-view {
+      display: none;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+    .page-view.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-header {
+      margin-bottom: 1.75rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-header h2 { font-size: 1.55rem; font-weight: 800; color: #1e1b4b; }
+    .page-header p { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
+
+    .sub-filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .sub-pill {
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .sub-pill.active, .sub-pill:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: #c7d2fe;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px -3px rgba(0,0,0,0.08);
+    }
+
+    .card-thumb {
+      height: 120px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2.3rem;
+      font-weight: bold;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .thumb-pdf { background-color: #ef4444; background-image: linear-gradient(135deg, #ef4444, #f97316); }
+    .thumb-cours { background-color: #4f46e5; background-image: linear-gradient(135deg, #4f46e5, #06b6d4); }
+    .thumb-mental { background-color: #8b5cf6; background-image: linear-gradient(135deg, #8b5cf6, #ec4899); }
+    .thumb-jeu { background-color: #10b981; background-image: linear-gradient(135deg, #10b981, #14b8a6); }
+    .thumb-video { background-color: #f59e0b; background-image: linear-gradient(135deg, #f59e0b, #d97706); }
+    .thumb-web { background-color: #0284c7; background-image: linear-gradient(135deg, #0284c7, #22d3ee); }
+    .thumb-info { background-color: #64748b; background-image: linear-gradient(135deg, #64748b, #475569); }
+
+    .thumb-watermark {
+      position: absolute;
+      right: 12px;
+      bottom: 8px;
+      font-size: 0.72rem;
+      background: rgba(0, 0, 0, 0.55);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      backdrop-filter: blur(2px);
+      z-index: 3;
+    }
+
+    .card-body {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-category {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.45rem;
+      line-height: 1.35;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-bottom: 1.2rem;
+      flex: 1;
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      padding-top: 0.85rem;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      padding: 0.45rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      text-decoration: none;
+    }
+    .btn:hover { background: #f1f5f9; }
+    .btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-edit { background: #3b82f6; color: white; border-color: #3b82f6; }
+    .btn-edit:hover { background: #2563eb; }
+    .btn-danger { background: #ef4444; color: white; border-color: #ef4444; }
+
+    .popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 1.5rem;
+    }
+    .popup-backdrop.active { display: flex; }
+
+    .popup-content {
+      background: white;
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 980px;
+      height: 88vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+    }
+
+    .popup-header {
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+    }
+
+    .popup-header h3 { font-size: 1.05rem; font-weight: 700; color: #1e1b4b; }
+
+    .popup-frame {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: #f8fafc;
+    }
+
+    .popup-yt-player {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      background: #0f172a;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .popup-yt-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: blur(10px) brightness(0.4);
+      transform: scale(1.05);
+    }
+
+    .popup-yt-box {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 2rem;
+      text-align: center;
+      color: white;
+    }
+
+    .popup-yt-poster {
+      width: 100%;
+      max-width: 640px;
+      height: 360px;
+      border-radius: 12px;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+    .popup-yt-poster:hover { transform: scale(1.02); }
+
+    .popup-yt-play-btn {
+      width: 72px;
+      height: 72px;
+      background: #ef4444;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(239, 68, 68, 0.5);
+      transition: transform 0.2s, background 0.2s;
+    }
+    .popup-yt-poster:hover .popup-yt-play-btn {
+      transform: scale(1.12);
+      background: #dc2626;
+    }
+    .popup-yt-play-btn svg { width: 32px; height: 32px; fill: white; margin-left: 4px; }
+
+    .popup-alt {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      padding: 2.5rem;
+      text-align: center;
+      background: #f8fafc;
+    }
+
+    .admin-bar-active {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1e1b4b;
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border-radius: 999px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      z-index: 90;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    body.is-admin .admin-bar-active { display: flex; }
+    body.is-admin .admin-item-btn { display: inline-flex !important; }
+    .admin-item-btn { display: none; }
+
+    .modal-box {
+      background: white;
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 620px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .form-control {
+      width: 100%;
+      padding: 0.55rem 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+
+    .struct-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0.8rem;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1240px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
+
+    .discrete-lock {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 0.95rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    .discrete-lock:hover { color: var(--primary); background: #f1f5f9; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="top-bar">
+      <a href="#" class="brand" onclick="showPage(Object.keys(sections)[0]); return false;">
+        <div class="brand-logo-container">
+          <picture>
+            <source srcset="images/logo.png">
+            <source srcset="images/logo.jpeg">
+            <source srcset="images/logo.jpg">
+            <img src="images/logo.png" alt="Logo Lycée" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='block';">
+          </picture>
+          <span id="logoFallback" class="brand-logo-fallback" style="display:none;">∫</span>
+        </div>
+        <div class="brand-title">
+          <h1>Terminale Spécialité Mathématiques</h1>
+          <p>Lycée Charlotte Perriand — Genech</p>
+        </div>
+      </a>
+      <div id="syncStatusBadge" class="sync-badge" title="Mode de stockage actif">
+        💾 Stockage Local
+      </div>
+    </div>
+    <nav id="navTabsContainer"></nav>
+  </header>
+
+  <main>
+    <div class="hero-banner" id="heroBanner">
+      <picture class="hero-banner-bg">
+        <source srcset="images/lycee-facade.jpeg">
+        <source srcset="images/lycee-facade.jpg">
+        <source srcset="images/lycee-facade.png">
+        <img src="images/lycee-facade.jpeg" alt="Façade du lycée Charlotte Perriand" class="hero-banner-bg">
+      </picture>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <span class="hero-tag">Espace Numérique de Cours</span>
+        <h2>Bienvenue sur le portail de Mathématiques</h2>
+        <p>Retrouvez l'ensemble des cours, feuilles d'exercices, cartes mentales et sujets de préparation au baccalauréat et au Grand Oral.</p>
+      </div>
+    </div>
+
+    <div id="mainPagesContainer"></div>
+  </main>
+
+  <div class="popup-backdrop" id="docPopup">
+    <div class="popup-content">
+      <div class="popup-header">
+        <h3 id="popupTitle">Document</h3>
+        <div style="display:flex; gap:0.5rem; align-items:center;">
+          <a id="popupDirectOpenBtn" href="#" target="_blank" class="btn" style="display:none; font-size:0.8rem;">
+            ↗ Plein écran
+          </a>
+          <button class="btn" onclick="closePopup()">✕ Fermer</button>
+        </div>
+      </div>
+
+      <iframe id="popupIframe" class="popup-frame" src="" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
+
+      <div id="popupYtPlayer" class="popup-yt-player">
+        <div id="popupYtBg" class="popup-yt-bg"></div>
+        <div class="popup-yt-box">
+          <a id="popupYtLink" href="#" target="_blank" class="popup-yt-poster">
+            <div class="popup-yt-play-btn">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </a>
+          <p id="popupYtDesc" style="margin-top:1rem; max-width:640px; color:#cbd5e1; font-size:0.9rem; line-height:1.4;"></p>
+          <a id="popupYtBtn" href="#" target="_blank" class="btn btn-primary" style="margin-top:1rem;">
+            ▶ Lancer la vidéo sur YouTube
+          </a>
+        </div>
+      </div>
+
+      <div id="popupAlt" class="popup-alt">
+        <div style="font-size:3.5rem; margin-bottom:1rem;">🌐</div>
+        <h4 id="popupAltTitle" style="font-size:1.3rem; margin-bottom:0.6rem; color:#1e1b4b;">Accéder au site officiel</h4>
+        <p style="color:var(--muted); max-width:520px; margin-bottom:1.8rem; font-size:0.92rem; line-height:1.5;" id="popupAltDesc"></p>
+        <a id="popupAltLink" href="#" target="_blank" class="btn btn-primary" style="font-size:0.95rem; padding:0.65rem 1.4rem;">
+          Ouvrir le site dans un nouvel onglet ↗
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-bar-active" id="adminBar">
+    <span style="font-size:0.85rem; font-weight:600; margin-right:0.3rem;">👨‍🏫 Professeur</span>
+    <button class="btn btn-primary" onclick="openAddModal()">+ Nouveau document</button>
+    <button class="btn" onclick="openStructureModal()">⚙️ Structure & Ordre</button>
+    <button class="btn" onclick="openCategoryModal()">➕ Nouvel onglet</button>
+    <button class="btn" onclick="exportBackupJson()" title="Télécharger une sauvegarde complète">💾 Exporter</button>
+    <button class="btn" onclick="logoutAdmin()">Verrouiller</button>
+  </div>
+
+  <div class="popup-backdrop" id="addModal">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+        <h3 id="docModalTitle" style="font-size:1.15rem; font-weight:700;">Ajouter un document au site</h3>
+        <button class="btn" onclick="closeAddModal()">✕</button>
+      </div>
+      <form id="addDocForm" onsubmit="saveDocForm(event)">
+        <input type="hidden" id="editDocId" value="">
+
+        <div class="form-group">
+          <label>Titre</label>
+          <input type="text" id="newTitle" class="form-control" required placeholder="Ex : Fiche méthode suites">
+        </div>
+        <div class="form-group">
+          <label>Page de destination (Onglet)</label>
+          <select id="newSection" class="form-control" onchange="syncSubCategories()"></select>
+        </div>
+        <div class="form-group">
+          <label>Sous-catégorie</label>
+          <select id="newSub" class="form-control"></select>
+        </div>
+        <div class="form-group">
+          <label>Type de document</label>
+          <select id="newType" class="form-control">
+            <option value="mental">🧠 Carte Mentale (Visualisation synthétique)</option>
+            <option value="pdf">📄 Document PDF (Fiche, énoncé, devoir)</option>
+            <option value="cours">📐 Fiche de cours / Méthode</option>
+            <option value="jeu">🎲 Activité / Jeu interactif</option>
+            <option value="video">▶️ Vidéo (YouTube ou lien web)</option>
+            <option value="web">🌐 Lien Web / Site externe (Éduscol, GeoGebra...)</option>
+            <option value="info">📌 Consigne / Information</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Photo pour l'arrière-plan de la vignette</label>
+          <div style="background:#f1f5f9; padding:0.8rem; border-radius:8px; border:1px dashed var(--border); margin-bottom:0.5rem;">
+            <label style="font-size:0.8rem; font-weight:700; color:var(--primary); cursor:pointer; display:block; margin-bottom:0.3rem;">
+              🖼 Choisir un fichier image depuis l'ordinateur :
+            </label>
+            <input type="file" id="coverFileInput" accept="image/*" class="form-control" onchange="handleLocalCoverUpload(event)">
+          </div>
+          <label style="font-size:0.78rem;">Ou indiquer le chemin de l'image (ex : images/lycee-facade.jpeg) :</label>
+          <input type="text" id="newCoverImg" class="form-control" placeholder="images/lycee-facade.jpeg (ou automatique si YouTube)">
+        </div>
+
+        <div class="form-group">
+          <label>Fichier PDF ou Lien Web / YouTube</label>
+          <div style="background:#f1f5f9; padding:0.8rem; border-radius:8px; border:1px dashed var(--border); margin-bottom:0.5rem;">
+            <label style="font-size:0.8rem; font-weight:700; color:var(--primary); cursor:pointer; display:block; margin-bottom:0.3rem;">
+              📁 Choisir un fichier PDF depuis l'ordinateur :
+            </label>
+            <input type="file" id="pdfFileInput" accept=".pdf" class="form-control" onchange="handleLocalPdfUpload(event)">
+          </div>
+          <label style="font-size:0.78rem;">Ou chemin du document / URL externe :</label>
+          <input type="text" id="newUrl" class="form-control" placeholder="documents/mon-fichier.pdf ou https://...">
+        </div>
+
+        <div class="form-group">
+          <label>Description ou consignes</label>
+          <textarea id="newDesc" class="form-control" rows="3" placeholder="Exercices à chercher, points de cours..."></textarea>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1.5rem;">
+          <button type="button" class="btn" onclick="closeAddModal()">Annuler</button>
+          <button type="submit" id="docModalSubmitBtn" class="btn btn-primary">Publier sur le site</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="popup-backdrop" id="structureModal">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+        <h3 style="font-size:1.15rem; font-weight:700;">Gérer l'ordre & les sous-catégories</h3>
+        <button class="btn" onclick="closeStructureModal()">✕</button>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <h4 style="font-size:0.9rem; margin-bottom:0.5rem;">1. Ordre des onglets principaux</h4>
+        <div id="tabsOrderList"></div>
+      </div>
+
+      <div>
+        <h4 style="font-size:0.9rem; margin-bottom:0.5rem;">2. Modifier les sous-catégories d'un onglet</h4>
+        <div class="form-group">
+          <select id="structSecSelect" class="form-control" onchange="renderSubEditor()"></select>
+        </div>
+        <div class="form-group">
+          <label>Sous-catégories (séparées par des virgules)</label>
+          <input type="text" id="structSubsInput" class="form-control">
+        </div>
+        <button type="button" class="btn btn-primary" onclick="saveSubsEdit()">Mettre à jour les sous-catégories</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="popup-backdrop" id="categoryModal">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+        <h3 style="font-size:1.15rem; font-weight:700;">Créer un nouvel onglet</h3>
+        <button class="btn" onclick="closeCategoryModal()">✕</button>
+      </div>
+      <form onsubmit="saveNewCategory(event)">
+        <div class="form-group">
+          <label>Nom du nouvel onglet</label>
+          <input type="text" id="catTitle" class="form-control" required placeholder="Ex : Algorithmique & Python">
+        </div>
+        <div class="form-group">
+          <label>Description / Sous-titre de la page</label>
+          <input type="text" id="catDesc" class="form-control" placeholder="Ex : Scripts, fonctions et exercices type bac">
+        </div>
+        <div class="form-group">
+          <label>Sous-catégories (séparées par des virgules)</label>
+          <input type="text" id="catSubs" class="form-control" required placeholder="Ex : Bases, Boucles et listes, Sujets bac">
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1.5rem;">
+          <button type="button" class="btn" onclick="closeCategoryModal()">Annuler</button>
+          <button type="submit" class="btn btn-primary">Créer cet onglet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <p>Portail Mathématiques • Lycée Charlotte Perriand — Genech</p>
+    <button class="discrete-lock" onclick="promptAdmin()" title="Accès Enseignant (ou Ctrl+Maj+A)">🔒</button>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // CONFIGURATION CLOUD SUPABASE INTÉGRÉE
+    // =========================================================================
+    const DEFAULT_SUPABASE_URL = "https://xydayuntveuscibupgto.supabase.co"; 
+    const DEFAULT_SUPABASE_ANON_KEY = "sb_publishable_g-99-oNcE_9noSl-_yxA1g_eZ8VvmLV";
+
+    const defaultSections = {
+      "communication": {
+        title: "Communication",
+        desc: "Informations, calendrier et consignes pour la semaine suivante",
+        subs: ["Consignes de la semaine", "Planning", "Divers"]
+      },
+      "rappels": {
+        title: "Rappels des cours de 1ère",
+        desc: "Notions indispensables, formules de dérivation, second degré et trigonométrie",
+        subs: ["Polynômes", "Dérivation", "Suites 1ère", "Trigonométrie"]
+      },
+      "grand-oral": {
+        title: "Grand Oral",
+        desc: "Guides méthodologiques, critères du jury et propositions de questions transversales",
+        subs: ["Méthodologie", "Pistes de questions", "Grille d'évaluation"]
+      },
+      "suites": {
+        title: "Suites",
+        desc: "Récurrence, variations, théorèmes de comparaison et limites de suites",
+        subs: ["Récurrence et étude de suites", "Limites de suites"]
+      },
+      "fonctions": {
+        title: "Étude de fonctions",
+        desc: "Dérivation, trigonométrie, logarithme népérien, intégration, primitives et équations différentielles",
+        subs: [
+          "Dérivation", 
+          "Fonctions trigonométriques", 
+          "Fonction logarithme", 
+          "Intégration", 
+          "Primitive", 
+          "Équations différentielles"
+        ]
+      },
+      "espace": {
+        title: "Géométrie dans l'espace",
+        desc: "Repères orthonormés, vecteurs, droites, plans et produit scalaire spatial",
+        subs: ["Vecteurs & Droites", "Plans & Produit scalaire"]
+      },
+      "probas": {
+        title: "Probabilités",
+        desc: "Épreuves de Bernoulli, loi binomiale, variables aléatoires et lois des grands nombres",
+        subs: ["Schéma de Bernoulli", "Loi binomiale", "Sommes de variables"]
+      }
+    };
+
+    const defaultDocs = [
+      {
+        id: "1",
+        section: "communication",
+        sub: "Consignes de la semaine",
+        title: "Planning & Consignes de la semaine",
+        type: "info",
+        desc: "Penser à prendre la calculatrice en mode radian. Séance sur les raisonnements par récurrence.",
+        coverImg: "images/lycee-facade.jpeg",
+        url: ""
+      },
+      // --- POLYNÔMES ---
+      {
+        id: "doc_poly_f1",
+        section: "rappels",
+        sub: "Polynômes",
+        title: "Fiche 1 : Racines, équations & factorisation",
+        type: "pdf",
+        desc: "Méthodologie complète sur le calcul du discriminant, la recherche des racines réelles et la factorisation du trinôme avec exercices guidés[cite: 8, 9].",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/f1-racines-equa-facto_456lqasy7n4.pdf"
+      },
+      {
+        id: "doc_poly_f2",
+        section: "rappels",
+        sub: "Polynômes",
+        title: "Fiche 2 : Les trois formes du second degré",
+        type: "pdf",
+        desc: "Utiliser et passer entre les formes développée, canonique et factorisée. Variations, sommet et modélisation de problèmes concrets[cite: 1, 2, 3].",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/f2-formes-dun-poly_kixvroep8q.pdf"
+      },
+      {
+        id: "doc_poly_tb",
+        section: "rappels",
+        sub: "Polynômes",
+        title: "Tableau récapitulatif du second degré",
+        type: "cours",
+        desc: "Tableau comparatif croisant les signes de a et de Delta : racines, factorisation, positions relatives et tableaux de signes[cite: 12].",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/tb_degre21_dokiva3b5b.pdf"
+      },
+      {
+        id: "doc_poly_carte",
+        section: "rappels",
+        sub: "Polynômes",
+        title: "Carte mentale : Le second degré en un clin d'œil",
+        type: "mental",
+        desc: "Synthèse visuelle organisée : passage de l'équation ax²+bx+c=0 à la fonction, paraboles et synthèses graphiques[cite: 15].",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/carte_heuristique_2nddeg_ylw5v3epooa.pdf"
+      },
+      {
+        id: "doc_poly_essentiel",
+        section: "rappels",
+        sub: "Polynômes",
+        title: "Fiche mémo : L'essentiel pour la Terminale",
+        type: "cours",
+        desc: "Formules indispensables à maîtriser en début d'année : sommet S(alpha; beta), calcul de Delta et règle d'or des signes[cite: 13, 14].",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/polynomes_s3sx85m2rg.pdf"
+      },
+      {
+        id: "doc_poly_rappels",
+        section: "rappels",
+        sub: "Polynômes",
+        title: "Fiche de synthèse : Formes, racines & signes",
+        type: "cours",
+        desc: "Fiche de rappel illustrée : paraboles orientées vers le haut ou le bas, formules canoniques et factorisées du trinôme[cite: 16, 17, 18].",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/rappels_polynomes_krevtj0lvf.pdf"
+      },
+      // --- SUITES & RÉCURRENCE ---
+      {
+        id: "doc_recu_methode_bac",
+        section: "suites",
+        sub: "Récurrence et étude de suites",
+        title: "Fiche méthode : Raisonnement par récurrence (Type Bac)",
+        type: "cours",
+        desc: "Guide méthodologique complet en 4 étapes (initialisation, hérédité, conclusion) avec un exemple classique guidé sur une suite définie par une fonction.",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/recu-_7nkci316cag (1).pdf"
+      },
+      {
+        id: "doc_recu_grenouille",
+        section: "suites",
+        sub: "Récurrence et étude de suites",
+        title: "Illustration visuelle : La grenouille et l'escalier",
+        type: "mental",
+        desc: "Métaphore imagée pour mémoriser intuitivement le principe de récurrence : monter sur la 1ère marche et passer d'une marche à la suivante.",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/grenouille-et-recurrence_fi4jkb632g9.pdf"
+      },
+      {
+        id: "doc_recu_exemples_sommes",
+        section: "suites",
+        sub: "Récurrence et étude de suites",
+        title: "Exemples types : Égalités, sommes & divisibilité",
+        type: "cours",
+        desc: "Modèles complets de rédactions rigoureuses : somme des premiers entiers, somme des carrés et démonstration de divisibilité par récurrence.",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/recurrence_gs2kx0hkyoi (1).pdf"
+      },
+      {
+        id: "doc_suites_plan_travail",
+        section: "suites",
+        sub: "Récurrence et étude de suites",
+        title: "Plan de travail & Objectifs : Suites et récurrence",
+        type: "pdf",
+        desc: "Feuille de route complète du chapitre : savoir-faire prioritaires, liste d'exercices d'entraînement, algorithmes Python et liens vidéos de révision.",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/plan-de-travail_chap1-2024_al325yn3xbt.pdf"
+      },
+      {
+        id: "doc_suites_cm_globale",
+        section: "suites",
+        sub: "Récurrence et étude de suites",
+        title: "Carte mentale : Panorama des suites numériques",
+        type: "mental",
+        desc: "Synthèse visuelle de Terminale : sens de variation, suites arithmétiques et géométriques, majoration, minoration et sommes de termes.",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/cm_termspe_suitesnumeriques_rqve9ve1q9i (1).pdf"
+      },
+      {
+        id: "doc_suites_memo_bornes",
+        section: "suites",
+        sub: "Récurrence et étude de suites",
+        title: "Fiche mémo : Propriétés, bornes & comportements",
+        type: "cours",
+        desc: "Fiche synthétique sur les définitions de suites majorées, minorées, bornées, limites de suites géométriques et méthodes d'encadrement.",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/les-suites_b5iudac8xqp.pdf"
+      },
+      {
+        id: "doc_suites_ari_geo_1ere",
+        section: "suites",
+        sub: "Récurrence et étude de suites",
+        title: "Carte mentale : Rappels suites arithmétiques & géométriques",
+        type: "mental",
+        desc: "Rappels visuels indispensables de 1ère : formes par récurrence, expressions explicites en fonction de n et formules des sommes.",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/suites-ari-geo-1ere--cm_tskff4ooe0p.pdf"
+      },
+      // --- GRAND ORAL & FONCTIONS ---
+      {
+        id: "doc_go_themes",
+        section: "grand-oral",
+        sub: "Pistes de questions",
+        title: "Idées de thèmes et pistes pour le Grand Oral",
+        type: "pdf",
+        desc: "Recueil complet de thèmes mathématiques et bi-disciplinaires (Physique, SES, SVT, HGGSP, NSI) pour orienter le choix du sujet.",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/exemples-de-thames_grand-oral_camh4lepw1q_ffw54uy8rln.pdf"
+      },
+      {
+        id: "doc_go_grille",
+        section: "grand-oral",
+        sub: "Grille d'évaluation",
+        title: "Grille officielle d'évaluation du Grand Oral",
+        type: "pdf",
+        desc: "Les 5 compétences officielles du B.O. : prestation orale, parole en continu, solidité des connaissances, échange et argumentation.",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/grille_evaluation-go-1_m5nj0ul77p.pdf"
+      },
+      {
+        id: "doc_go_auto",
+        section: "grand-oral",
+        sub: "Méthodologie",
+        title: "Fiche d'auto-évaluation et d'entraînement oral",
+        type: "cours",
+        desc: "Grille d'observation entre pairs ou personnelle : posture, voix, rythme, clarté mathématique et vulgarisation.",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/grille-auto-aval-grand-oral_aqloy0g388f_gjje2nlvqsv.docx"
+      },
+      {
+        id: "doc_exp_poly",
+        section: "fonctions",
+        sub: "Dérivation",
+        title: "Méthode pas à pas : Polynôme × Exponentielle",
+        type: "cours",
+        desc: "Guide méthodologique en 5 étapes pour dériver f(x) = (ax+b)e^(cx+d), factoriser par l'exponentielle et dresser le tableau de variations.",
+        coverImg: "images/lycee-facade.jpeg",
+        url: "documents/exp__poly_srl0naajtya.pdf"
+      },
+      {
+        id: "doc_suites_yt",
+        section: "suites",
+        sub: "Limites de suites",
+        title: "Vidéo : Calculer une limite avec les théorèmes de comparaison",
+        type: "video",
+        desc: "Démonstration pas-à-pas et méthode de rédaction type bac.",
+        coverImg: "",
+        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      }
+    ];
+
+    let sections = {};
+    let docs = [];
+    let uploadedPdfDataUri = "";
+    let uploadedCoverDataUri = "";
+    let activeBlobUrl = null;
+    let currentPage = "communication";
+    let activeSubFilter = "all";
+    let isAdmin = false;
+
+    // --- LOGIQUE DE SYNCHRONISATION SUPABASE ---
+    function getCloudCreds() {
+      return { url: DEFAULT_SUPABASE_URL.trim().replace(/\/$/, ""), key: DEFAULT_SUPABASE_ANON_KEY.trim() };
+    }
+
+    function updateSyncBadge(isOnline) {
+      const badge = document.getElementById('syncStatusBadge');
+      if (!badge) return;
+      if (isOnline) {
+        badge.className = 'sync-badge online';
+        badge.innerHTML = '☁️ Cloud Synchronisé';
+      } else {
+        badge.className = 'sync-badge';
+        badge.innerHTML = '💾 Stockage Local';
+      }
+    }
+
+    async function fetchFromSupabase() {
+      const { url, key } = getCloudCreds();
+      if (!url || !key) return null;
+      try {
+        const res = await fetch(`${url}/rest/v1/portal_state?id=eq.main&select=*`, {
+          headers: {
+            'apikey': key,
+            'Authorization': `Bearer ${key}`
+          }
+        });
+        if (!res.ok) return null;
+        const data = await res.json();
+        if (data && data.length > 0) {
+          updateSyncBadge(true);
+          return data[0];
+        }
+        updateSyncBadge(true);
+        return { empty: true };
+      } catch (e) {
+        updateSyncBadge(false);
+        return null;
+      }
+    }
+
+    async function pushToSupabase() {
+      const { url, key } = getCloudCreds();
+      if (!url || !key) return false;
+      try {
+        const payload = {
+          id: 'main',
+          sections: sections,
+          docs: docs,
+          updated_at: new Date().toISOString()
+        };
+        const res = await fetch(`${url}/rest/v1/portal_state`, {
+          method: 'POST',
+          headers: {
+            'apikey': key,
+            'Authorization': `Bearer ${key}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'resolution=merge-duplicates'
+          },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+          updateSyncBadge(true);
+          return true;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    // --- INDEXEDDB LOCAL ---
+    const DB_NAME = "PerriandPortalDB";
+    const DB_VERSION = 1;
+
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains("documents")) {
+            db.createObjectStore("documents", { keyPath: "id" });
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function loadAllDocsFromDB() {
+      const db = await openDatabase();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction("documents", "readonly");
+        const store = tx.objectStore("documents");
+        const req = store.getAll();
+        req.onsuccess = () => resolve(req.result || []);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function saveAllDocsToDB(docsList) {
+      const db = await openDatabase();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction("documents", "readwrite");
+        const store = tx.objectStore("documents");
+        store.clear();
+        docsList.forEach(d => store.put(d));
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+
+    async function saveStorage() {
+      try {
+        localStorage.setItem('perriand_sections_v27', JSON.stringify(sections));
+        await saveAllDocsToDB(docs);
+        await pushToSupabase();
+      } catch(e) {
+        console.error("Erreur de sauvegarde :", e);
+      }
+    }
+
+    function dataUriToBlob(dataURI) {
+      try {
+        const byteString = atob(dataURI.split(',')[1]);
+        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], { type: mimeString });
+      } catch(e) {
+        return null;
+      }
+    }
+
+    function extractYouTubeId(url) {
+      if (!url) return null;
+      const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([^"&?\/\s]{11})/i;
+      const match = url.match(regExp);
+      return (match && match[1]) ? match[1] : null;
+    }
+
+    function isWebUrl(url) {
+      if (!url) return false;
+      return url.startsWith('http://') || url.startsWith('https://');
+    }
+
+    function isStrictlyFramedBlocked(url) {
+      if (!url) return false;
+      const lower = url.toLowerCase();
+      return lower.includes('education.fr') ||
+             lower.includes('eduscol.') ||
+             lower.includes('wikipedia.org') ||
+             lower.includes('google.') ||
+             lower.includes('github.com');
+    }
+
+    function handleLocalPdfUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          uploadedPdfDataUri = evt.target.result;
+          document.getElementById('newUrl').value = file.name + " (PDF local prêt)";
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function handleLocalCoverUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          uploadedCoverDataUri = evt.target.result;
+          document.getElementById('newCoverImg').value = file.name + " (Image locale prête)";
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function initApp() {
+      const navContainer = document.getElementById('navTabsContainer');
+      const pagesContainer = document.getElementById('mainPagesContainer');
+
+      navContainer.innerHTML = '';
+      pagesContainer.innerHTML = '';
+
+      Object.keys(sections).forEach(secKey => {
+        const sec = sections[secKey];
+
+        const btn = document.createElement('button');
+        btn.className = 'nav-btn' + (secKey === currentPage ? ' active' : '');
+        btn.textContent = sec.title;
+        btn.onclick = () => showPage(secKey);
+        navContainer.appendChild(btn);
+
+        const pageDiv = document.createElement('div');
+        pageDiv.id = 'page-' + secKey;
+        pageDiv.className = 'page-view' + (secKey === currentPage ? ' active' : '');
+        pageDiv.innerHTML = `
+          <div class="page-header">
+            <h2>${sec.title}</h2>
+            <p>${sec.desc || ''}</p>
+          </div>
+          <div class="sub-filter-bar" id="filters-${secKey}"></div>
+          <div class="cards-grid" id="grid-${secKey}"></div>
+        `;
+        pagesContainer.appendChild(pageDiv);
+      });
+
+      renderSubFilters();
+      renderPageCards();
+    }
+
+    function showPage(pageKey) {
+      if (!sections[pageKey]) pageKey = Object.keys(sections)[0];
+      currentPage = pageKey;
+      activeSubFilter = "all";
+
+      const hero = document.getElementById('heroBanner');
+      if (hero) hero.style.display = (pageKey === "communication") ? "flex" : "none";
+
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.toggle('active', b.textContent === sections[pageKey].title);
+      });
+
+      document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
+      const activeView = document.getElementById('page-' + pageKey);
+      if (activeView) activeView.classList.add('active');
+
+      renderSubFilters();
+      renderPageCards();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderSubFilters() {
+      const box = document.getElementById('filters-' + currentPage);
+      if (!box) return;
+      box.innerHTML = '';
+      const subs = sections[currentPage].subs;
+      if (!subs || subs.length === 0) return;
+
+      const allBtn = document.createElement('button');
+      allBtn.className = 'sub-pill' + (activeSubFilter === 'all' ? ' active' : '');
+      allBtn.textContent = 'Tous';
+      allBtn.onclick = () => {
+        activeSubFilter = 'all';
+        renderSubFilters();
+        renderPageCards();
+      };
+      box.appendChild(allBtn);
+
+      subs.forEach(s => {
+        const b = document.createElement('button');
+        b.className = 'sub-pill' + (activeSubFilter === s ? ' active' : '');
+        b.textContent = s;
+        b.onclick = () => {
+          activeSubFilter = s;
+          renderSubFilters();
+          renderPageCards();
+        };
+        box.appendChild(b);
+      });
+    }
+
+    function renderPageCards() {
+      const grid = document.getElementById('grid-' + currentPage);
+      if (!grid) return;
+
+      const filtered = docs.filter(d => {
+        const matchSec = d.section === currentPage;
+        const matchSub = (activeSubFilter === 'all') || (d.sub === activeSubFilter);
+        return matchSec && matchSub;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: var(--muted);">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem; opacity: 0.6;">📂</div>
+            <p>Aucun document dans cette rubrique pour l'instant.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const visualThemes = {
+        mental: { icon: "🧠", cls: "thumb-mental", label: "Carte Mentale" },
+        pdf: { icon: "📄", cls: "thumb-pdf", label: "Document PDF" },
+        cours: { icon: "📐", cls: "thumb-cours", label: "Fiche Méthode" },
+        jeu: { icon: "🎲", cls: "thumb-jeu", label: "Activité Interactive" },
+        video: { icon: "▶️", cls: "thumb-video", label: "Vidéo" },
+        web: { icon: "🌐", cls: "thumb-web", label: "Lien Web" },
+        info: { icon: "📌", cls: "thumb-info", label: "Information" }
+      };
+
+      grid.innerHTML = '';
+      filtered.forEach(item => {
+        const theme = visualThemes[item.type] || visualThemes.pdf;
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        let ytId = extractYouTubeId(item.url);
+        let finalCover = item.coverImg ? item.coverImg.trim() : "";
+
+        if (!finalCover && ytId) {
+          finalCover = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+        } else if (!finalCover && (item.type === 'web' || isWebUrl(item.url)) && !ytId) {
+          finalCover = `https://api.microlink.io?url=${encodeURIComponent(item.url)}&screenshot=true&meta=false&embed=screenshot.url`;
+        }
+
+        let thumbStyle = "";
+        let thumbClass = theme.cls;
+        let thumbIcon = `<span style="position:relative; z-index:2; text-shadow: 0 2px 8px rgba(0,0,0,0.6);">${theme.icon}</span>`;
+
+        if (finalCover !== "") {
+          if (!finalCover.startsWith('http') && !finalCover.startsWith('data:') && !finalCover.includes('.')) {
+            finalCover += '.jpeg';
+          }
+          thumbStyle = `style="background-image: linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.60)), url('${finalCover}'); background-size: cover; background-position: center;"`;
+        }
+
+        card.innerHTML = `
+          <div class="card-thumb ${thumbClass}" ${thumbStyle}>
+            ${thumbIcon}
+            <div class="thumb-watermark">${theme.label}</div>
+          </div>
+          <div class="card-body">
+            <span class="card-category">${item.sub || 'Général'}</span>
+            <h3 class="card-title">${item.title}</h3>
+            <p class="card-desc">${item.desc || 'Consulter la ressource pour réviser le cours.'}</p>
+            <div class="card-actions">
+              <button class="btn btn-primary" onclick="openDocPopup('${item.id}')">
+                👁 Consulter
+              </button>
+              <div class="admin-item-btn" style="gap:0.35rem;">
+                <button class="btn btn-edit" onclick="openEditModal('${item.id}')" title="Modifier">✏️ Modifier</button>
+                <button class="btn btn-danger" onclick="deleteDoc('${item.id}')" title="Supprimer">🗑</button>
+              </div>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function openDocPopup(id) {
+      const item = docs.find(d => d.id === id);
+      if (!item) return;
+
+      const modal = document.getElementById('docPopup');
+      const title = document.getElementById('popupTitle');
+      const frame = document.getElementById('popupIframe');
+      const ytPlayer = document.getElementById('popupYtPlayer');
+      const alt = document.getElementById('popupAlt');
+      const directBtn = document.getElementById('popupDirectOpenBtn');
+
+      title.textContent = item.title;
+      directBtn.style.display = 'none';
+
+      if (activeBlobUrl) {
+        URL.revokeObjectURL(activeBlobUrl);
+        activeBlobUrl = null;
+      }
+
+      const ytId = extractYouTubeId(item.url);
+
+      if (ytId) {
+        const directYtUrl = `https://www.youtube.com/watch?v=${ytId}`;
+        directBtn.href = directYtUrl;
+        directBtn.style.display = 'inline-flex';
+
+        if (window.location.protocol.startsWith('http')) {
+          ytPlayer.style.display = 'none';
+          alt.style.display = 'none';
+          frame.style.display = 'block';
+          frame.src = `https://www.youtube.com/embed/${ytId}?rel=0&autoplay=1`;
+        } else {
+          frame.style.display = 'none';
+          alt.style.display = 'none';
+          ytPlayer.style.display = 'flex';
+
+          const posterUrl = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+          document.getElementById('popupYtBg').style.backgroundImage = `url('${posterUrl}')`;
+          const posterLink = document.getElementById('popupYtLink');
+          posterLink.style.backgroundImage = `url('${posterUrl}')`;
+          posterLink.href = directYtUrl;
+
+          document.getElementById('popupYtDesc').textContent = item.desc || "En mode fichier local, cliquez pour lancer la vidéo.";
+          document.getElementById('popupYtBtn').href = directYtUrl;
+        }
+      } else if (isWebUrl(item.url) && isStrictlyFramedBlocked(item.url)) {
+        frame.style.display = 'none';
+        ytPlayer.style.display = 'none';
+        alt.style.display = 'flex';
+
+        document.getElementById('popupAltTitle').textContent = item.title;
+        document.getElementById('popupAltDesc').textContent = item.desc 
+          ? (item.desc + " (Ce site officiel protège ses connexions et s'ouvre dans un onglet dédié).")
+          : "Ce site officiel protège ses connexions et s'ouvre dans un onglet dédié.";
+
+        const linkBtn = document.getElementById('popupAltLink');
+        linkBtn.href = item.url;
+        linkBtn.style.display = 'inline-flex';
+      } else if (!item.url || item.url === '#' || item.url === '') {
+        frame.style.display = 'none';
+        ytPlayer.style.display = 'none';
+        alt.style.display = 'flex';
+        document.getElementById('popupAltTitle').textContent = item.title;
+        document.getElementById('popupAltDesc').textContent = item.desc || "Consigne ou information de travail.";
+        document.getElementById('popupAltLink').style.display = 'none';
+      } else {
+        ytPlayer.style.display = 'none';
+        alt.style.display = 'none';
+        frame.style.display = 'block';
+
+        let targetUrl = item.url;
+
+        if (item.url.startsWith('data:application/pdf')) {
+          const blob = dataUriToBlob(item.url);
+          if (blob) {
+            activeBlobUrl = URL.createObjectURL(blob);
+            targetUrl = activeBlobUrl;
+          }
+        }
+
+        frame.src = targetUrl;
+        directBtn.href = targetUrl;
+        directBtn.style.display = 'inline-flex';
+      }
+
+      modal.classList.add('active');
+    }
+
+    function closePopup() {
+      const frame = document.getElementById('popupIframe');
+      frame.src = '';
+      if (activeBlobUrl) {
+        URL.revokeObjectURL(activeBlobUrl);
+        activeBlobUrl = null;
+      }
+      document.getElementById('docPopup').classList.remove('active');
+    }
+
+    function promptAdmin() {
+      if (isAdmin) {
+        logoutAdmin();
+        return;
+      }
+      const pass = prompt("Mot de passe enseignant (défaut : perriand2026) :");
+      if (pass === "perriand2026") {
+        isAdmin = true;
+        document.body.classList.add('is-admin');
+        renderPageCards();
+      } else if (pass !== null) {
+        alert("Mot de passe incorrect.");
+      }
+    }
+
+    function logoutAdmin() {
+      isAdmin = false;
+      document.body.classList.remove('is-admin');
+      renderPageCards();
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
+        promptAdmin();
+      }
+    });
+
+    function exportBackupJson() {
+      const backup = { sections, docs, exportedAt: new Date().toISOString() };
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "sauvegarde-portail-perriand.json";
+      a.click();
+    }
+
+    function populateSectionOptions(targetSelectId) {
+      const select = document.getElementById(targetSelectId);
+      select.innerHTML = '';
+      Object.keys(sections).forEach(k => {
+        const opt = document.createElement('option');
+        opt.value = k;
+        opt.textContent = sections[k].title;
+        select.appendChild(opt);
+      });
+    }
+
+    function openAddModal() {
+      document.getElementById('addDocForm').reset();
+      document.getElementById('editDocId').value = "";
+      document.getElementById('docModalTitle').textContent = "Ajouter un document au site";
+      document.getElementById('docModalSubmitBtn').textContent = "Publier sur le site";
+      uploadedPdfDataUri = "";
+      uploadedCoverDataUri = "";
+
+      populateSectionOptions('newSection');
+      document.getElementById('newSection').value = currentPage;
+      syncSubCategories();
+      document.getElementById('addModal').classList.add('active');
+    }
+
+    function openEditModal(docId) {
+      const item = docs.find(d => d.id === docId);
+      if (!item) return;
+
+      document.getElementById('addDocForm').reset();
+      document.getElementById('editDocId').value = item.id;
+      document.getElementById('docModalTitle').textContent = "Modifier la vignette / le document";
+      document.getElementById('docModalSubmitBtn').textContent = "Enregistrer les modifications";
+      uploadedPdfDataUri = (item.url && item.url.startsWith("data:")) ? item.url : "";
+      uploadedCoverDataUri = (item.coverImg && item.coverImg.startsWith("data:")) ? item.coverImg : "";
+
+      populateSectionOptions('newSection');
+      document.getElementById('newSection').value = item.section;
+      syncSubCategories();
+
+      document.getElementById('newSub').value = item.sub;
+      document.getElementById('newTitle').value = item.title;
+      document.getElementById('newType').value = item.type;
+      document.getElementById('newCoverImg').value = (item.coverImg && item.coverImg.startsWith("data:")) ? "(Image locale déjà embarquée)" : (item.coverImg || "");
+      document.getElementById('newUrl').value = (item.url && item.url.startsWith("data:")) ? "(Fichier PDF local déjà embarqué)" : (item.url || "");
+      document.getElementById('newDesc').value = item.desc || "";
+
+      document.getElementById('addModal').classList.add('active');
+    }
+
+    function closeAddModal() {
+      document.getElementById('addModal').classList.remove('active');
+    }
+
+    function syncSubCategories() {
+      const secKey = document.getElementById('newSection').value;
+      const subSelect = document.getElementById('newSub');
+      subSelect.innerHTML = '';
+      (sections[secKey]?.subs || []).forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s;
+        opt.textContent = s;
+        subSelect.appendChild(opt);
+      });
+    }
+
+    async function saveDocForm(e) {
+      e.preventDefault();
+
+      const editId = document.getElementById('editDocId').value;
+      let finalUrl = uploadedPdfDataUri;
+      let finalCover = uploadedCoverDataUri;
+
+      if (!finalUrl) {
+        let typedUrl = document.getElementById('newUrl').value.trim();
+        if (typedUrl !== "(Fichier PDF local déjà embarqué)") {
+          finalUrl = typedUrl.replace(/^["']|["']$/g, '');
+        } else if (editId) {
+          const prev = docs.find(d => d.id === editId);
+          if (prev) finalUrl = prev.url;
+        }
+      }
+
+      if (!finalCover) {
+        let typedCover = document.getElementById('newCoverImg').value.trim();
+        if (typedCover !== "(Image locale déjà embarquée)") {
+          finalCover = typedCover.replace(/^["']|["']$/g, '');
+        } else if (editId) {
+          const prev = docs.find(d => d.id === editId);
+          if (prev) finalCover = prev.coverImg;
+        }
+      }
+
+      if (editId) {
+        const docIndex = docs.findIndex(d => d.id === editId);
+        if (docIndex !== -1) {
+          docs[docIndex].title = document.getElementById('newTitle').value;
+          docs[docIndex].section = document.getElementById('newSection').value;
+          docs[docIndex].sub = document.getElementById('newSub').value;
+          docs[docIndex].type = document.getElementById('newType').value;
+          docs[docIndex].coverImg = finalCover;
+          docs[docIndex].desc = document.getElementById('newDesc').value;
+          docs[docIndex].url = finalUrl;
+        }
+      } else {
+        const newDoc = {
+          id: "doc_" + Date.now(),
+          section: document.getElementById('newSection').value,
+          sub: document.getElementById('newSub').value,
+          title: document.getElementById('newTitle').value,
+          type: document.getElementById('newType').value,
+          coverImg: finalCover,
+          desc: document.getElementById('newDesc').value,
+          url: finalUrl
+        };
+        docs.unshift(newDoc);
+      }
+
+      await saveStorage();
+      closeAddModal();
+      renderPageCards();
+    }
+
+    async function deleteDoc(id) {
+      if (confirm("Supprimer définitivement ce document ?")) {
+        docs = docs.filter(d => d.id !== id);
+        await saveStorage();
+        renderPageCards();
+      }
+    }
+
+    function openCategoryModal() {
+      document.getElementById('categoryModal').classList.add('active');
+    }
+
+    function closeCategoryModal() {
+      document.getElementById('categoryModal').classList.remove('active');
+    }
+
+    async function saveNewCategory(e) {
+      e.preventDefault();
+      const title = document.getElementById('catTitle').value.trim();
+      const desc = document.getElementById('catDesc').value.trim();
+      const subsRaw = document.getElementById('catSubs').value.trim();
+
+      const key = "sec_" + Date.now();
+      const subsArray = subsRaw.split(',').map(s => s.trim()).filter(s => s.length > 0);
+
+      sections[key] = {
+        title: title,
+        desc: desc,
+        subs: subsArray.length > 0 ? subsArray : ["Général"]
+      };
+
+      await saveStorage();
+      closeCategoryModal();
+      initApp();
+      showPage(key);
+    }
+
+    function openStructureModal() {
+      renderTabsOrderEditor();
+
+      const secSelect = document.getElementById('structSecSelect');
+      secSelect.innerHTML = '';
+      Object.keys(sections).forEach(k => {
+        const opt = document.createElement('option');
+        opt.value = k;
+        opt.textContent = sections[k].title;
+        secSelect.appendChild(opt);
+      });
+      secSelect.value = currentPage;
+      renderSubEditor();
+
+      document.getElementById('structureModal').classList.add('active');
+    }
+
+    function closeStructureModal() {
+      document.getElementById('structureModal').classList.remove('active');
+    }
+
+    function renderTabsOrderEditor() {
+      const container = document.getElementById('tabsOrderList');
+      container.innerHTML = '';
+      const keys = Object.keys(sections);
+
+      keys.forEach((k, idx) => {
+        const item = document.createElement('div');
+        item.className = 'struct-item';
+        item.innerHTML = `
+          <span style="font-weight:600; font-size:0.85rem;">${sections[k].title}</span>
+          <div style="display:flex; gap:0.3rem;">
+            ${idx > 0 ? `<button class="btn" onclick="moveTab('${k}', -1)">▲</button>` : ''}
+            ${idx < keys.length - 1 ? `<button class="btn" onclick="moveTab('${k}', 1)">▼</button>` : ''}
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    async function moveTab(key, direction) {
+      const keys = Object.keys(sections);
+      const index = keys.indexOf(key);
+      if (index === -1) return;
+
+      const newIndex = index + direction;
+      if (newIndex < 0 || newIndex >= keys.length) return;
+
+      const newSections = {};
+      const targetKey = keys[newIndex];
+      keys[newIndex] = key;
+      keys[index] = targetKey;
+
+      keys.forEach(k => { newSections[k] = sections[k]; });
+      sections = newSections;
+
+      await saveStorage();
+      initApp();
+      renderTabsOrderEditor();
+    }
+
+    function renderSubEditor() {
+      const secKey = document.getElementById('structSecSelect').value;
+      const input = document.getElementById('structSubsInput');
+      input.value = (sections[secKey]?.subs || []).join(', ');
+    }
+
+    async function saveSubsEdit() {
+      const secKey = document.getElementById('structSecSelect').value;
+      const raw = document.getElementById('structSubsInput').value;
+      const subs = raw.split(',').map(s => s.trim()).filter(s => s.length > 0);
+
+      if (subs.length === 0) {
+        alert("Indiquez au moins une sous-catégorie.");
+        return;
+      }
+
+      sections[secKey].subs = subs;
+      await saveStorage();
+      initApp();
+      showPage(secKey);
+      alert(`Sous-catégories de "${sections[secKey].title}" mises à jour !`);
+    }
+
+    async function startApplication() {
+      try {
+        const savedSec = localStorage.getItem('perriand_sections_v27');
+        sections = savedSec ? JSON.parse(savedSec) : defaultSections;
+
+        const storedDocs = await loadAllDocsFromDB();
+        if (storedDocs && storedDocs.length > 0) {
+          const storedIds = new Set(storedDocs.map(d => d.id));
+          const newDefaults = defaultDocs.filter(d => !storedIds.has(d.id));
+          docs = [...storedDocs, ...newDefaults];
+        } else {
+          docs = defaultDocs;
+        }
+
+        const cloudData = await fetchFromSupabase();
+        if (cloudData && !cloudData.empty && cloudData.docs) {
+          sections = cloudData.sections || sections;
+          const cloudIds = new Set(cloudData.docs.map(d => d.id));
+          const missingDefaults = defaultDocs.filter(d => !cloudIds.has(d.id));
+          docs = [...cloudData.docs, ...missingDefaults];
+        } else if (cloudData && cloudData.empty) {
+          await pushToSupabase();
+        }
+
+        await saveAllDocsToDB(docs);
+      } catch(e) {
+        sections = defaultSections;
+        docs = defaultDocs;
+      }
+
+      currentPage = Object.keys(sections)[0] || "communication";
+      initApp();
+      showPage(currentPage);
+    }
+
+    startApplication();
+  </script>
+</body>
+</html>
