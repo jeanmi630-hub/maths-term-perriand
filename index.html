@@ -247,45 +247,18 @@
   </footer>
 
   <script>
-    // --- CONNEXION CLOUD SUPABASE ---
+    // --- CONNEXION STRICTE AU CLOUD SUPABASE ---
     const DEFAULT_SUPABASE_URL = "https://xydayuntveuscibupgto.supabase.co"; 
     const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5ZGF5dW50dmV1c2NpYnVwZ3RvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MDMyNTcsImV4cCI6MjEwODA3OTI1N30.ketR5e-MimQuqzk5cHLhlN5ZjdZEH_Fq4fNz6UG-Fzo";
 
     const defaultSections = {
-      "communication": { title: "Communication", desc: "Informations et calendrier", subs: ["Consignes de la semaine", "Planning", "Divers"] },
-      "rappels": { title: "Rappels", desc: "Cours de 1ère", subs: ["Polynômes", "Dérivation", "Suites 1ère", "Trigonométrie"] },
-      "grand-oral": { title: "Grand Oral", desc: "Préparation", subs: ["Méthodologie", "Pistes de questions", "Grille d'évaluation"] },
-      "suites": { title: "Suites", desc: "Récurrence, variations et limites", subs: ["Récurrence et étude de suites", "Limites de suites"] }
+      "communication": { title: "Communication", desc: "Informations et calendrier", subs: ["Consignes de la semaine", "Planning", "Divers"] }
     };
 
     let sections = {}; let docs = [];
     let currentPage = "communication"; let activeSubFilter = "all"; let isAdmin = false;
 
-    // --- SAUVETAGE DES DONNÉES LOCALES ---
-    function openDatabase() {
-      return new Promise((resolve, reject) => {
-        const req = indexedDB.open("PerriandPortalDB", 1);
-        req.onupgradeneeded = (e) => {
-          const db = e.target.result;
-          if (!db.objectStoreNames.contains("documents")) db.createObjectStore("documents", { keyPath: "id" });
-        };
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-      });
-    }
-
-    async function loadAllDocsFromDB() {
-      try {
-        const db = await openDatabase();
-        return new Promise((resolve) => {
-          const tx = db.transaction("documents", "readonly");
-          const req = tx.objectStore("documents").getAll();
-          req.onsuccess = () => resolve(req.result || []);
-          req.onerror = () => resolve([]);
-        });
-      } catch(e) { return []; }
-    }
-
+    // --- LECTURE EXCLUSIVE DU CLOUD ---
     async function fetchFromSupabase() {
       try {
         const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state?id=eq.main&select=*`, {
@@ -297,11 +270,10 @@
       } catch (e) { return null; }
     }
 
-    // --- ENVOI AU CLOUD AMÉLIORÉ AVEC GESTION D'ERREUR ---
+    // --- ENREGISTREMENT SUR LE CLOUD ---
     async function pushToSupabase() {
       try {
         const payload = { id: 'main', sections: sections, docs: docs, updated_at: new Date().toISOString() };
-        // Ajout de ?on_conflict=id pour forcer la mise à jour (Upsert)
         const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state?on_conflict=id`, {
           method: 'POST',
           headers: {
@@ -315,20 +287,14 @@
         
         if (res.ok) {
           const badge = document.getElementById('syncStatusBadge');
-          if(badge) {
-              badge.className = 'sync-badge online';
-              badge.innerHTML = '☁️ Cloud Synchronisé';
-          }
+          if(badge) { badge.className = 'sync-badge online'; badge.innerHTML = '☁️ Cloud Synchronisé'; }
           return true;
         } else {
-          // Si Supabase refuse, on lit l'erreur exacte et on l'affiche si on est le prof !
           const errorMsg = await res.text();
-          console.error("Erreur Cloud Supabase :", errorMsg);
-          if (isAdmin) alert("Supabase a bloqué la sauvegarde. Voici l'erreur : \n" + errorMsg);
+          if (isAdmin) alert("Erreur Supabase : \n" + errorMsg);
         }
       } catch (e) { 
-          console.error(e);
-          if (isAdmin) alert("Erreur réseau vers le Cloud : " + e.message);
+          if (isAdmin) alert("Erreur réseau : " + e.message);
       }
       return false;
     }
@@ -347,32 +313,27 @@
       return null;
     }
 
-    // --- INITIALISATION ---
+    // --- DÉMARRAGE DU SITE (100% CLOUD) ---
     async function startApplication() {
-      const savedSecText = localStorage.getItem('perriand_sections_v27');
-      let localDocs = await loadAllDocsFromDB();
-      const cloudData = await fetchFromSupabase();
-      let cloudHasData = (cloudData && !cloudData.empty && cloudData.sections);
+      // On efface l'ancienne mémoire locale pour qu'elle n'interfère plus JAMAIS
+      localStorage.removeItem('perriand_sections_v27');
 
-      if (savedSecText && savedSecText.length > 200) {
-          sections = JSON.parse(savedSecText); docs = localDocs || [];
-      } else if (cloudHasData) {
-          sections = cloudData.sections; docs = cloudData.docs;
+      // On lit la vraie donnée sur le Cloud
+      const cloudData = await fetchFromSupabase();
+      
+      if (cloudData && !cloudData.empty && cloudData.sections) {
+          sections = cloudData.sections; 
+          docs = cloudData.docs;
+          const badge = document.getElementById('syncStatusBadge');
+          if(badge) { badge.className = 'sync-badge online'; badge.innerHTML = '☁️ Cloud Synchronisé'; }
       } else {
-          sections = defaultSections; docs = [];
+          sections = defaultSections; 
+          docs = [];
       }
 
-      // Nettoyage des vieux Base64
-      docs.forEach(d => {
-        if (d.url && d.url.startsWith('data:application/pdf')) {
-          d.url = ""; if (!d.desc.includes("⚠️")) d.desc = "⚠️ PDF à ré-importer. " + (d.desc || "");
-        }
-        if (d.coverImg && d.coverImg.startsWith('data:image')) d.coverImg = "";
-      });
-
-      await pushToSupabase();
       currentPage = Object.keys(sections)[0] || "communication";
-      initApp(); showPage(currentPage);
+      initApp(); 
+      showPage(currentPage);
     }
 
     // --- UI DU SITE ---
@@ -398,7 +359,7 @@
           id: editId || "doc_" + Date.now(), section: document.getElementById('newSection').value,
           sub: document.getElementById('newSub').value, title: document.getElementById('newTitle').value,
           type: document.getElementById('newType').value, coverImg: finalCover,
-          desc: document.getElementById('newDesc').value.replace("⚠️ PDF à ré-importer. ", ""), url: finalUrl
+          desc: document.getElementById('newDesc').value, url: finalUrl
         };
 
         if (editId) { const idx = docs.findIndex(d => d.id === editId); if (idx !== -1) docs[idx] = docData; }
