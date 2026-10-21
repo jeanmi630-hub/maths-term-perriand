@@ -261,7 +261,7 @@
     let sections = {}; let docs = [];
     let currentPage = "communication"; let activeSubFilter = "all"; let isAdmin = false;
 
-    // --- SAUVETAGE DES DONNÉES LOCALES (MÉMOIRE DU PC) ---
+    // --- SAUVETAGE DES DONNÉES LOCALES ---
     function openDatabase() {
       return new Promise((resolve, reject) => {
         const req = indexedDB.open("PerriandPortalDB", 1);
@@ -297,10 +297,12 @@
       } catch (e) { return null; }
     }
 
+    // --- ENVOI AU CLOUD AMÉLIORÉ AVEC GESTION D'ERREUR ---
     async function pushToSupabase() {
       try {
         const payload = { id: 'main', sections: sections, docs: docs, updated_at: new Date().toISOString() };
-        const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state`, {
+        // Ajout de ?on_conflict=id pour forcer la mise à jour (Upsert)
+        const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state?on_conflict=id`, {
           method: 'POST',
           headers: {
             'apikey': DEFAULT_SUPABASE_ANON_KEY,
@@ -310,12 +312,24 @@
           },
           body: JSON.stringify(payload)
         });
+        
         if (res.ok) {
-          document.getElementById('syncStatusBadge').className = 'sync-badge online';
-          document.getElementById('syncStatusBadge').innerHTML = '☁️ Cloud Synchronisé';
+          const badge = document.getElementById('syncStatusBadge');
+          if(badge) {
+              badge.className = 'sync-badge online';
+              badge.innerHTML = '☁️ Cloud Synchronisé';
+          }
           return true;
+        } else {
+          // Si Supabase refuse, on lit l'erreur exacte et on l'affiche si on est le prof !
+          const errorMsg = await res.text();
+          console.error("Erreur Cloud Supabase :", errorMsg);
+          if (isAdmin) alert("Supabase a bloqué la sauvegarde. Voici l'erreur : \n" + errorMsg);
         }
-      } catch (e) { console.error(e); }
+      } catch (e) { 
+          console.error(e);
+          if (isAdmin) alert("Erreur réseau vers le Cloud : " + e.message);
+      }
       return false;
     }
 
@@ -333,46 +347,35 @@
       return null;
     }
 
-    // --- INITIALISATION INTÉLLIGENTE (SAUVETAGE) ---
+    // --- INITIALISATION ---
     async function startApplication() {
-      // 1. Lire la mémoire locale cachée de l'ordinateur
       const savedSecText = localStorage.getItem('perriand_sections_v27');
       let localDocs = await loadAllDocsFromDB();
-      
-      // 2. Lire le Cloud
       const cloudData = await fetchFromSupabase();
       let cloudHasData = (cloudData && !cloudData.empty && cloudData.sections);
 
-      // 3. Choix intelligent : Si le PC a les rubriques (ex: probas ou geometrie) on sauve le PC !
       if (savedSecText && savedSecText.length > 200) {
-          sections = JSON.parse(savedSecText);
-          docs = localDocs || [];
+          sections = JSON.parse(savedSecText); docs = localDocs || [];
       } else if (cloudHasData) {
-          sections = cloudData.sections;
-          docs = cloudData.docs;
+          sections = cloudData.sections; docs = cloudData.docs;
       } else {
-          sections = defaultSections;
-          docs = [];
+          sections = defaultSections; docs = [];
       }
 
-      // 4. NETTOYAGE OBLIGATOIRE DES GROS FICHIERS QUI BLOQUAIENT LE CLOUD
+      // Nettoyage des vieux Base64
       docs.forEach(d => {
         if (d.url && d.url.startsWith('data:application/pdf')) {
-          d.url = ""; // On supprime le texte lourd
-          if (!d.desc.includes("⚠️")) d.desc = "⚠️ PDF à ré-importer. " + (d.desc || "");
+          d.url = ""; if (!d.desc.includes("⚠️")) d.desc = "⚠️ PDF à ré-importer. " + (d.desc || "");
         }
         if (d.coverImg && d.coverImg.startsWith('data:image')) d.coverImg = "";
       });
 
-      // 5. On propulse instantanément le tout vers le Cloud
       await pushToSupabase();
-
       currentPage = Object.keys(sections)[0] || "communication";
-      initApp();
-      showPage(currentPage);
+      initApp(); showPage(currentPage);
     }
 
-    // --- RESTE DES FONCTIONS UI ---
+    // --- UI DU SITE ---
     async function saveDocForm(e) {
       e.preventDefault();
       const submitBtn = document.getElementById('docModalSubmitBtn');
@@ -535,7 +538,7 @@
     function renderSubEditor() { document.getElementById('structSubsInput').value = (sections[document.getElementById('structSecSelect').value]?.subs || []).join(', '); }
     async function saveSubsEdit() {
       sections[document.getElementById('structSecSelect').value].subs = document.getElementById('structSubsInput').value.split(',').map(s=>s.trim()).filter(s=>s.length>0);
-      await pushToSupabase(); initApp(); showPage(document.getElementById('structSecSelect').value); alert("Mis à jour !");
+      await pushToSupabase(); initApp(); showPage(document.getElementById('structSecSelect').value);
     }
 
     startApplication();
