@@ -606,31 +606,22 @@
           <button class="btn" onclick="closePopup()">✕ Fermer</button>
         </div>
       </div>
-
-      <iframe id="popupIframe" class="popup-frame" src="" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
-
+      <iframe id="popupIframe" class="popup-frame" src="" allowfullscreen></iframe>
       <div id="popupYtPlayer" class="popup-yt-player">
         <div id="popupYtBg" class="popup-yt-bg"></div>
         <div class="popup-yt-box">
           <a id="popupYtLink" href="#" target="_blank" class="popup-yt-poster">
-            <div class="popup-yt-play-btn">
-              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            </div>
+            <div class="popup-yt-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
           </a>
           <p id="popupYtDesc" style="margin-top:1rem; max-width:640px; color:#cbd5e1; font-size:0.9rem; line-height:1.4;"></p>
-          <a id="popupYtBtn" href="#" target="_blank" class="btn btn-primary" style="margin-top:1rem;">
-            ▶ Lancer la vidéo sur YouTube
-          </a>
+          <a id="popupYtBtn" href="#" target="_blank" class="btn btn-primary" style="margin-top:1rem;">▶ Lancer la vidéo sur YouTube</a>
         </div>
       </div>
-
       <div id="popupAlt" class="popup-alt">
         <div style="font-size:3.5rem; margin-bottom:1rem;">🌐</div>
         <h4 id="popupAltTitle" style="font-size:1.3rem; margin-bottom:0.6rem; color:#1e1b4b;">Accéder au site officiel</h4>
         <p style="color:var(--muted); max-width:520px; margin-bottom:1.8rem; font-size:0.92rem; line-height:1.5;" id="popupAltDesc"></p>
-        <a id="popupAltLink" href="#" target="_blank" class="btn btn-primary" style="font-size:0.95rem; padding:0.65rem 1.4rem;">
-          Ouvrir le site dans un nouvel onglet ↗
-        </a>
+        <a id="popupAltLink" href="#" target="_blank" class="btn btn-primary" style="font-size:0.95rem; padding:0.65rem 1.4rem;">Ouvrir le site dans un nouvel onglet ↗</a>
       </div>
     </div>
   </div>
@@ -640,7 +631,6 @@
     <button class="btn btn-primary" onclick="openAddModal()">+ Nouveau document</button>
     <button class="btn" onclick="openStructureModal()">⚙️ Structure & Ordre</button>
     <button class="btn" onclick="openCategoryModal()">➕ Nouvel onglet</button>
-    <button class="btn" onclick="exportBackupJson()" title="Télécharger une sauvegarde complète">💾 Exporter</button>
     <button class="btn" onclick="logoutAdmin()">Verrouiller</button>
   </div>
 
@@ -648,7 +638,7 @@
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
         <h3 id="docModalTitle" style="font-size:1.15rem; font-weight:700;">Ajouter un document au site</h3>
-        <button class="btn" onclick="closeAddModal()">✕</button>
+        <button class="btn" id="closeAddModalBtn" onclick="closeAddModal()">✕</button>
       </div>
       <form id="addDocForm" onsubmit="saveDocForm(event)">
         <input type="hidden" id="editDocId" value="">
@@ -673,7 +663,7 @@
             <option value="cours">📐 Fiche de cours / Méthode</option>
             <option value="jeu">🎲 Activité / Jeu interactif</option>
             <option value="video">▶️ Vidéo (YouTube ou lien web)</option>
-            <option value="web">🌐 Lien Web / Site externe (Éduscol, GeoGebra...)</option>
+            <option value="web">🌐 Lien Web / Site externe</option>
             <option value="info">📌 Consigne / Information</option>
           </select>
         </div>
@@ -682,24 +672,24 @@
           <label>Photo pour l'arrière-plan de la vignette</label>
           <div style="background:#f1f5f9; padding:0.8rem; border-radius:8px; border:1px dashed var(--border); margin-bottom:0.5rem;">
             <label style="font-size:0.8rem; font-weight:700; color:var(--primary); cursor:pointer; display:block; margin-bottom:0.3rem;">
-              🖼 Choisir un fichier image depuis l'ordinateur :
+              🖼 Sélectionner un fichier image depuis l'ordinateur :
             </label>
-            <input type="file" id="coverFileInput" accept="image/*" class="form-control" onchange="handleLocalCoverUpload(event)">
+            <input type="file" id="coverFileInput" accept="image/*" class="form-control" onchange="document.getElementById('newCoverImg').value = '(Fichier prêt pour l\'envoi sécurisé au Cloud)';">
           </div>
-          <label style="font-size:0.78rem;">Ou indiquer le chemin de l'image (ex : images/lycee-facade.jpeg) :</label>
-          <input type="text" id="newCoverImg" class="form-control" placeholder="images/lycee-facade.jpeg (ou automatique si YouTube)">
+          <label style="font-size:0.78rem;">Ou URL externe / chemin existant :</label>
+          <input type="text" id="newCoverImg" class="form-control" placeholder="Laisser vide pour un fond automatique">
         </div>
 
         <div class="form-group">
           <label>Fichier PDF ou Lien Web / YouTube</label>
           <div style="background:#f1f5f9; padding:0.8rem; border-radius:8px; border:1px dashed var(--border); margin-bottom:0.5rem;">
             <label style="font-size:0.8rem; font-weight:700; color:var(--primary); cursor:pointer; display:block; margin-bottom:0.3rem;">
-              📁 Choisir un fichier PDF depuis l'ordinateur :
+              📁 Sélectionner un fichier PDF depuis l'ordinateur :
             </label>
-            <input type="file" id="pdfFileInput" accept=".pdf" class="form-control" onchange="handleLocalPdfUpload(event)">
+            <input type="file" id="pdfFileInput" accept=".pdf" class="form-control" onchange="document.getElementById('newUrl').value = '(Fichier prêt pour l\'envoi sécurisé au Cloud)';">
           </div>
-          <label style="font-size:0.78rem;">Ou chemin du document / URL externe :</label>
-          <input type="text" id="newUrl" class="form-control" placeholder="documents/mon-fichier.pdf ou https://...">
+          <label style="font-size:0.78rem;">Ou URL externe :</label>
+          <input type="text" id="newUrl" class="form-control" placeholder="https://...">
         </div>
 
         <div class="form-group">
@@ -707,7 +697,7 @@
           <textarea id="newDesc" class="form-control" rows="3" placeholder="Exercices à chercher, points de cours..."></textarea>
         </div>
         <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1.5rem;">
-          <button type="button" class="btn" onclick="closeAddModal()">Annuler</button>
+          <button type="button" class="btn" onclick="closeAddModal()" id="cancelBtnModal">Annuler</button>
           <button type="submit" id="docModalSubmitBtn" class="btn btn-primary">Publier sur le site</button>
         </div>
       </form>
@@ -720,12 +710,10 @@
         <h3 style="font-size:1.15rem; font-weight:700;">Gérer l'ordre & les sous-catégories</h3>
         <button class="btn" onclick="closeStructureModal()">✕</button>
       </div>
-
       <div style="margin-bottom: 1.5rem;">
         <h4 style="font-size:0.9rem; margin-bottom:0.5rem;">1. Ordre des onglets principaux</h4>
         <div id="tabsOrderList"></div>
       </div>
-
       <div>
         <h4 style="font-size:0.9rem; margin-bottom:0.5rem;">2. Modifier les sous-catégories d'un onglet</h4>
         <div class="form-group">
@@ -735,7 +723,7 @@
           <label>Sous-catégories (séparées par des virgules)</label>
           <input type="text" id="structSubsInput" class="form-control">
         </div>
-        <button type="button" class="btn btn-primary" onclick="saveSubsEdit()">Mettre à jour les sous-catégories</button>
+        <button type="button" class="btn btn-primary" onclick="saveSubsEdit()">Mettre à jour</button>
       </div>
     </div>
   </div>
@@ -749,19 +737,19 @@
       <form onsubmit="saveNewCategory(event)">
         <div class="form-group">
           <label>Nom du nouvel onglet</label>
-          <input type="text" id="catTitle" class="form-control" required placeholder="Ex : Algorithmique & Python">
+          <input type="text" id="catTitle" class="form-control" required>
         </div>
         <div class="form-group">
           <label>Description / Sous-titre de la page</label>
-          <input type="text" id="catDesc" class="form-control" placeholder="Ex : Scripts, fonctions et exercices type bac">
+          <input type="text" id="catDesc" class="form-control">
         </div>
         <div class="form-group">
           <label>Sous-catégories (séparées par des virgules)</label>
-          <input type="text" id="catSubs" class="form-control" required placeholder="Ex : Bases, Boucles et listes, Sujets bac">
+          <input type="text" id="catSubs" class="form-control" required>
         </div>
         <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1.5rem;">
           <button type="button" class="btn" onclick="closeCategoryModal()">Annuler</button>
-          <button type="submit" class="btn btn-primary">Créer cet onglet</button>
+          <button type="submit" class="btn btn-primary">Créer</button>
         </div>
       </form>
     </div>
@@ -773,444 +761,170 @@
   </footer>
 
   <script>
-    // =========================================================================
-    // CONFIGURATION CLOUD SUPABASE INTÉGRÉE
-    // =========================================================================
+    // === VOS CLÉS SUPABASE (Sécurisées pour le portail) ===
     const DEFAULT_SUPABASE_URL = "https://xydayuntveuscibupgto.supabase.co"; 
     const DEFAULT_SUPABASE_ANON_KEY = "sb_publishable_g-99-oNcE_9noSl-_yxA1g_eZ8VvmLV";
 
+    // --- Configurations initiales ---
     const defaultSections = {
-      "communication": {
-        title: "Communication",
-        desc: "Informations, calendrier et consignes pour la semaine suivante",
-        subs: ["Consignes de la semaine", "Planning", "Divers"]
-      },
-      "rappels": {
-        title: "Rappels des cours de 1ère",
-        desc: "Notions indispensables, formules de dérivation, second degré et trigonométrie",
-        subs: ["Polynômes", "Dérivation", "Suites 1ère", "Trigonométrie"]
-      },
-      "grand-oral": {
-        title: "Grand Oral",
-        desc: "Guides méthodologiques, critères du jury et propositions de questions transversales",
-        subs: ["Méthodologie", "Pistes de questions", "Grille d'évaluation"]
-      },
-      "suites": {
-        title: "Suites",
-        desc: "Récurrence, variations, théorèmes de comparaison et limites de suites",
-        subs: ["Récurrence et étude de suites", "Limites de suites"]
-      },
-      "fonctions": {
-        title: "Étude de fonctions",
-        desc: "Dérivation, trigonométrie, logarithme népérien, intégration, primitives et équations différentielles",
-        subs: [
-          "Dérivation", 
-          "Fonctions trigonométriques", 
-          "Fonction logarithme", 
-          "Intégration", 
-          "Primitive", 
-          "Équations différentielles"
-        ]
-      },
-      "espace": {
-        title: "Géométrie dans l'espace",
-        desc: "Repères orthonormés, vecteurs, droites, plans et produit scalaire spatial",
-        subs: ["Vecteurs & Droites", "Plans & Produit scalaire"]
-      },
-      "probas": {
-        title: "Probabilités",
-        desc: "Épreuves de Bernoulli, loi binomiale, variables aléatoires et lois des grands nombres",
-        subs: ["Schéma de Bernoulli", "Loi binomiale", "Sommes de variables"]
-      }
+      "communication": { title: "Communication", desc: "Informations et calendrier", subs: ["Consignes de la semaine", "Planning", "Divers"] },
+      "rappels": { title: "Rappels", desc: "Cours de 1ère", subs: ["Polynômes", "Dérivation", "Suites 1ère", "Trigonométrie"] },
+      "grand-oral": { title: "Grand Oral", desc: "Préparation", subs: ["Méthodologie", "Pistes de questions", "Grille d'évaluation"] },
+      "suites": { title: "Suites", desc: "Récurrence, variations et limites", subs: ["Récurrence et étude de suites", "Limites de suites"] }
     };
 
-    const defaultDocs = [
-      {
-        id: "1",
-        section: "communication",
-        sub: "Consignes de la semaine",
-        title: "Planning & Consignes de la semaine",
-        type: "info",
-        desc: "Penser à prendre la calculatrice en mode radian. Séance sur les raisonnements par récurrence.",
-        coverImg: "images/lycee-facade.jpeg",
-        url: ""
-      },
-      // --- POLYNÔMES ---
-      {
-        id: "doc_poly_f1",
-        section: "rappels",
-        sub: "Polynômes",
-        title: "Fiche 1 : Racines, équations & factorisation",
-        type: "pdf",
-        desc: "Méthodologie complète sur le calcul du discriminant, la recherche des racines réelles et la factorisation du trinôme avec exercices guidés[cite: 8, 9].",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/f1-racines-equa-facto_456lqasy7n4.pdf"
-      },
-      {
-        id: "doc_poly_f2",
-        section: "rappels",
-        sub: "Polynômes",
-        title: "Fiche 2 : Les trois formes du second degré",
-        type: "pdf",
-        desc: "Utiliser et passer entre les formes développée, canonique et factorisée. Variations, sommet et modélisation de problèmes concrets[cite: 1, 2, 3].",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/f2-formes-dun-poly_kixvroep8q.pdf"
-      },
-      {
-        id: "doc_poly_tb",
-        section: "rappels",
-        sub: "Polynômes",
-        title: "Tableau récapitulatif du second degré",
-        type: "cours",
-        desc: "Tableau comparatif croisant les signes de a et de Delta : racines, factorisation, positions relatives et tableaux de signes[cite: 12].",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/tb_degre21_dokiva3b5b.pdf"
-      },
-      {
-        id: "doc_poly_carte",
-        section: "rappels",
-        sub: "Polynômes",
-        title: "Carte mentale : Le second degré en un clin d'œil",
-        type: "mental",
-        desc: "Synthèse visuelle organisée : passage de l'équation ax²+bx+c=0 à la fonction, paraboles et synthèses graphiques[cite: 15].",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/carte_heuristique_2nddeg_ylw5v3epooa.pdf"
-      },
-      {
-        id: "doc_poly_essentiel",
-        section: "rappels",
-        sub: "Polynômes",
-        title: "Fiche mémo : L'essentiel pour la Terminale",
-        type: "cours",
-        desc: "Formules indispensables à maîtriser en début d'année : sommet S(alpha; beta), calcul de Delta et règle d'or des signes[cite: 13, 14].",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/polynomes_s3sx85m2rg.pdf"
-      },
-      {
-        id: "doc_poly_rappels",
-        section: "rappels",
-        sub: "Polynômes",
-        title: "Fiche de synthèse : Formes, racines & signes",
-        type: "cours",
-        desc: "Fiche de rappel illustrée : paraboles orientées vers le haut ou le bas, formules canoniques et factorisées du trinôme[cite: 16, 17, 18].",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/rappels_polynomes_krevtj0lvf.pdf"
-      },
-      // --- SUITES & RÉCURRENCE ---
-      {
-        id: "doc_recu_methode_bac",
-        section: "suites",
-        sub: "Récurrence et étude de suites",
-        title: "Fiche méthode : Raisonnement par récurrence (Type Bac)",
-        type: "cours",
-        desc: "Guide méthodologique complet en 4 étapes (initialisation, hérédité, conclusion) avec un exemple classique guidé sur une suite définie par une fonction.",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/recu-_7nkci316cag (1).pdf"
-      },
-      {
-        id: "doc_recu_grenouille",
-        section: "suites",
-        sub: "Récurrence et étude de suites",
-        title: "Illustration visuelle : La grenouille et l'escalier",
-        type: "mental",
-        desc: "Métaphore imagée pour mémoriser intuitivement le principe de récurrence : monter sur la 1ère marche et passer d'une marche à la suivante.",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/grenouille-et-recurrence_fi4jkb632g9.pdf"
-      },
-      {
-        id: "doc_recu_exemples_sommes",
-        section: "suites",
-        sub: "Récurrence et étude de suites",
-        title: "Exemples types : Égalités, sommes & divisibilité",
-        type: "cours",
-        desc: "Modèles complets de rédactions rigoureuses : somme des premiers entiers, somme des carrés et démonstration de divisibilité par récurrence.",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/recurrence_gs2kx0hkyoi (1).pdf"
-      },
-      {
-        id: "doc_suites_plan_travail",
-        section: "suites",
-        sub: "Récurrence et étude de suites",
-        title: "Plan de travail & Objectifs : Suites et récurrence",
-        type: "pdf",
-        desc: "Feuille de route complète du chapitre : savoir-faire prioritaires, liste d'exercices d'entraînement, algorithmes Python et liens vidéos de révision.",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/plan-de-travail_chap1-2024_al325yn3xbt.pdf"
-      },
-      {
-        id: "doc_suites_cm_globale",
-        section: "suites",
-        sub: "Récurrence et étude de suites",
-        title: "Carte mentale : Panorama des suites numériques",
-        type: "mental",
-        desc: "Synthèse visuelle de Terminale : sens de variation, suites arithmétiques et géométriques, majoration, minoration et sommes de termes.",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/cm_termspe_suitesnumeriques_rqve9ve1q9i (1).pdf"
-      },
-      {
-        id: "doc_suites_memo_bornes",
-        section: "suites",
-        sub: "Récurrence et étude de suites",
-        title: "Fiche mémo : Propriétés, bornes & comportements",
-        type: "cours",
-        desc: "Fiche synthétique sur les définitions de suites majorées, minorées, bornées, limites de suites géométriques et méthodes d'encadrement.",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/les-suites_b5iudac8xqp.pdf"
-      },
-      {
-        id: "doc_suites_ari_geo_1ere",
-        section: "suites",
-        sub: "Récurrence et étude de suites",
-        title: "Carte mentale : Rappels suites arithmétiques & géométriques",
-        type: "mental",
-        desc: "Rappels visuels indispensables de 1ère : formes par récurrence, expressions explicites en fonction de n et formules des sommes.",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/suites-ari-geo-1ere--cm_tskff4ooe0p.pdf"
-      },
-      // --- GRAND ORAL & FONCTIONS ---
-      {
-        id: "doc_go_themes",
-        section: "grand-oral",
-        sub: "Pistes de questions",
-        title: "Idées de thèmes et pistes pour le Grand Oral",
-        type: "pdf",
-        desc: "Recueil complet de thèmes mathématiques et bi-disciplinaires (Physique, SES, SVT, HGGSP, NSI) pour orienter le choix du sujet.",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/exemples-de-thames_grand-oral_camh4lepw1q_ffw54uy8rln.pdf"
-      },
-      {
-        id: "doc_go_grille",
-        section: "grand-oral",
-        sub: "Grille d'évaluation",
-        title: "Grille officielle d'évaluation du Grand Oral",
-        type: "pdf",
-        desc: "Les 5 compétences officielles du B.O. : prestation orale, parole en continu, solidité des connaissances, échange et argumentation.",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/grille_evaluation-go-1_m5nj0ul77p.pdf"
-      },
-      {
-        id: "doc_go_auto",
-        section: "grand-oral",
-        sub: "Méthodologie",
-        title: "Fiche d'auto-évaluation et d'entraînement oral",
-        type: "cours",
-        desc: "Grille d'observation entre pairs ou personnelle : posture, voix, rythme, clarté mathématique et vulgarisation.",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/grille-auto-aval-grand-oral_aqloy0g388f_gjje2nlvqsv.docx"
-      },
-      {
-        id: "doc_exp_poly",
-        section: "fonctions",
-        sub: "Dérivation",
-        title: "Méthode pas à pas : Polynôme × Exponentielle",
-        type: "cours",
-        desc: "Guide méthodologique en 5 étapes pour dériver f(x) = (ax+b)e^(cx+d), factoriser par l'exponentielle et dresser le tableau de variations.",
-        coverImg: "images/lycee-facade.jpeg",
-        url: "documents/exp__poly_srl0naajtya.pdf"
-      },
-      {
-        id: "doc_suites_yt",
-        section: "suites",
-        sub: "Limites de suites",
-        title: "Vidéo : Calculer une limite avec les théorèmes de comparaison",
-        type: "video",
-        desc: "Démonstration pas-à-pas et méthode de rédaction type bac.",
-        coverImg: "",
-        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-      }
-    ];
-
+    const defaultDocs = [];
     let sections = {};
     let docs = [];
-    let uploadedPdfDataUri = "";
-    let uploadedCoverDataUri = "";
-    let activeBlobUrl = null;
     let currentPage = "communication";
     let activeSubFilter = "all";
     let isAdmin = false;
 
-    // --- LOGIQUE DE SYNCHRONISATION SUPABASE ---
-    function getCloudCreds() {
-      return { url: DEFAULT_SUPABASE_URL.trim().replace(/\/$/, ""), key: DEFAULT_SUPABASE_ANON_KEY.trim() };
-    }
-
-    function updateSyncBadge(isOnline) {
-      const badge = document.getElementById('syncStatusBadge');
-      if (!badge) return;
-      if (isOnline) {
-        badge.className = 'sync-badge online';
-        badge.innerHTML = '☁️ Cloud Synchronisé';
-      } else {
-        badge.className = 'sync-badge';
-        badge.innerHTML = '💾 Stockage Local';
-      }
-    }
-
+    // --- CLOUD SUPABASE (STRUCTURE TEXTUELLE) ---
     async function fetchFromSupabase() {
-      const { url, key } = getCloudCreds();
-      if (!url || !key) return null;
       try {
-        const res = await fetch(`${url}/rest/v1/portal_state?id=eq.main&select=*`, {
-          headers: {
-            'apikey': key,
-            'Authorization': `Bearer ${key}`
-          }
+        const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state?id=eq.main&select=*`, {
+          headers: { 'apikey': DEFAULT_SUPABASE_ANON_KEY, 'Authorization': `Bearer ${DEFAULT_SUPABASE_ANON_KEY}` }
         });
         if (!res.ok) return null;
         const data = await res.json();
-        if (data && data.length > 0) {
-          updateSyncBadge(true);
-          return data[0];
-        }
-        updateSyncBadge(true);
-        return { empty: true };
-      } catch (e) {
-        updateSyncBadge(false);
-        return null;
-      }
+        return (data && data.length > 0) ? data[0] : { empty: true };
+      } catch (e) { return null; }
     }
 
     async function pushToSupabase() {
-      const { url, key } = getCloudCreds();
-      if (!url || !key) return false;
       try {
-        const payload = {
-          id: 'main',
-          sections: sections,
-          docs: docs,
-          updated_at: new Date().toISOString()
-        };
-        const res = await fetch(`${url}/rest/v1/portal_state`, {
+        const payload = { id: 'main', sections: sections, docs: docs, updated_at: new Date().toISOString() };
+        const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state`, {
           method: 'POST',
           headers: {
-            'apikey': key,
-            'Authorization': `Bearer ${key}`,
+            'apikey': DEFAULT_SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${DEFAULT_SUPABASE_ANON_KEY}`,
             'Content-Type': 'application/json',
             'Prefer': 'resolution=merge-duplicates'
           },
           body: JSON.stringify(payload)
         });
         if (res.ok) {
-          updateSyncBadge(true);
+          document.getElementById('syncStatusBadge').className = 'sync-badge online';
+          document.getElementById('syncStatusBadge').innerHTML = '☁️ Cloud Synchronisé';
           return true;
         }
-        return false;
-      } catch (e) {
-        return false;
-      }
+      } catch (e) { }
+      return false;
     }
 
-    // --- INDEXEDDB LOCAL ---
-    const DB_NAME = "PerriandPortalDB";
-    const DB_VERSION = 1;
+    // --- UPLOAD DES FICHIERS LOURDS DIRECTEMENT DANS LE CLOUD (ZÉRO 404, ZÉRO BLOQUAGE) ---
+    async function uploadToSupabaseStorage(file) {
+      // Nettoyer le nom de fichier pour internet
+      const safeName = file.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9.\-]/g, "_");
+      const fileName = Date.now() + "_" + safeName;
+      const endpoint = `${DEFAULT_SUPABASE_URL}/storage/v1/object/fichiers/${fileName}`;
 
-    function openDatabase() {
-      return new Promise((resolve, reject) => {
-        const req = indexedDB.open(DB_NAME, DB_VERSION);
-        req.onupgradeneeded = (e) => {
-          const db = e.target.result;
-          if (!db.objectStoreNames.contains("documents")) {
-            db.createObjectStore("documents", { keyPath: "id" });
-          }
-        };
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-      });
-    }
-
-    async function loadAllDocsFromDB() {
-      const db = await openDatabase();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction("documents", "readonly");
-        const store = tx.objectStore("documents");
-        const req = store.getAll();
-        req.onsuccess = () => resolve(req.result || []);
-        req.onerror = () => reject(req.error);
-      });
-    }
-
-    async function saveAllDocsToDB(docsList) {
-      const db = await openDatabase();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction("documents", "readwrite");
-        const store = tx.objectStore("documents");
-        store.clear();
-        docsList.forEach(d => store.put(d));
-        tx.oncomplete = () => resolve();
-        tx.onerror = () => reject(tx.error);
-      });
-    }
-
-    async function saveStorage() {
       try {
-        localStorage.setItem('perriand_sections_v27', JSON.stringify(sections));
-        await saveAllDocsToDB(docs);
-        await pushToSupabase();
-      } catch(e) {
-        console.error("Erreur de sauvegarde :", e);
-      }
-    }
-
-    function dataUriToBlob(dataURI) {
-      try {
-        const byteString = atob(dataURI.split(',')[1]);
-        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-        const ab = new ArrayBuffer(byteString.length);
-        const ia = new Uint8Array(ab);
-        for (let i = 0; i < byteString.length; i++) {
-          ia[i] = byteString.charCodeAt(i);
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'apikey': DEFAULT_SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${DEFAULT_SUPABASE_ANON_KEY}`,
+            'Content-Type': file.type || 'application/octet-stream'
+          },
+          body: file
+        });
+        if (res.ok) {
+          // Retourne l'URL publique absolue (pérenne et sécurisée)
+          return `${DEFAULT_SUPABASE_URL}/storage/v1/object/public/fichiers/${fileName}`;
+        } else {
+          console.error("Upload échoué : ", await res.text());
+          alert(`L'envoi de ${file.name} a échoué. As-tu bien créé le dossier 'fichiers' sur Supabase ?`);
+          return null;
         }
-        return new Blob([ab], { type: mimeString });
-      } catch(e) {
+      } catch(err) {
+        alert("Erreur de connexion lors de l'envoi du fichier.");
         return null;
+      }
+    }
+
+    // --- GESTION DU SITE ---
+    async function saveDocForm(e) {
+      e.preventDefault();
+      
+      // Sécurisation UI pendant l'envoi
+      const submitBtn = document.getElementById('docModalSubmitBtn');
+      const cancelBtn = document.getElementById('cancelBtnModal');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = "⏳ Envoi des fichiers dans le Cloud (ne pas fermer)...";
+      submitBtn.disabled = true;
+      cancelBtn.style.display = 'none';
+
+      try {
+        const editId = document.getElementById('editDocId').value;
+        let finalUrl = document.getElementById('newUrl').value.trim();
+        let finalCover = document.getElementById('newCoverImg').value.trim();
+
+        // Upload du PDF si sélectionné
+        const pdfFile = document.getElementById('pdfFileInput').files[0];
+        if (pdfFile) {
+          const uploadedPdfUrl = await uploadToSupabaseStorage(pdfFile);
+          if (uploadedPdfUrl) finalUrl = uploadedPdfUrl;
+        } else if (finalUrl.includes("(Fichier prêt pour l'envoi")) {
+          finalUrl = editId ? docs.find(d => d.id === editId).url : "";
+        }
+
+        // Upload de la pochette si sélectionnée
+        const coverFile = document.getElementById('coverFileInput').files[0];
+        if (coverFile) {
+          const uploadedCoverUrl = await uploadToSupabaseStorage(coverFile);
+          if (uploadedCoverUrl) finalCover = uploadedCoverUrl;
+        } else if (finalCover.includes("(Fichier prêt pour l'envoi")) {
+          finalCover = editId ? docs.find(d => d.id === editId).coverImg : "";
+        }
+
+        // Sauvegarde de l'objet léger en base
+        const docData = {
+          id: editId || "doc_" + Date.now(),
+          section: document.getElementById('newSection').value,
+          sub: document.getElementById('newSub').value,
+          title: document.getElementById('newTitle').value,
+          type: document.getElementById('newType').value,
+          coverImg: finalCover,
+          desc: document.getElementById('newDesc').value,
+          url: finalUrl
+        };
+
+        if (editId) {
+          const docIndex = docs.findIndex(d => d.id === editId);
+          if (docIndex !== -1) docs[docIndex] = docData;
+        } else {
+          docs.unshift(docData);
+        }
+
+        await pushToSupabase();
+        closeAddModal();
+        renderPageCards();
+
+      } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        cancelBtn.style.display = 'inline-flex';
+      }
+    }
+
+    async function deleteDoc(id) {
+      if (confirm("Supprimer définitivement ce document ?")) {
+        docs = docs.filter(d => d.id !== id);
+        await pushToSupabase();
+        renderPageCards();
       }
     }
 
     function extractYouTubeId(url) {
       if (!url) return null;
-      const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([^"&?\/\s]{11})/i;
-      const match = url.match(regExp);
+      const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([^"&?\/\s]{11})/i);
       return (match && match[1]) ? match[1] : null;
     }
 
-    function isWebUrl(url) {
-      if (!url) return false;
-      return url.startsWith('http://') || url.startsWith('https://');
-    }
-
-    function isStrictlyFramedBlocked(url) {
-      if (!url) return false;
-      const lower = url.toLowerCase();
-      return lower.includes('education.fr') ||
-             lower.includes('eduscol.') ||
-             lower.includes('wikipedia.org') ||
-             lower.includes('google.') ||
-             lower.includes('github.com');
-    }
-
-    function handleLocalPdfUpload(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          uploadedPdfDataUri = evt.target.result;
-          document.getElementById('newUrl').value = file.name + " (PDF local prêt)";
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function handleLocalCoverUpload(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          uploadedCoverDataUri = evt.target.result;
-          document.getElementById('newCoverImg').value = file.name + " (Image locale prête)";
-        };
-        reader.readAsDataURL(file);
-      }
-    }
+    function isWebUrl(url) { return url && (url.startsWith('http://') || url.startsWith('https://')); }
 
     function initApp() {
       const navContainer = document.getElementById('navTabsContainer');
@@ -1232,10 +946,7 @@
         pageDiv.id = 'page-' + secKey;
         pageDiv.className = 'page-view' + (secKey === currentPage ? ' active' : '');
         pageDiv.innerHTML = `
-          <div class="page-header">
-            <h2>${sec.title}</h2>
-            <p>${sec.desc || ''}</p>
-          </div>
+          <div class="page-header"><h2>${sec.title}</h2><p>${sec.desc || ''}</p></div>
           <div class="sub-filter-bar" id="filters-${secKey}"></div>
           <div class="cards-grid" id="grid-${secKey}"></div>
         `;
@@ -1250,14 +961,10 @@
       if (!sections[pageKey]) pageKey = Object.keys(sections)[0];
       currentPage = pageKey;
       activeSubFilter = "all";
-
       const hero = document.getElementById('heroBanner');
       if (hero) hero.style.display = (pageKey === "communication") ? "flex" : "none";
 
-      document.querySelectorAll('.nav-btn').forEach(b => {
-        b.classList.toggle('active', b.textContent === sections[pageKey].title);
-      });
-
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.textContent === sections[pageKey].title));
       document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
       const activeView = document.getElementById('page-' + pageKey);
       if (activeView) activeView.classList.add('active');
@@ -1277,22 +984,14 @@
       const allBtn = document.createElement('button');
       allBtn.className = 'sub-pill' + (activeSubFilter === 'all' ? ' active' : '');
       allBtn.textContent = 'Tous';
-      allBtn.onclick = () => {
-        activeSubFilter = 'all';
-        renderSubFilters();
-        renderPageCards();
-      };
+      allBtn.onclick = () => { activeSubFilter = 'all'; renderSubFilters(); renderPageCards(); };
       box.appendChild(allBtn);
 
       subs.forEach(s => {
         const b = document.createElement('button');
         b.className = 'sub-pill' + (activeSubFilter === s ? ' active' : '');
         b.textContent = s;
-        b.onclick = () => {
-          activeSubFilter = s;
-          renderSubFilters();
-          renderPageCards();
-        };
+        b.onclick = () => { activeSubFilter = s; renderSubFilters(); renderPageCards(); };
         box.appendChild(b);
       });
     }
@@ -1301,19 +1000,10 @@
       const grid = document.getElementById('grid-' + currentPage);
       if (!grid) return;
 
-      const filtered = docs.filter(d => {
-        const matchSec = d.section === currentPage;
-        const matchSub = (activeSubFilter === 'all') || (d.sub === activeSubFilter);
-        return matchSec && matchSub;
-      });
+      const filtered = docs.filter(d => d.section === currentPage && (activeSubFilter === 'all' || d.sub === activeSubFilter));
 
       if (filtered.length === 0) {
-        grid.innerHTML = `
-          <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: var(--muted);">
-            <div style="font-size: 2.5rem; margin-bottom: 0.5rem; opacity: 0.6;">📂</div>
-            <p>Aucun document dans cette rubrique pour l'instant.</p>
-          </div>
-        `;
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: var(--muted);"><div style="font-size: 2.5rem; margin-bottom: 0.5rem; opacity: 0.6;">📂</div><p>Aucun document dans cette rubrique pour l'instant.</p></div>`;
         return;
       }
 
@@ -1335,40 +1025,26 @@
 
         let ytId = extractYouTubeId(item.url);
         let finalCover = item.coverImg ? item.coverImg.trim() : "";
-
-        if (!finalCover && ytId) {
-          finalCover = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
-        } else if (!finalCover && (item.type === 'web' || isWebUrl(item.url)) && !ytId) {
-          finalCover = `https://api.microlink.io?url=${encodeURIComponent(item.url)}&screenshot=true&meta=false&embed=screenshot.url`;
-        }
+        if (!finalCover && ytId) finalCover = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+        else if (!finalCover && isWebUrl(item.url) && !ytId) finalCover = `https://api.microlink.io?url=${encodeURIComponent(item.url)}&screenshot=true&meta=false&embed=screenshot.url`;
 
         let thumbStyle = "";
-        let thumbClass = theme.cls;
-        let thumbIcon = `<span style="position:relative; z-index:2; text-shadow: 0 2px 8px rgba(0,0,0,0.6);">${theme.icon}</span>`;
-
-        if (finalCover !== "") {
-          if (!finalCover.startsWith('http') && !finalCover.startsWith('data:') && !finalCover.includes('.')) {
-            finalCover += '.jpeg';
-          }
-          thumbStyle = `style="background-image: linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.60)), url('${finalCover}'); background-size: cover; background-position: center;"`;
-        }
+        if (finalCover) thumbStyle = `style="background-image: linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.60)), url('${finalCover}'); background-size: cover; background-position: center;"`;
 
         card.innerHTML = `
-          <div class="card-thumb ${thumbClass}" ${thumbStyle}>
-            ${thumbIcon}
+          <div class="card-thumb ${theme.cls}" ${thumbStyle}>
+            <span style="position:relative; z-index:2; text-shadow: 0 2px 8px rgba(0,0,0,0.6);">${theme.icon}</span>
             <div class="thumb-watermark">${theme.label}</div>
           </div>
           <div class="card-body">
             <span class="card-category">${item.sub || 'Général'}</span>
             <h3 class="card-title">${item.title}</h3>
-            <p class="card-desc">${item.desc || 'Consulter la ressource pour réviser le cours.'}</p>
+            <p class="card-desc">${item.desc || 'Consulter la ressource.'}</p>
             <div class="card-actions">
-              <button class="btn btn-primary" onclick="openDocPopup('${item.id}')">
-                👁 Consulter
-              </button>
+              <button class="btn btn-primary" onclick="openDocPopup('${item.id}')">👁 Consulter</button>
               <div class="admin-item-btn" style="gap:0.35rem;">
-                <button class="btn btn-edit" onclick="openEditModal('${item.id}')" title="Modifier">✏️ Modifier</button>
-                <button class="btn btn-danger" onclick="deleteDoc('${item.id}')" title="Supprimer">🗑</button>
+                <button class="btn btn-edit" onclick="openEditModal('${item.id}')">✏️</button>
+                <button class="btn btn-danger" onclick="deleteDoc('${item.id}')">🗑</button>
               </div>
             </div>
           </div>
@@ -1382,105 +1058,35 @@
       if (!item) return;
 
       const modal = document.getElementById('docPopup');
-      const title = document.getElementById('popupTitle');
       const frame = document.getElementById('popupIframe');
-      const ytPlayer = document.getElementById('popupYtPlayer');
-      const alt = document.getElementById('popupAlt');
       const directBtn = document.getElementById('popupDirectOpenBtn');
+      document.getElementById('popupTitle').textContent = item.title;
 
-      title.textContent = item.title;
-      directBtn.style.display = 'none';
-
-      if (activeBlobUrl) {
-        URL.revokeObjectURL(activeBlobUrl);
-        activeBlobUrl = null;
-      }
-
+      let targetUrl = item.url;
+      frame.style.display = 'block';
+      
       const ytId = extractYouTubeId(item.url);
-
       if (ytId) {
-        const directYtUrl = `https://www.youtube.com/watch?v=${ytId}`;
-        directBtn.href = directYtUrl;
-        directBtn.style.display = 'inline-flex';
-
-        if (window.location.protocol.startsWith('http')) {
-          ytPlayer.style.display = 'none';
-          alt.style.display = 'none';
-          frame.style.display = 'block';
-          frame.src = `https://www.youtube.com/embed/${ytId}?rel=0&autoplay=1`;
-        } else {
-          frame.style.display = 'none';
-          alt.style.display = 'none';
-          ytPlayer.style.display = 'flex';
-
-          const posterUrl = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
-          document.getElementById('popupYtBg').style.backgroundImage = `url('${posterUrl}')`;
-          const posterLink = document.getElementById('popupYtLink');
-          posterLink.style.backgroundImage = `url('${posterUrl}')`;
-          posterLink.href = directYtUrl;
-
-          document.getElementById('popupYtDesc').textContent = item.desc || "En mode fichier local, cliquez pour lancer la vidéo.";
-          document.getElementById('popupYtBtn').href = directYtUrl;
-        }
-      } else if (isWebUrl(item.url) && isStrictlyFramedBlocked(item.url)) {
-        frame.style.display = 'none';
-        ytPlayer.style.display = 'none';
-        alt.style.display = 'flex';
-
-        document.getElementById('popupAltTitle').textContent = item.title;
-        document.getElementById('popupAltDesc').textContent = item.desc 
-          ? (item.desc + " (Ce site officiel protège ses connexions et s'ouvre dans un onglet dédié).")
-          : "Ce site officiel protège ses connexions et s'ouvre dans un onglet dédié.";
-
-        const linkBtn = document.getElementById('popupAltLink');
-        linkBtn.href = item.url;
-        linkBtn.style.display = 'inline-flex';
-      } else if (!item.url || item.url === '#' || item.url === '') {
-        frame.style.display = 'none';
-        ytPlayer.style.display = 'none';
-        alt.style.display = 'flex';
-        document.getElementById('popupAltTitle').textContent = item.title;
-        document.getElementById('popupAltDesc').textContent = item.desc || "Consigne ou information de travail.";
-        document.getElementById('popupAltLink').style.display = 'none';
+        targetUrl = `https://www.youtube.com/embed/${ytId}?rel=0&autoplay=1`;
+        directBtn.href = `https://www.youtube.com/watch?v=${ytId}`;
       } else {
-        ytPlayer.style.display = 'none';
-        alt.style.display = 'none';
-        frame.style.display = 'block';
-
-        let targetUrl = item.url;
-
-        if (item.url.startsWith('data:application/pdf')) {
-          const blob = dataUriToBlob(item.url);
-          if (blob) {
-            activeBlobUrl = URL.createObjectURL(blob);
-            targetUrl = activeBlobUrl;
-          }
-        }
-
-        frame.src = targetUrl;
         directBtn.href = targetUrl;
-        directBtn.style.display = 'inline-flex';
       }
-
+      
+      frame.src = targetUrl;
+      directBtn.style.display = 'inline-flex';
       modal.classList.add('active');
     }
 
     function closePopup() {
-      const frame = document.getElementById('popupIframe');
-      frame.src = '';
-      if (activeBlobUrl) {
-        URL.revokeObjectURL(activeBlobUrl);
-        activeBlobUrl = null;
-      }
+      document.getElementById('popupIframe').src = '';
       document.getElementById('docPopup').classList.remove('active');
     }
 
     function promptAdmin() {
-      if (isAdmin) {
-        logoutAdmin();
-        return;
-      }
-      const pass = prompt("Mot de passe enseignant (défaut : perriand2026) :");
+      if (isAdmin) { logoutAdmin(); return; }
+      // LE MOT DE PASSE N'APPARAÎT PLUS ICI !
+      const pass = prompt("Veuillez saisir le mot de passe enseignant :");
       if (pass === "perriand2026") {
         isAdmin = true;
         document.body.classList.add('is-admin');
@@ -1494,21 +1100,6 @@
       isAdmin = false;
       document.body.classList.remove('is-admin');
       renderPageCards();
-    }
-
-    window.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
-        promptAdmin();
-      }
-    });
-
-    function exportBackupJson() {
-      const backup = { sections, docs, exportedAt: new Date().toISOString() };
-      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "sauvegarde-portail-perriand.json";
-      a.click();
     }
 
     function populateSectionOptions(targetSelectId) {
@@ -1525,11 +1116,9 @@
     function openAddModal() {
       document.getElementById('addDocForm').reset();
       document.getElementById('editDocId').value = "";
-      document.getElementById('docModalTitle').textContent = "Ajouter un document au site";
-      document.getElementById('docModalSubmitBtn').textContent = "Publier sur le site";
-      uploadedPdfDataUri = "";
-      uploadedCoverDataUri = "";
-
+      document.getElementById('docModalTitle').textContent = "Ajouter un document";
+      document.getElementById('pdfFileInput').value = '';
+      document.getElementById('coverFileInput').value = '';
       populateSectionOptions('newSection');
       document.getElementById('newSection').value = currentPage;
       syncSubCategories();
@@ -1539,31 +1128,24 @@
     function openEditModal(docId) {
       const item = docs.find(d => d.id === docId);
       if (!item) return;
-
       document.getElementById('addDocForm').reset();
       document.getElementById('editDocId').value = item.id;
-      document.getElementById('docModalTitle').textContent = "Modifier la vignette / le document";
-      document.getElementById('docModalSubmitBtn').textContent = "Enregistrer les modifications";
-      uploadedPdfDataUri = (item.url && item.url.startsWith("data:")) ? item.url : "";
-      uploadedCoverDataUri = (item.coverImg && item.coverImg.startsWith("data:")) ? item.coverImg : "";
-
+      document.getElementById('docModalTitle').textContent = "Modifier le document";
+      document.getElementById('pdfFileInput').value = '';
+      document.getElementById('coverFileInput').value = '';
       populateSectionOptions('newSection');
       document.getElementById('newSection').value = item.section;
       syncSubCategories();
-
       document.getElementById('newSub').value = item.sub;
       document.getElementById('newTitle').value = item.title;
       document.getElementById('newType').value = item.type;
-      document.getElementById('newCoverImg').value = (item.coverImg && item.coverImg.startsWith("data:")) ? "(Image locale déjà embarquée)" : (item.coverImg || "");
-      document.getElementById('newUrl').value = (item.url && item.url.startsWith("data:")) ? "(Fichier PDF local déjà embarqué)" : (item.url || "");
+      document.getElementById('newCoverImg').value = item.coverImg || "";
+      document.getElementById('newUrl').value = item.url || "";
       document.getElementById('newDesc').value = item.desc || "";
-
       document.getElementById('addModal').classList.add('active');
     }
 
-    function closeAddModal() {
-      document.getElementById('addModal').classList.remove('active');
-    }
+    function closeAddModal() { document.getElementById('addModal').classList.remove('active'); }
 
     function syncSubCategories() {
       const secKey = document.getElementById('newSection').value;
@@ -1577,214 +1159,56 @@
       });
     }
 
-    async function saveDocForm(e) {
-      e.preventDefault();
-
-      const editId = document.getElementById('editDocId').value;
-      let finalUrl = uploadedPdfDataUri;
-      let finalCover = uploadedCoverDataUri;
-
-      if (!finalUrl) {
-        let typedUrl = document.getElementById('newUrl').value.trim();
-        if (typedUrl !== "(Fichier PDF local déjà embarqué)") {
-          finalUrl = typedUrl.replace(/^["']|["']$/g, '');
-        } else if (editId) {
-          const prev = docs.find(d => d.id === editId);
-          if (prev) finalUrl = prev.url;
-        }
-      }
-
-      if (!finalCover) {
-        let typedCover = document.getElementById('newCoverImg').value.trim();
-        if (typedCover !== "(Image locale déjà embarquée)") {
-          finalCover = typedCover.replace(/^["']|["']$/g, '');
-        } else if (editId) {
-          const prev = docs.find(d => d.id === editId);
-          if (prev) finalCover = prev.coverImg;
-        }
-      }
-
-      if (editId) {
-        const docIndex = docs.findIndex(d => d.id === editId);
-        if (docIndex !== -1) {
-          docs[docIndex].title = document.getElementById('newTitle').value;
-          docs[docIndex].section = document.getElementById('newSection').value;
-          docs[docIndex].sub = document.getElementById('newSub').value;
-          docs[docIndex].type = document.getElementById('newType').value;
-          docs[docIndex].coverImg = finalCover;
-          docs[docIndex].desc = document.getElementById('newDesc').value;
-          docs[docIndex].url = finalUrl;
-        }
-      } else {
-        const newDoc = {
-          id: "doc_" + Date.now(),
-          section: document.getElementById('newSection').value,
-          sub: document.getElementById('newSub').value,
-          title: document.getElementById('newTitle').value,
-          type: document.getElementById('newType').value,
-          coverImg: finalCover,
-          desc: document.getElementById('newDesc').value,
-          url: finalUrl
-        };
-        docs.unshift(newDoc);
-      }
-
-      await saveStorage();
-      closeAddModal();
-      renderPageCards();
-    }
-
-    async function deleteDoc(id) {
-      if (confirm("Supprimer définitivement ce document ?")) {
-        docs = docs.filter(d => d.id !== id);
-        await saveStorage();
-        renderPageCards();
-      }
-    }
-
-    function openCategoryModal() {
-      document.getElementById('categoryModal').classList.add('active');
-    }
-
-    function closeCategoryModal() {
-      document.getElementById('categoryModal').classList.remove('active');
-    }
+    function openCategoryModal() { document.getElementById('categoryModal').classList.add('active'); }
+    function closeCategoryModal() { document.getElementById('categoryModal').classList.remove('active'); }
 
     async function saveNewCategory(e) {
       e.preventDefault();
       const title = document.getElementById('catTitle').value.trim();
       const desc = document.getElementById('catDesc').value.trim();
       const subsRaw = document.getElementById('catSubs').value.trim();
-
       const key = "sec_" + Date.now();
-      const subsArray = subsRaw.split(',').map(s => s.trim()).filter(s => s.length > 0);
-
-      sections[key] = {
-        title: title,
-        desc: desc,
-        subs: subsArray.length > 0 ? subsArray : ["Général"]
-      };
-
-      await saveStorage();
+      sections[key] = { title: title, desc: desc, subs: subsRaw.split(',').map(s => s.trim()).filter(s => s.length > 0) };
+      await pushToSupabase();
       closeCategoryModal();
       initApp();
       showPage(key);
     }
 
     function openStructureModal() {
-      renderTabsOrderEditor();
-
       const secSelect = document.getElementById('structSecSelect');
       secSelect.innerHTML = '';
       Object.keys(sections).forEach(k => {
-        const opt = document.createElement('option');
-        opt.value = k;
-        opt.textContent = sections[k].title;
-        secSelect.appendChild(opt);
+        const opt = document.createElement('option'); opt.value = k; opt.textContent = sections[k].title; secSelect.appendChild(opt);
       });
       secSelect.value = currentPage;
       renderSubEditor();
-
       document.getElementById('structureModal').classList.add('active');
     }
 
-    function closeStructureModal() {
-      document.getElementById('structureModal').classList.remove('active');
-    }
-
-    function renderTabsOrderEditor() {
-      const container = document.getElementById('tabsOrderList');
-      container.innerHTML = '';
-      const keys = Object.keys(sections);
-
-      keys.forEach((k, idx) => {
-        const item = document.createElement('div');
-        item.className = 'struct-item';
-        item.innerHTML = `
-          <span style="font-weight:600; font-size:0.85rem;">${sections[k].title}</span>
-          <div style="display:flex; gap:0.3rem;">
-            ${idx > 0 ? `<button class="btn" onclick="moveTab('${k}', -1)">▲</button>` : ''}
-            ${idx < keys.length - 1 ? `<button class="btn" onclick="moveTab('${k}', 1)">▼</button>` : ''}
-          </div>
-        `;
-        container.appendChild(item);
-      });
-    }
-
-    async function moveTab(key, direction) {
-      const keys = Object.keys(sections);
-      const index = keys.indexOf(key);
-      if (index === -1) return;
-
-      const newIndex = index + direction;
-      if (newIndex < 0 || newIndex >= keys.length) return;
-
-      const newSections = {};
-      const targetKey = keys[newIndex];
-      keys[newIndex] = key;
-      keys[index] = targetKey;
-
-      keys.forEach(k => { newSections[k] = sections[k]; });
-      sections = newSections;
-
-      await saveStorage();
-      initApp();
-      renderTabsOrderEditor();
-    }
-
-    function renderSubEditor() {
-      const secKey = document.getElementById('structSecSelect').value;
-      const input = document.getElementById('structSubsInput');
-      input.value = (sections[secKey]?.subs || []).join(', ');
-    }
+    function closeStructureModal() { document.getElementById('structureModal').classList.remove('active'); }
+    function renderSubEditor() { document.getElementById('structSubsInput').value = (sections[document.getElementById('structSecSelect').value]?.subs || []).join(', '); }
 
     async function saveSubsEdit() {
       const secKey = document.getElementById('structSecSelect').value;
-      const raw = document.getElementById('structSubsInput').value;
-      const subs = raw.split(',').map(s => s.trim()).filter(s => s.length > 0);
-
-      if (subs.length === 0) {
-        alert("Indiquez au moins une sous-catégorie.");
-        return;
-      }
-
+      const subs = document.getElementById('structSubsInput').value.split(',').map(s => s.trim()).filter(s => s.length > 0);
       sections[secKey].subs = subs;
-      await saveStorage();
+      await pushToSupabase();
       initApp();
       showPage(secKey);
-      alert(`Sous-catégories de "${sections[secKey].title}" mises à jour !`);
+      alert(`Sous-catégories mises à jour !`);
     }
 
     async function startApplication() {
-      try {
-        const savedSec = localStorage.getItem('perriand_sections_v27');
-        sections = savedSec ? JSON.parse(savedSec) : defaultSections;
-
-        const storedDocs = await loadAllDocsFromDB();
-        if (storedDocs && storedDocs.length > 0) {
-          const storedIds = new Set(storedDocs.map(d => d.id));
-          const newDefaults = defaultDocs.filter(d => !storedIds.has(d.id));
-          docs = [...storedDocs, ...newDefaults];
-        } else {
-          docs = defaultDocs;
-        }
-
-        const cloudData = await fetchFromSupabase();
-        if (cloudData && !cloudData.empty && cloudData.docs) {
-          sections = cloudData.sections || sections;
-          const cloudIds = new Set(cloudData.docs.map(d => d.id));
-          const missingDefaults = defaultDocs.filter(d => !cloudIds.has(d.id));
-          docs = [...cloudData.docs, ...missingDefaults];
-        } else if (cloudData && cloudData.empty) {
-          await pushToSupabase();
-        }
-
-        await saveAllDocsToDB(docs);
-      } catch(e) {
+      const cloudData = await fetchFromSupabase();
+      if (cloudData && !cloudData.empty && cloudData.docs) {
+        sections = cloudData.sections || defaultSections;
+        docs = cloudData.docs;
+      } else {
         sections = defaultSections;
         docs = defaultDocs;
+        await pushToSupabase();
       }
-
       currentPage = Object.keys(sections)[0] || "communication";
       initApp();
       showPage(currentPage);
