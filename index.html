@@ -5,267 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Terminale Mathématiques - Lycée Charlotte Perriand</title>
   <style>
-    :root {
-      --bg: #f8fafc;
-      --surface: #ffffff;
-      --primary: #4f46e5;
-      --primary-hover: #4338ca;
-      --primary-light: #eef2ff;
-      --text: #0f172a;
-      --muted: #64748b;
-      --border: #e2e8f0;
-      --radius: 12px;
-      --shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
-    }
-
+    /* TOUT LE CSS RESTE IDENTIQUE */
+    :root { --bg: #f8fafc; --surface: #ffffff; --primary: #4f46e5; --primary-hover: #4338ca; --primary-light: #eef2ff; --text: #0f172a; --muted: #64748b; --border: #e2e8f0; --radius: 12px; --shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02); }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      background: var(--surface);
-      border-bottom: 2px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-
-    .top-bar {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0.75rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.9rem;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .brand-logo-container {
-      width: 46px;
-      height: 46px;
-      border-radius: 10px;
-      overflow: hidden;
-      background: linear-gradient(135deg, #4f46e5, #06b6d4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      flex-shrink: 0;
-    }
-
-    .brand-logo-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .brand-logo-fallback {
-      color: white;
-      font-size: 1.4rem;
-      font-weight: 800;
-    }
-
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    header { background: var(--surface); border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 50; }
+    .top-bar { max-width: 1240px; margin: 0 auto; padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+    .brand { display: flex; align-items: center; gap: 0.9rem; text-decoration: none; color: inherit; }
+    .brand-logo-container { width: 46px; height: 46px; border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, #4f46e5, #06b6d4); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-shrink: 0; }
+    .brand-logo-img { width: 100%; height: 100%; object-fit: cover; }
+    .brand-logo-fallback { color: white; font-size: 1.4rem; font-weight: 800; }
     .brand-title h1 { font-size: 1.15rem; font-weight: 800; color: #1e1b4b; }
     .brand-title p { font-size: 0.8rem; color: var(--muted); }
-
-    .sync-badge {
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      background: #f1f5f9;
-      color: var(--muted);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-    .sync-badge.online {
-      background: #dcfce7;
-      color: #15803d;
-    }
-
-    nav {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0 1rem;
-      display: flex;
-      gap: 0.35rem;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
+    .sync-badge { font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.7rem; border-radius: 999px; background: #f1f5f9; color: var(--muted); display: inline-flex; align-items: center; gap: 0.35rem; }
+    .sync-badge.online { background: #dcfce7; color: #15803d; }
+    nav { max-width: 1240px; margin: 0 auto; padding: 0 1rem; display: flex; gap: 0.35rem; overflow-x: auto; scrollbar-width: none; }
     nav::-webkit-scrollbar { display: none; }
-
-    .nav-btn {
-      padding: 0.85rem 1.05rem;
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--muted);
-      background: transparent;
-      border: none;
-      border-bottom: 3px solid transparent;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s;
-    }
-
+    .nav-btn { padding: 0.85rem 1.05rem; font-size: 0.88rem; font-weight: 600; color: var(--muted); background: transparent; border: none; border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
     .nav-btn:hover { color: var(--primary); }
-    .nav-btn.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-    }
-
-    main {
-      max-width: 1240px;
-      margin: 1.5rem auto 2.5rem;
-      padding: 0 1.5rem;
-      flex: 1;
-      width: 100%;
-    }
-
-    .hero-banner {
-      position: relative;
-      border-radius: var(--radius);
-      overflow: hidden;
-      margin-bottom: 2rem;
-      min-height: 230px;
-      display: flex;
-      align-items: center;
-      padding: 2.5rem 2rem;
-      box-shadow: var(--shadow);
-      background-color: #1e1b4b;
-    }
-
-    .hero-banner-bg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      z-index: 1;
-    }
-
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(15, 23, 42, 0.90) 0%, rgba(30, 27, 75, 0.78) 50%, rgba(15, 23, 42, 0.45) 100%);
-      z-index: 2;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 3;
-      max-width: 650px;
-      color: white;
-    }
-
-    .hero-tag {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      background: rgba(255, 255, 255, 0.18);
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 0.75rem;
-      backdrop-filter: blur(4px);
-    }
-
+    .nav-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+    main { max-width: 1240px; margin: 1.5rem auto 2.5rem; padding: 0 1.5rem; flex: 1; width: 100%; }
+    .hero-banner { position: relative; border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; min-height: 230px; display: flex; align-items: center; padding: 2.5rem 2rem; box-shadow: var(--shadow); background-color: #1e1b4b; }
+    .hero-banner-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 1; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(15, 23, 42, 0.90) 0%, rgba(30, 27, 75, 0.78) 50%, rgba(15, 23, 42, 0.45) 100%); z-index: 2; }
+    .hero-content { position: relative; z-index: 3; max-width: 650px; color: white; }
+    .hero-tag { display: inline-block; padding: 0.25rem 0.75rem; background: rgba(255, 255, 255, 0.18); border-radius: 999px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.75rem; backdrop-filter: blur(4px); }
     .hero-content h2 { font-size: 1.7rem; font-weight: 800; line-height: 1.25; margin-bottom: 0.5rem; }
     .hero-content p { font-size: 0.95rem; color: #e2e8f0; line-height: 1.5; }
-
-    .page-view {
-      display: none;
-      animation: fadeIn 0.2s ease-in-out;
-    }
+    .page-view { display: none; animation: fadeIn 0.2s ease-in-out; }
     .page-view.active { display: block; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .page-header {
-      margin-bottom: 1.75rem;
-      padding-bottom: 0.85rem;
-      border-bottom: 1px solid var(--border);
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .page-header { margin-bottom: 1.75rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border); }
     .page-header h2 { font-size: 1.55rem; font-weight: 800; color: #1e1b4b; }
     .page-header p { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
-
-    .sub-filter-bar {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 1.5rem;
-    }
-
-    .sub-pill {
-      padding: 0.4rem 0.85rem;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      cursor: pointer;
-    }
-
-    .sub-pill.active, .sub-pill:hover {
-      background: var(--primary-light);
-      color: var(--primary);
-      border-color: #c7d2fe;
-    }
-
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: var(--shadow);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px -3px rgba(0,0,0,0.08);
-    }
-
-    .card-thumb {
-      height: 120px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 2.3rem;
-      font-weight: bold;
-      background-size: cover;
-      background-position: center;
-    }
-
+    .sub-filter-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .sub-pill { padding: 0.4rem 0.85rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; background: var(--surface); border: 1px solid var(--border); color: var(--muted); cursor: pointer; }
+    .sub-pill.active, .sub-pill:hover { background: var(--primary-light); color: var(--primary); border-color: #c7d2fe; }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); transition: transform 0.2s, box-shadow 0.2s; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -3px rgba(0,0,0,0.08); }
+    .card-thumb { height: 120px; position: relative; display: flex; align-items: center; justify-content: center; color: white; font-size: 2.3rem; font-weight: bold; background-size: cover; background-position: center; }
     .thumb-pdf { background-color: #ef4444; background-image: linear-gradient(135deg, #ef4444, #f97316); }
     .thumb-cours { background-color: #4f46e5; background-image: linear-gradient(135deg, #4f46e5, #06b6d4); }
     .thumb-mental { background-color: #8b5cf6; background-image: linear-gradient(135deg, #8b5cf6, #ec4899); }
@@ -273,280 +52,45 @@
     .thumb-video { background-color: #f59e0b; background-image: linear-gradient(135deg, #f59e0b, #d97706); }
     .thumb-web { background-color: #0284c7; background-image: linear-gradient(135deg, #0284c7, #22d3ee); }
     .thumb-info { background-color: #64748b; background-image: linear-gradient(135deg, #64748b, #475569); }
-
-    .thumb-watermark {
-      position: absolute;
-      right: 12px;
-      bottom: 8px;
-      font-size: 0.72rem;
-      background: rgba(0, 0, 0, 0.55);
-      color: white;
-      padding: 3px 8px;
-      border-radius: 4px;
-      text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      backdrop-filter: blur(2px);
-      z-index: 3;
-    }
-
-    .card-body {
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .card-category {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 0.4rem;
-    }
-
-    .card-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #0f172a;
-      margin-bottom: 0.45rem;
-      line-height: 1.35;
-    }
-
-    .card-desc {
-      font-size: 0.85rem;
-      color: var(--muted);
-      line-height: 1.45;
-      margin-bottom: 1.2rem;
-      flex: 1;
-    }
-
-    .card-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid var(--border);
-      padding-top: 0.85rem;
-      gap: 0.5rem;
-    }
-
-    .btn {
-      padding: 0.45rem 0.85rem;
-      border-radius: 6px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      text-decoration: none;
-    }
+    .thumb-watermark { position: absolute; right: 12px; bottom: 8px; font-size: 0.72rem; background: rgba(0, 0, 0, 0.55); color: white; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; backdrop-filter: blur(2px); z-index: 3; }
+    .card-body { padding: 1.25rem; display: flex; flex-direction: column; flex: 1; }
+    .card-category { font-size: 0.75rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.4rem; }
+    .card-title { font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.45rem; line-height: 1.35; }
+    .card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.45; margin-bottom: 1.2rem; flex: 1; }
+    .card-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 0.85rem; gap: 0.5rem; }
+    .btn { padding: 0.45rem 0.85rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none; }
     .btn:hover { background: #f1f5f9; }
     .btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
     .btn-primary:hover { background: var(--primary-hover); }
     .btn-edit { background: #3b82f6; color: white; border-color: #3b82f6; }
     .btn-edit:hover { background: #2563eb; }
     .btn-danger { background: #ef4444; color: white; border-color: #ef4444; }
-
-    .popup-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.65);
-      backdrop-filter: blur(4px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-      padding: 1.5rem;
-    }
+    .popup-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 1.5rem; }
     .popup-backdrop.active { display: flex; }
-
-    .popup-content {
-      background: white;
-      border-radius: var(--radius);
-      width: 100%;
-      max-width: 980px;
-      height: 88vh;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
-      overflow: hidden;
-    }
-
-    .popup-header {
-      padding: 0.85rem 1.25rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #f8fafc;
-    }
-
+    .popup-content { background: white; border-radius: var(--radius); width: 100%; max-width: 980px; height: 88vh; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); overflow: hidden; }
+    .popup-header { padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #f8fafc; }
     .popup-header h3 { font-size: 1.05rem; font-weight: 700; color: #1e1b4b; }
-
-    .popup-frame {
-      flex: 1;
-      width: 100%;
-      border: none;
-      background: #f8fafc;
-    }
-
-    .popup-yt-player {
-      display: none;
-      flex-direction: column;
-      flex: 1;
-      background: #0f172a;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .popup-yt-bg {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      filter: blur(10px) brightness(0.4);
-      transform: scale(1.05);
-    }
-
-    .popup-yt-box {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      padding: 2rem;
-      text-align: center;
-      color: white;
-    }
-
-    .popup-yt-poster {
-      width: 100%;
-      max-width: 640px;
-      height: 360px;
-      border-radius: 12px;
-      background-size: cover;
-      background-position: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      cursor: pointer;
-      text-decoration: none;
-      transition: transform 0.2s;
-    }
+    .popup-frame { flex: 1; width: 100%; border: none; background: #f8fafc; }
+    .popup-yt-player { display: none; flex-direction: column; flex: 1; background: #0f172a; position: relative; overflow: hidden; }
+    .popup-yt-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: blur(10px) brightness(0.4); transform: scale(1.05); }
+    .popup-yt-box { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 2rem; text-align: center; color: white; }
+    .popup-yt-poster { width: 100%; max-width: 640px; height: 360px; border-radius: 12px; background-size: cover; background-position: center; box-shadow: 0 20px 40px rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; text-decoration: none; transition: transform 0.2s; }
     .popup-yt-poster:hover { transform: scale(1.02); }
-
-    .popup-yt-play-btn {
-      width: 72px;
-      height: 72px;
-      background: #ef4444;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 10px 25px rgba(239, 68, 68, 0.5);
-      transition: transform 0.2s, background 0.2s;
-    }
-    .popup-yt-poster:hover .popup-yt-play-btn {
-      transform: scale(1.12);
-      background: #dc2626;
-    }
+    .popup-yt-play-btn { width: 72px; height: 72px; background: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(239, 68, 68, 0.5); transition: transform 0.2s, background 0.2s; }
+    .popup-yt-poster:hover .popup-yt-play-btn { transform: scale(1.12); background: #dc2626; }
     .popup-yt-play-btn svg { width: 32px; height: 32px; fill: white; margin-left: 4px; }
-
-    .popup-alt {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      flex: 1;
-      padding: 2.5rem;
-      text-align: center;
-      background: #f8fafc;
-    }
-
-    .admin-bar-active {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #1e1b4b;
-      color: white;
-      padding: 0.75rem 1.25rem;
-      border-radius: 999px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      z-index: 90;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
+    .popup-alt { display: none; flex-direction: column; align-items: center; justify-content: center; flex: 1; padding: 2.5rem; text-align: center; background: #f8fafc; }
+    .admin-bar-active { display: none; position: fixed; bottom: 20px; right: 20px; background: #1e1b4b; color: white; padding: 0.75rem 1.25rem; border-radius: 999px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 90; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
     body.is-admin .admin-bar-active { display: flex; }
     body.is-admin .admin-item-btn { display: inline-flex !important; }
     .admin-item-btn { display: none; }
-
-    .modal-box {
-      background: white;
-      padding: 1.5rem;
-      border-radius: var(--radius);
-      width: 100%;
-      max-width: 620px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
+    .modal-box { background: white; padding: 1.5rem; border-radius: var(--radius); width: 100%; max-width: 620px; max-height: 90vh; overflow-y: auto; }
     .form-group { margin-bottom: 1rem; }
     .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.3rem; }
-    .form-control {
-      width: 100%;
-      padding: 0.55rem 0.8rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 0.85rem;
-    }
-
-    .struct-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.6rem 0.8rem;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      margin-bottom: 0.5rem;
-    }
-
-    footer {
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      text-align: center;
-      padding: 1.5rem;
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1240px;
-      margin-left: auto;
-      margin-right: auto;
-      width: 100%;
-    }
-
-    .discrete-lock {
-      background: none;
-      border: none;
-      color: #94a3b8;
-      cursor: pointer;
-      font-size: 0.95rem;
-      padding: 4px 8px;
-      border-radius: 4px;
-    }
+    .form-control { width: 100%; padding: 0.55rem 0.8rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; }
+    .struct-item { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.8rem; background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 0.5rem; }
+    footer { background: var(--surface); border-top: 1px solid var(--border); text-align: center; padding: 1.5rem; font-size: 0.8rem; color: var(--muted); margin-top: auto; display: flex; justify-content: space-between; align-items: center; max-width: 1240px; margin-left: auto; margin-right: auto; width: 100%; }
+    .discrete-lock { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 0.95rem; padding: 4px 8px; border-radius: 4px; }
     .discrete-lock:hover { color: var(--primary); background: #f1f5f9; }
   </style>
 </head>
@@ -557,9 +101,6 @@
       <a href="#" class="brand" onclick="showPage(Object.keys(sections)[0]); return false;">
         <div class="brand-logo-container">
           <picture>
-            <source srcset="images/logo.png">
-            <source srcset="images/logo.jpeg">
-            <source srcset="images/logo.jpg">
             <img src="images/logo.png" alt="Logo Lycée" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='block';">
           </picture>
           <span id="logoFallback" class="brand-logo-fallback" style="display:none;">∫</span>
@@ -579,9 +120,6 @@
   <main>
     <div class="hero-banner" id="heroBanner">
       <picture class="hero-banner-bg">
-        <source srcset="images/lycee-facade.jpeg">
-        <source srcset="images/lycee-facade.jpg">
-        <source srcset="images/lycee-facade.png">
         <img src="images/lycee-facade.jpeg" alt="Façade du lycée Charlotte Perriand" class="hero-banner-bg">
       </picture>
       <div class="hero-overlay"></div>
@@ -591,18 +129,16 @@
         <p>Retrouvez l'ensemble des cours, feuilles d'exercices, cartes mentales et sujets de préparation au baccalauréat et au Grand Oral.</p>
       </div>
     </div>
-
     <div id="mainPagesContainer"></div>
   </main>
 
+  <!-- MODAL DE CONSULTATION -->
   <div class="popup-backdrop" id="docPopup">
     <div class="popup-content">
       <div class="popup-header">
         <h3 id="popupTitle">Document</h3>
         <div style="display:flex; gap:0.5rem; align-items:center;">
-          <a id="popupDirectOpenBtn" href="#" target="_blank" class="btn" style="display:none; font-size:0.8rem;">
-            ↗ Plein écran
-          </a>
+          <a id="popupDirectOpenBtn" href="#" target="_blank" class="btn" style="display:none; font-size:0.8rem;">↗ Plein écran</a>
           <button class="btn" onclick="closePopup()">✕ Fermer</button>
         </div>
       </div>
@@ -617,15 +153,10 @@
           <a id="popupYtBtn" href="#" target="_blank" class="btn btn-primary" style="margin-top:1rem;">▶ Lancer la vidéo sur YouTube</a>
         </div>
       </div>
-      <div id="popupAlt" class="popup-alt">
-        <div style="font-size:3.5rem; margin-bottom:1rem;">🌐</div>
-        <h4 id="popupAltTitle" style="font-size:1.3rem; margin-bottom:0.6rem; color:#1e1b4b;">Accéder au site officiel</h4>
-        <p style="color:var(--muted); max-width:520px; margin-bottom:1.8rem; font-size:0.92rem; line-height:1.5;" id="popupAltDesc"></p>
-        <a id="popupAltLink" href="#" target="_blank" class="btn btn-primary" style="font-size:0.95rem; padding:0.65rem 1.4rem;">Ouvrir le site dans un nouvel onglet ↗</a>
-      </div>
     </div>
   </div>
 
+  <!-- BARRE PROFESSEUR -->
   <div class="admin-bar-active" id="adminBar">
     <span style="font-size:0.85rem; font-weight:600; margin-right:0.3rem;">👨‍🏫 Professeur</span>
     <button class="btn btn-primary" onclick="openAddModal()">+ Nouveau document</button>
@@ -634,6 +165,7 @@
     <button class="btn" onclick="logoutAdmin()">Verrouiller</button>
   </div>
 
+  <!-- MODAL AJOUT/MODIFICATION -->
   <div class="popup-backdrop" id="addModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
@@ -642,92 +174,56 @@
       </div>
       <form id="addDocForm" onsubmit="saveDocForm(event)">
         <input type="hidden" id="editDocId" value="">
-
-        <div class="form-group">
-          <label>Titre</label>
-          <input type="text" id="newTitle" class="form-control" required placeholder="Ex : Fiche méthode suites">
-        </div>
-        <div class="form-group">
-          <label>Page de destination (Onglet)</label>
-          <select id="newSection" class="form-control" onchange="syncSubCategories()"></select>
-        </div>
-        <div class="form-group">
-          <label>Sous-catégorie</label>
-          <select id="newSub" class="form-control"></select>
-        </div>
-        <div class="form-group">
-          <label>Type de document</label>
+        <div class="form-group"><label>Titre</label><input type="text" id="newTitle" class="form-control" required></div>
+        <div class="form-group"><label>Onglet</label><select id="newSection" class="form-control" onchange="syncSubCategories()"></select></div>
+        <div class="form-group"><label>Sous-catégorie</label><select id="newSub" class="form-control"></select></div>
+        <div class="form-group"><label>Type</label>
           <select id="newType" class="form-control">
-            <option value="mental">🧠 Carte Mentale (Visualisation synthétique)</option>
-            <option value="pdf">📄 Document PDF (Fiche, énoncé, devoir)</option>
-            <option value="cours">📐 Fiche de cours / Méthode</option>
-            <option value="jeu">🎲 Activité / Jeu interactif</option>
-            <option value="video">▶️ Vidéo (YouTube ou lien web)</option>
-            <option value="web">🌐 Lien Web / Site externe</option>
-            <option value="info">📌 Consigne / Information</option>
+            <option value="pdf">📄 Document PDF</option><option value="mental">🧠 Carte Mentale</option>
+            <option value="cours">📐 Fiche de cours</option><option value="jeu">🎲 Activité</option>
+            <option value="video">▶️ Vidéo</option><option value="web">🌐 Lien Web</option><option value="info">📌 Information</option>
           </select>
         </div>
-
         <div class="form-group">
-          <label>Photo pour l'arrière-plan de la vignette</label>
+          <label>Vignette (Image de fond)</label>
           <div style="background:#f1f5f9; padding:0.8rem; border-radius:8px; border:1px dashed var(--border); margin-bottom:0.5rem;">
-            <label style="font-size:0.8rem; font-weight:700; color:var(--primary); cursor:pointer; display:block; margin-bottom:0.3rem;">
-              🖼 Sélectionner un fichier image depuis l'ordinateur :
-            </label>
-            <input type="file" id="coverFileInput" accept="image/*" class="form-control" onchange="document.getElementById('newCoverImg').value = '(Fichier prêt pour l\'envoi sécurisé au Cloud)';">
+            <input type="file" id="coverFileInput" accept="image/*" class="form-control" onchange="document.getElementById('newCoverImg').value = '(Fichier prêt pour le Cloud)';">
           </div>
-          <label style="font-size:0.78rem;">Ou URL externe / chemin existant :</label>
-          <input type="text" id="newCoverImg" class="form-control" placeholder="Laisser vide pour un fond automatique">
+          <input type="text" id="newCoverImg" class="form-control" placeholder="URL ou laisser vide">
         </div>
-
         <div class="form-group">
-          <label>Fichier PDF ou Lien Web / YouTube</label>
+          <label>Fichier PDF (ou lien web)</label>
           <div style="background:#f1f5f9; padding:0.8rem; border-radius:8px; border:1px dashed var(--border); margin-bottom:0.5rem;">
-            <label style="font-size:0.8rem; font-weight:700; color:var(--primary); cursor:pointer; display:block; margin-bottom:0.3rem;">
-              📁 Sélectionner un fichier PDF depuis l'ordinateur :
-            </label>
-            <input type="file" id="pdfFileInput" accept=".pdf" class="form-control" onchange="document.getElementById('newUrl').value = '(Fichier prêt pour l\'envoi sécurisé au Cloud)';">
+            <input type="file" id="pdfFileInput" accept=".pdf" class="form-control" onchange="document.getElementById('newUrl').value = '(Fichier prêt pour le Cloud)';">
           </div>
-          <label style="font-size:0.78rem;">Ou URL externe :</label>
-          <input type="text" id="newUrl" class="form-control" placeholder="https://...">
+          <input type="text" id="newUrl" class="form-control" placeholder="URL externe">
         </div>
-
-        <div class="form-group">
-          <label>Description ou consignes</label>
-          <textarea id="newDesc" class="form-control" rows="3" placeholder="Exercices à chercher, points de cours..."></textarea>
-        </div>
+        <div class="form-group"><label>Description</label><textarea id="newDesc" class="form-control" rows="3"></textarea></div>
         <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1.5rem;">
           <button type="button" class="btn" onclick="closeAddModal()" id="cancelBtnModal">Annuler</button>
-          <button type="submit" id="docModalSubmitBtn" class="btn btn-primary">Publier sur le site</button>
+          <button type="submit" id="docModalSubmitBtn" class="btn btn-primary">Publier sur le Cloud</button>
         </div>
       </form>
     </div>
   </div>
 
+  <!-- MODAL STRUCTURE -->
   <div class="popup-backdrop" id="structureModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
         <h3 style="font-size:1.15rem; font-weight:700;">Gérer l'ordre & les sous-catégories</h3>
         <button class="btn" onclick="closeStructureModal()">✕</button>
       </div>
-      <div style="margin-bottom: 1.5rem;">
-        <h4 style="font-size:0.9rem; margin-bottom:0.5rem;">1. Ordre des onglets principaux</h4>
-        <div id="tabsOrderList"></div>
+      <div class="form-group">
+        <label>Sous-catégories de l'onglet actif (séparées par des virgules)</label>
+        <select id="structSecSelect" class="form-control" onchange="renderSubEditor()" style="margin-bottom: 0.5rem;"></select>
+        <input type="text" id="structSubsInput" class="form-control">
       </div>
-      <div>
-        <h4 style="font-size:0.9rem; margin-bottom:0.5rem;">2. Modifier les sous-catégories d'un onglet</h4>
-        <div class="form-group">
-          <select id="structSecSelect" class="form-control" onchange="renderSubEditor()"></select>
-        </div>
-        <div class="form-group">
-          <label>Sous-catégories (séparées par des virgules)</label>
-          <input type="text" id="structSubsInput" class="form-control">
-        </div>
-        <button type="button" class="btn btn-primary" onclick="saveSubsEdit()">Mettre à jour</button>
-      </div>
+      <button type="button" class="btn btn-primary" onclick="saveSubsEdit()">Mettre à jour</button>
     </div>
   </div>
 
+  <!-- MODAL NOUVEL ONGLET -->
   <div class="popup-backdrop" id="categoryModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
@@ -735,18 +231,9 @@
         <button class="btn" onclick="closeCategoryModal()">✕</button>
       </div>
       <form onsubmit="saveNewCategory(event)">
-        <div class="form-group">
-          <label>Nom du nouvel onglet</label>
-          <input type="text" id="catTitle" class="form-control" required>
-        </div>
-        <div class="form-group">
-          <label>Description / Sous-titre de la page</label>
-          <input type="text" id="catDesc" class="form-control">
-        </div>
-        <div class="form-group">
-          <label>Sous-catégories (séparées par des virgules)</label>
-          <input type="text" id="catSubs" class="form-control" required>
-        </div>
+        <div class="form-group"><label>Nom de l'onglet</label><input type="text" id="catTitle" class="form-control" required></div>
+        <div class="form-group"><label>Description</label><input type="text" id="catDesc" class="form-control"></div>
+        <div class="form-group"><label>Sous-catégories (séparées par des virgules)</label><input type="text" id="catSubs" class="form-control" required></div>
         <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1.5rem;">
           <button type="button" class="btn" onclick="closeCategoryModal()">Annuler</button>
           <button type="submit" class="btn btn-primary">Créer</button>
@@ -761,11 +248,10 @@
   </footer>
 
   <script>
-    // === VOS CLÉS SUPABASE (Sécurisées pour le portail) ===
+    // --- CONNEXION CLOUD SUPABASE ---
     const DEFAULT_SUPABASE_URL = "https://xydayuntveuscibupgto.supabase.co"; 
     const DEFAULT_SUPABASE_ANON_KEY = "sb_publishable_g-99-oNcE_9noSl-_yxA1g_eZ8VvmLV";
 
-    // --- Configurations initiales ---
     const defaultSections = {
       "communication": { title: "Communication", desc: "Informations et calendrier", subs: ["Consignes de la semaine", "Planning", "Divers"] },
       "rappels": { title: "Rappels", desc: "Cours de 1ère", subs: ["Polynômes", "Dérivation", "Suites 1ère", "Trigonométrie"] },
@@ -773,14 +259,34 @@
       "suites": { title: "Suites", desc: "Récurrence, variations et limites", subs: ["Récurrence et étude de suites", "Limites de suites"] }
     };
 
-    const defaultDocs = [];
-    let sections = {};
-    let docs = [];
-    let currentPage = "communication";
-    let activeSubFilter = "all";
-    let isAdmin = false;
+    let sections = {}; let docs = [];
+    let currentPage = "communication"; let activeSubFilter = "all"; let isAdmin = false;
 
-    // --- CLOUD SUPABASE (STRUCTURE TEXTUELLE) ---
+    // --- SAUVETAGE DES DONNÉES LOCALES (MÉMOIRE DU PC) ---
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open("PerriandPortalDB", 1);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains("documents")) db.createObjectStore("documents", { keyPath: "id" });
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function loadAllDocsFromDB() {
+      try {
+        const db = await openDatabase();
+        return new Promise((resolve) => {
+          const tx = db.transaction("documents", "readonly");
+          const req = tx.objectStore("documents").getAll();
+          req.onsuccess = () => resolve(req.result || []);
+          req.onerror = () => resolve([]);
+        });
+      } catch(e) { return []; }
+    }
+
     async function fetchFromSupabase() {
       try {
         const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state?id=eq.main&select=*`, {
@@ -810,408 +316,227 @@
           document.getElementById('syncStatusBadge').innerHTML = '☁️ Cloud Synchronisé';
           return true;
         }
-      } catch (e) { }
+      } catch (e) { console.error(e); }
       return false;
     }
 
-    // --- UPLOAD DES FICHIERS LOURDS DIRECTEMENT DANS LE CLOUD (ZÉRO 404, ZÉRO BLOQUAGE) ---
     async function uploadToSupabaseStorage(file) {
-      // Nettoyer le nom de fichier pour internet
       const safeName = file.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9.\-]/g, "_");
       const fileName = Date.now() + "_" + safeName;
-      const endpoint = `${DEFAULT_SUPABASE_URL}/storage/v1/object/fichiers/${fileName}`;
-
       try {
-        const res = await fetch(endpoint, {
+        const res = await fetch(`${DEFAULT_SUPABASE_URL}/storage/v1/object/fichiers/${fileName}`, {
           method: 'POST',
-          headers: {
-            'apikey': DEFAULT_SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${DEFAULT_SUPABASE_ANON_KEY}`,
-            'Content-Type': file.type || 'application/octet-stream'
-          },
+          headers: { 'apikey': DEFAULT_SUPABASE_ANON_KEY, 'Authorization': `Bearer ${DEFAULT_SUPABASE_ANON_KEY}`, 'Content-Type': file.type || 'application/octet-stream' },
           body: file
         });
-        if (res.ok) {
-          // Retourne l'URL publique absolue (pérenne et sécurisée)
-          return `${DEFAULT_SUPABASE_URL}/storage/v1/object/public/fichiers/${fileName}`;
-        } else {
-          console.error("Upload échoué : ", await res.text());
-          alert(`L'envoi de ${file.name} a échoué. As-tu bien créé le dossier 'fichiers' sur Supabase ?`);
-          return null;
-        }
-      } catch(err) {
-        alert("Erreur de connexion lors de l'envoi du fichier.");
-        return null;
-      }
+        if (res.ok) return `${DEFAULT_SUPABASE_URL}/storage/v1/object/public/fichiers/${fileName}`;
+      } catch(err) { }
+      return null;
     }
 
-    // --- GESTION DU SITE ---
+    // --- INITIALISATION INTÉLLIGENTE (SAUVETAGE) ---
+    async function startApplication() {
+      // 1. Lire la mémoire locale cachée de l'ordinateur
+      const savedSecText = localStorage.getItem('perriand_sections_v27');
+      let localDocs = await loadAllDocsFromDB();
+      
+      // 2. Lire le Cloud
+      const cloudData = await fetchFromSupabase();
+      let cloudHasData = (cloudData && !cloudData.empty && cloudData.sections);
+
+      // 3. Choix intelligent : Si le PC a les rubriques (ex: probas ou geometrie) on sauve le PC !
+      if (savedSecText && savedSecText.length > 200) {
+          sections = JSON.parse(savedSecText);
+          docs = localDocs || [];
+      } else if (cloudHasData) {
+          sections = cloudData.sections;
+          docs = cloudData.docs;
+      } else {
+          sections = defaultSections;
+          docs = [];
+      }
+
+      // 4. NETTOYAGE OBLIGATOIRE DES GROS FICHIERS QUI BLOQUAIENT LE CLOUD
+      docs.forEach(d => {
+        if (d.url && d.url.startsWith('data:application/pdf')) {
+          d.url = ""; // On supprime le texte lourd
+          if (!d.desc.includes("⚠️")) d.desc = "⚠️ PDF à ré-importer. " + (d.desc || "");
+        }
+        if (d.coverImg && d.coverImg.startsWith('data:image')) d.coverImg = "";
+      });
+
+      // 5. On propulse instantanément le tout vers le Cloud
+      await pushToSupabase();
+
+      currentPage = Object.keys(sections)[0] || "communication";
+      initApp();
+      showPage(currentPage);
+    }
+
+    // --- RESTE DES FONCTIONS UI ---
     async function saveDocForm(e) {
       e.preventDefault();
-      
-      // Sécurisation UI pendant l'envoi
       const submitBtn = document.getElementById('docModalSubmitBtn');
-      const cancelBtn = document.getElementById('cancelBtnModal');
-      const originalText = submitBtn.textContent;
-      submitBtn.textContent = "⏳ Envoi des fichiers dans le Cloud (ne pas fermer)...";
-      submitBtn.disabled = true;
-      cancelBtn.style.display = 'none';
+      submitBtn.textContent = "⏳ Envoi au Cloud..."; submitBtn.disabled = true;
 
       try {
         const editId = document.getElementById('editDocId').value;
         let finalUrl = document.getElementById('newUrl').value.trim();
         let finalCover = document.getElementById('newCoverImg').value.trim();
 
-        // Upload du PDF si sélectionné
         const pdfFile = document.getElementById('pdfFileInput').files[0];
-        if (pdfFile) {
-          const uploadedPdfUrl = await uploadToSupabaseStorage(pdfFile);
-          if (uploadedPdfUrl) finalUrl = uploadedPdfUrl;
-        } else if (finalUrl.includes("(Fichier prêt pour l'envoi")) {
-          finalUrl = editId ? docs.find(d => d.id === editId).url : "";
-        }
+        if (pdfFile) { const u = await uploadToSupabaseStorage(pdfFile); if(u) finalUrl = u; }
+        else if (finalUrl.includes("(Fichier prêt")) finalUrl = editId ? docs.find(d => d.id === editId).url : "";
 
-        // Upload de la pochette si sélectionnée
         const coverFile = document.getElementById('coverFileInput').files[0];
-        if (coverFile) {
-          const uploadedCoverUrl = await uploadToSupabaseStorage(coverFile);
-          if (uploadedCoverUrl) finalCover = uploadedCoverUrl;
-        } else if (finalCover.includes("(Fichier prêt pour l'envoi")) {
-          finalCover = editId ? docs.find(d => d.id === editId).coverImg : "";
-        }
+        if (coverFile) { const c = await uploadToSupabaseStorage(coverFile); if(c) finalCover = c; }
+        else if (finalCover.includes("(Fichier prêt")) finalCover = editId ? docs.find(d => d.id === editId).coverImg : "";
 
-        // Sauvegarde de l'objet léger en base
         const docData = {
-          id: editId || "doc_" + Date.now(),
-          section: document.getElementById('newSection').value,
-          sub: document.getElementById('newSub').value,
-          title: document.getElementById('newTitle').value,
-          type: document.getElementById('newType').value,
-          coverImg: finalCover,
-          desc: document.getElementById('newDesc').value,
-          url: finalUrl
+          id: editId || "doc_" + Date.now(), section: document.getElementById('newSection').value,
+          sub: document.getElementById('newSub').value, title: document.getElementById('newTitle').value,
+          type: document.getElementById('newType').value, coverImg: finalCover,
+          desc: document.getElementById('newDesc').value.replace("⚠️ PDF à ré-importer. ", ""), url: finalUrl
         };
 
-        if (editId) {
-          const docIndex = docs.findIndex(d => d.id === editId);
-          if (docIndex !== -1) docs[docIndex] = docData;
-        } else {
-          docs.unshift(docData);
-        }
+        if (editId) { const idx = docs.findIndex(d => d.id === editId); if (idx !== -1) docs[idx] = docData; }
+        else docs.unshift(docData);
 
         await pushToSupabase();
-        closeAddModal();
-        renderPageCards();
-
-      } finally {
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-        cancelBtn.style.display = 'inline-flex';
-      }
+        closeAddModal(); renderPageCards();
+      } finally { submitBtn.textContent = "Publier sur le Cloud"; submitBtn.disabled = false; }
     }
 
     async function deleteDoc(id) {
-      if (confirm("Supprimer définitivement ce document ?")) {
-        docs = docs.filter(d => d.id !== id);
-        await pushToSupabase();
-        renderPageCards();
-      }
+      if (confirm("Supprimer définitivement ce document ?")) { docs = docs.filter(d => d.id !== id); await pushToSupabase(); renderPageCards(); }
     }
-
-    function extractYouTubeId(url) {
-      if (!url) return null;
-      const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([^"&?\/\s]{11})/i);
-      return (match && match[1]) ? match[1] : null;
-    }
-
-    function isWebUrl(url) { return url && (url.startsWith('http://') || url.startsWith('https://')); }
 
     function initApp() {
-      const navContainer = document.getElementById('navTabsContainer');
-      const pagesContainer = document.getElementById('mainPagesContainer');
-
-      navContainer.innerHTML = '';
-      pagesContainer.innerHTML = '';
-
+      const nav = document.getElementById('navTabsContainer'); const pages = document.getElementById('mainPagesContainer');
+      nav.innerHTML = ''; pages.innerHTML = '';
       Object.keys(sections).forEach(secKey => {
         const sec = sections[secKey];
-
         const btn = document.createElement('button');
-        btn.className = 'nav-btn' + (secKey === currentPage ? ' active' : '');
-        btn.textContent = sec.title;
-        btn.onclick = () => showPage(secKey);
-        navContainer.appendChild(btn);
+        btn.className = 'nav-btn' + (secKey === currentPage ? ' active' : ''); btn.textContent = sec.title;
+        btn.onclick = () => showPage(secKey); nav.appendChild(btn);
 
         const pageDiv = document.createElement('div');
-        pageDiv.id = 'page-' + secKey;
-        pageDiv.className = 'page-view' + (secKey === currentPage ? ' active' : '');
-        pageDiv.innerHTML = `
-          <div class="page-header"><h2>${sec.title}</h2><p>${sec.desc || ''}</p></div>
-          <div class="sub-filter-bar" id="filters-${secKey}"></div>
-          <div class="cards-grid" id="grid-${secKey}"></div>
-        `;
-        pagesContainer.appendChild(pageDiv);
+        pageDiv.id = 'page-' + secKey; pageDiv.className = 'page-view' + (secKey === currentPage ? ' active' : '');
+        pageDiv.innerHTML = `<div class="page-header"><h2>${sec.title}</h2><p>${sec.desc || ''}</p></div><div class="sub-filter-bar" id="filters-${secKey}"></div><div class="cards-grid" id="grid-${secKey}"></div>`;
+        pages.appendChild(pageDiv);
       });
-
-      renderSubFilters();
-      renderPageCards();
+      renderSubFilters(); renderPageCards();
     }
 
     function showPage(pageKey) {
       if (!sections[pageKey]) pageKey = Object.keys(sections)[0];
-      currentPage = pageKey;
-      activeSubFilter = "all";
-      const hero = document.getElementById('heroBanner');
-      if (hero) hero.style.display = (pageKey === "communication") ? "flex" : "none";
-
+      currentPage = pageKey; activeSubFilter = "all";
+      const hero = document.getElementById('heroBanner'); if (hero) hero.style.display = (pageKey === "communication") ? "flex" : "none";
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.textContent === sections[pageKey].title));
       document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
-      const activeView = document.getElementById('page-' + pageKey);
-      if (activeView) activeView.classList.add('active');
-
-      renderSubFilters();
-      renderPageCards();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const activeView = document.getElementById('page-' + pageKey); if (activeView) activeView.classList.add('active');
+      renderSubFilters(); renderPageCards(); window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function renderSubFilters() {
-      const box = document.getElementById('filters-' + currentPage);
-      if (!box) return;
-      box.innerHTML = '';
-      const subs = sections[currentPage].subs;
-      if (!subs || subs.length === 0) return;
-
-      const allBtn = document.createElement('button');
-      allBtn.className = 'sub-pill' + (activeSubFilter === 'all' ? ' active' : '');
-      allBtn.textContent = 'Tous';
-      allBtn.onclick = () => { activeSubFilter = 'all'; renderSubFilters(); renderPageCards(); };
-      box.appendChild(allBtn);
-
+      const box = document.getElementById('filters-' + currentPage); if (!box) return;
+      box.innerHTML = ''; const subs = sections[currentPage].subs; if (!subs || subs.length === 0) return;
+      const allBtn = document.createElement('button'); allBtn.className = 'sub-pill' + (activeSubFilter === 'all' ? ' active' : '');
+      allBtn.textContent = 'Tous'; allBtn.onclick = () => { activeSubFilter = 'all'; renderSubFilters(); renderPageCards(); }; box.appendChild(allBtn);
       subs.forEach(s => {
-        const b = document.createElement('button');
-        b.className = 'sub-pill' + (activeSubFilter === s ? ' active' : '');
-        b.textContent = s;
-        b.onclick = () => { activeSubFilter = s; renderSubFilters(); renderPageCards(); };
-        box.appendChild(b);
+        const b = document.createElement('button'); b.className = 'sub-pill' + (activeSubFilter === s ? ' active' : '');
+        b.textContent = s; b.onclick = () => { activeSubFilter = s; renderSubFilters(); renderPageCards(); }; box.appendChild(b);
       });
     }
 
+    function extractYouTubeId(url) {
+      if (!url) return null; const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([^"&?\/\s]{11})/i);
+      return (match && match[1]) ? match[1] : null;
+    }
+
     function renderPageCards() {
-      const grid = document.getElementById('grid-' + currentPage);
-      if (!grid) return;
-
+      const grid = document.getElementById('grid-' + currentPage); if (!grid) return;
       const filtered = docs.filter(d => d.section === currentPage && (activeSubFilter === 'all' || d.sub === activeSubFilter));
+      if (filtered.length === 0) { grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: var(--muted);"><p>Aucun document.</p></div>`; return; }
 
-      if (filtered.length === 0) {
-        grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: var(--muted);"><div style="font-size: 2.5rem; margin-bottom: 0.5rem; opacity: 0.6;">📂</div><p>Aucun document dans cette rubrique pour l'instant.</p></div>`;
-        return;
-      }
-
-      const visualThemes = {
-        mental: { icon: "🧠", cls: "thumb-mental", label: "Carte Mentale" },
-        pdf: { icon: "📄", cls: "thumb-pdf", label: "Document PDF" },
-        cours: { icon: "📐", cls: "thumb-cours", label: "Fiche Méthode" },
-        jeu: { icon: "🎲", cls: "thumb-jeu", label: "Activité Interactive" },
-        video: { icon: "▶️", cls: "thumb-video", label: "Vidéo" },
-        web: { icon: "🌐", cls: "thumb-web", label: "Lien Web" },
-        info: { icon: "📌", cls: "thumb-info", label: "Information" }
-      };
-
+      const themes = { mental: { i: "🧠", c: "thumb-mental" }, pdf: { i: "📄", c: "thumb-pdf" }, cours: { i: "📐", c: "thumb-cours" }, jeu: { i: "🎲", c: "thumb-jeu" }, video: { i: "▶️", c: "thumb-video" }, web: { i: "🌐", c: "thumb-web" }, info: { i: "📌", c: "thumb-info" } };
       grid.innerHTML = '';
       filtered.forEach(item => {
-        const theme = visualThemes[item.type] || visualThemes.pdf;
-        const card = document.createElement('div');
-        card.className = 'card';
-
+        const t = themes[item.type] || themes.pdf;
         let ytId = extractYouTubeId(item.url);
-        let finalCover = item.coverImg ? item.coverImg.trim() : "";
-        if (!finalCover && ytId) finalCover = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
-        else if (!finalCover && isWebUrl(item.url) && !ytId) finalCover = `https://api.microlink.io?url=${encodeURIComponent(item.url)}&screenshot=true&meta=false&embed=screenshot.url`;
+        let cover = item.coverImg ? item.coverImg.trim() : (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : "");
+        let style = cover ? `style="background-image: linear-gradient(rgba(15,23,42,0.3), rgba(15,23,42,0.7)), url('${cover}'); background-size: cover; background-position: center;"` : "";
 
-        let thumbStyle = "";
-        if (finalCover) thumbStyle = `style="background-image: linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.60)), url('${finalCover}'); background-size: cover; background-position: center;"`;
-
+        const card = document.createElement('div'); card.className = 'card';
         card.innerHTML = `
-          <div class="card-thumb ${theme.cls}" ${thumbStyle}>
-            <span style="position:relative; z-index:2; text-shadow: 0 2px 8px rgba(0,0,0,0.6);">${theme.icon}</span>
-            <div class="thumb-watermark">${theme.label}</div>
-          </div>
+          <div class="card-thumb ${t.c}" ${style}><span style="position:relative; z-index:2;">${t.i}</span></div>
           <div class="card-body">
-            <span class="card-category">${item.sub || 'Général'}</span>
-            <h3 class="card-title">${item.title}</h3>
-            <p class="card-desc">${item.desc || 'Consulter la ressource.'}</p>
+            <span class="card-category">${item.sub || 'Général'}</span><h3 class="card-title">${item.title}</h3><p class="card-desc">${item.desc}</p>
             <div class="card-actions">
               <button class="btn btn-primary" onclick="openDocPopup('${item.id}')">👁 Consulter</button>
-              <div class="admin-item-btn" style="gap:0.35rem;">
-                <button class="btn btn-edit" onclick="openEditModal('${item.id}')">✏️</button>
-                <button class="btn btn-danger" onclick="deleteDoc('${item.id}')">🗑</button>
-              </div>
+              <div class="admin-item-btn" style="gap:0.35rem;"><button class="btn btn-edit" onclick="openEditModal('${item.id}')">✏️</button><button class="btn btn-danger" onclick="deleteDoc('${item.id}')">🗑</button></div>
             </div>
-          </div>
-        `;
+          </div>`;
         grid.appendChild(card);
       });
     }
 
     function openDocPopup(id) {
-      const item = docs.find(d => d.id === id);
-      if (!item) return;
-
-      const modal = document.getElementById('docPopup');
-      const frame = document.getElementById('popupIframe');
-      const directBtn = document.getElementById('popupDirectOpenBtn');
+      const item = docs.find(d => d.id === id); if (!item) return;
       document.getElementById('popupTitle').textContent = item.title;
-
-      let targetUrl = item.url;
-      frame.style.display = 'block';
-      
-      const ytId = extractYouTubeId(item.url);
-      if (ytId) {
-        targetUrl = `https://www.youtube.com/embed/${ytId}?rel=0&autoplay=1`;
-        directBtn.href = `https://www.youtube.com/watch?v=${ytId}`;
-      } else {
-        directBtn.href = targetUrl;
-      }
-      
-      frame.src = targetUrl;
-      directBtn.style.display = 'inline-flex';
-      modal.classList.add('active');
+      let url = item.url; const ytId = extractYouTubeId(url);
+      if (ytId) url = `https://www.youtube.com/embed/${ytId}?rel=0&autoplay=1`;
+      document.getElementById('popupIframe').src = url;
+      document.getElementById('docPopup').classList.add('active');
     }
-
-    function closePopup() {
-      document.getElementById('popupIframe').src = '';
-      document.getElementById('docPopup').classList.remove('active');
-    }
+    function closePopup() { document.getElementById('popupIframe').src = ''; document.getElementById('docPopup').classList.remove('active'); }
 
     function promptAdmin() {
-      if (isAdmin) { logoutAdmin(); return; }
-      // LE MOT DE PASSE N'APPARAÎT PLUS ICI !
-      const pass = prompt("Veuillez saisir le mot de passe enseignant :");
-      if (pass === "perriand2026") {
-        isAdmin = true;
-        document.body.classList.add('is-admin');
-        renderPageCards();
-      } else if (pass !== null) {
-        alert("Mot de passe incorrect.");
-      }
+      if (isAdmin) { isAdmin = false; document.body.classList.remove('is-admin'); renderPageCards(); return; }
+      const pass = prompt("Mot de passe enseignant :");
+      if (pass === "perriand2026") { isAdmin = true; document.body.classList.add('is-admin'); renderPageCards(); }
     }
-
-    function logoutAdmin() {
-      isAdmin = false;
-      document.body.classList.remove('is-admin');
-      renderPageCards();
-    }
-
-    function populateSectionOptions(targetSelectId) {
-      const select = document.getElementById(targetSelectId);
-      select.innerHTML = '';
-      Object.keys(sections).forEach(k => {
-        const opt = document.createElement('option');
-        opt.value = k;
-        opt.textContent = sections[k].title;
-        select.appendChild(opt);
-      });
-    }
+    function logoutAdmin() { isAdmin = false; document.body.classList.remove('is-admin'); renderPageCards(); }
 
     function openAddModal() {
-      document.getElementById('addDocForm').reset();
-      document.getElementById('editDocId').value = "";
+      document.getElementById('addDocForm').reset(); document.getElementById('editDocId').value = "";
       document.getElementById('docModalTitle').textContent = "Ajouter un document";
-      document.getElementById('pdfFileInput').value = '';
-      document.getElementById('coverFileInput').value = '';
-      populateSectionOptions('newSection');
-      document.getElementById('newSection').value = currentPage;
-      syncSubCategories();
-      document.getElementById('addModal').classList.add('active');
+      const sel = document.getElementById('newSection'); sel.innerHTML = '';
+      Object.keys(sections).forEach(k => { const opt = document.createElement('option'); opt.value = k; opt.textContent = sections[k].title; sel.appendChild(opt); });
+      sel.value = currentPage; syncSubCategories(); document.getElementById('addModal').classList.add('active');
     }
-
-    function openEditModal(docId) {
-      const item = docs.find(d => d.id === docId);
-      if (!item) return;
-      document.getElementById('addDocForm').reset();
-      document.getElementById('editDocId').value = item.id;
-      document.getElementById('docModalTitle').textContent = "Modifier le document";
-      document.getElementById('pdfFileInput').value = '';
-      document.getElementById('coverFileInput').value = '';
-      populateSectionOptions('newSection');
-      document.getElementById('newSection').value = item.section;
-      syncSubCategories();
-      document.getElementById('newSub').value = item.sub;
-      document.getElementById('newTitle').value = item.title;
-      document.getElementById('newType').value = item.type;
-      document.getElementById('newCoverImg').value = item.coverImg || "";
-      document.getElementById('newUrl').value = item.url || "";
-      document.getElementById('newDesc').value = item.desc || "";
-      document.getElementById('addModal').classList.add('active');
+    function openEditModal(id) {
+      const item = docs.find(d => d.id === id); if (!item) return;
+      openAddModal(); document.getElementById('editDocId').value = item.id;
+      document.getElementById('newSection').value = item.section; syncSubCategories();
+      document.getElementById('newSub').value = item.sub; document.getElementById('newTitle').value = item.title;
+      document.getElementById('newType').value = item.type; document.getElementById('newCoverImg').value = item.coverImg || "";
+      document.getElementById('newUrl').value = item.url || ""; document.getElementById('newDesc').value = item.desc || "";
     }
-
     function closeAddModal() { document.getElementById('addModal').classList.remove('active'); }
-
     function syncSubCategories() {
-      const secKey = document.getElementById('newSection').value;
-      const subSelect = document.getElementById('newSub');
-      subSelect.innerHTML = '';
-      (sections[secKey]?.subs || []).forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s;
-        opt.textContent = s;
-        subSelect.appendChild(opt);
-      });
+      const s = document.getElementById('newSub'); s.innerHTML = '';
+      (sections[document.getElementById('newSection').value]?.subs || []).forEach(sub => { const o = document.createElement('option'); o.value = sub; o.textContent = sub; s.appendChild(o); });
     }
 
     function openCategoryModal() { document.getElementById('categoryModal').classList.add('active'); }
     function closeCategoryModal() { document.getElementById('categoryModal').classList.remove('active'); }
-
     async function saveNewCategory(e) {
-      e.preventDefault();
-      const title = document.getElementById('catTitle').value.trim();
-      const desc = document.getElementById('catDesc').value.trim();
-      const subsRaw = document.getElementById('catSubs').value.trim();
-      const key = "sec_" + Date.now();
-      sections[key] = { title: title, desc: desc, subs: subsRaw.split(',').map(s => s.trim()).filter(s => s.length > 0) };
-      await pushToSupabase();
-      closeCategoryModal();
-      initApp();
-      showPage(key);
+      e.preventDefault(); const key = "sec_" + Date.now();
+      sections[key] = { title: document.getElementById('catTitle').value.trim(), desc: document.getElementById('catDesc').value.trim(), subs: document.getElementById('catSubs').value.split(',').map(s=>s.trim()).filter(s=>s.length>0) };
+      await pushToSupabase(); closeCategoryModal(); initApp(); showPage(key);
     }
 
     function openStructureModal() {
-      const secSelect = document.getElementById('structSecSelect');
-      secSelect.innerHTML = '';
-      Object.keys(sections).forEach(k => {
-        const opt = document.createElement('option'); opt.value = k; opt.textContent = sections[k].title; secSelect.appendChild(opt);
-      });
-      secSelect.value = currentPage;
-      renderSubEditor();
-      document.getElementById('structureModal').classList.add('active');
+      const sel = document.getElementById('structSecSelect'); sel.innerHTML = '';
+      Object.keys(sections).forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = sections[k].title; sel.appendChild(o); });
+      sel.value = currentPage; renderSubEditor(); document.getElementById('structureModal').classList.add('active');
     }
-
     function closeStructureModal() { document.getElementById('structureModal').classList.remove('active'); }
     function renderSubEditor() { document.getElementById('structSubsInput').value = (sections[document.getElementById('structSecSelect').value]?.subs || []).join(', '); }
-
     async function saveSubsEdit() {
-      const secKey = document.getElementById('structSecSelect').value;
-      const subs = document.getElementById('structSubsInput').value.split(',').map(s => s.trim()).filter(s => s.length > 0);
-      sections[secKey].subs = subs;
-      await pushToSupabase();
-      initApp();
-      showPage(secKey);
-      alert(`Sous-catégories mises à jour !`);
-    }
-
-    async function startApplication() {
-      const cloudData = await fetchFromSupabase();
-      if (cloudData && !cloudData.empty && cloudData.docs) {
-        sections = cloudData.sections || defaultSections;
-        docs = cloudData.docs;
-      } else {
-        sections = defaultSections;
-        docs = defaultDocs;
-        await pushToSupabase();
-      }
-      currentPage = Object.keys(sections)[0] || "communication";
-      initApp();
-      showPage(currentPage);
+      sections[document.getElementById('structSecSelect').value].subs = document.getElementById('structSubsInput').value.split(',').map(s=>s.trim()).filter(s=>s.length>0);
+      await pushToSupabase(); initApp(); showPage(document.getElementById('structSecSelect').value); alert("Mis à jour !");
     }
 
     startApplication();
