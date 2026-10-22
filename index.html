@@ -159,6 +159,7 @@
     <button class="btn btn-primary" onclick="openAddModal()">+ Nouveau document</button>
     <button class="btn" onclick="openStructureModal()">⚙️ Structure & Ordre</button>
     <button class="btn" onclick="openCategoryModal()">➕ Nouvel onglet</button>
+    <button class="btn" onclick="exportData()">💾 Exporter</button>
     <button class="btn" onclick="logoutAdmin()">Verrouiller</button>
   </div>
 
@@ -210,7 +211,6 @@
         <button class="btn" onclick="closeStructureModal()">✕</button>
       </div>
       
-      <!-- NOUVEL OUTIL DE TRI DES ONGLETS -->
       <div style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
         <h4 style="font-size:0.9rem; margin-bottom:0.5rem;">1. Réorganiser les onglets principaux</h4>
         <div id="tabsOrderList"></div>
@@ -253,7 +253,6 @@
     const DEFAULT_SUPABASE_URL = "https://xydayuntveuscibupgto.supabase.co"; 
     const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5ZGF5dW50dmV1c2NpYnVwZ3RvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MDMyNTcsImV4cCI6MjEwODA3OTI1N30.ketR5e-MimQuqzk5cHLhlN5ZjdZEH_Fq4fNz6UG-Fzo";
 
-    // Ordre par défaut idéal
     const PREFERRED_ORDER = ["communication", "rappels", "grand-oral", "suites", "fonctions", "espace", "probas"];
     
     let sections = {}; 
@@ -262,7 +261,6 @@
     let activeSubFilter = "all"; 
     let isAdmin = false;
 
-    // --- LECTURE EXCLUSIVE DU CLOUD ---
     async function fetchFromSupabase() {
       try {
         const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state?id=eq.main&select=*`, {
@@ -274,12 +272,10 @@
       } catch (e) { return null; }
     }
 
-    // --- ENREGISTREMENT SUR LE CLOUD (STABLE) ---
     async function pushToSupabase() {
       try {
         const payload = { id: 'main', sections: sections, docs: docs, updated_at: new Date().toISOString() };
         
-        // Requête POST standard (Upsert automatique par Supabase)
         const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state`, {
           method: 'POST',
           headers: {
@@ -320,20 +316,16 @@
       return null;
     }
 
-    // --- DÉMARRAGE DU SITE ---
     async function startApplication() {
-      // Nettoyage définitif du local storage pour ne lire QUE le cloud
       localStorage.removeItem('perriand_sections_v27');
 
       const cloudData = await fetchFromSupabase();
       
       if (cloudData && cloudData.sections) {
-          // RESTAURATION DE L'ORDRE CORRECT DES RUBRIQUES
           let sortedSections = {};
           PREFERRED_ORDER.forEach(key => {
             if (cloudData.sections[key]) sortedSections[key] = cloudData.sections[key];
           });
-          // On ajoute les nouvelles rubriques créées (comme géométrie) à la fin
           Object.keys(cloudData.sections).forEach(key => {
             if (!sortedSections[key]) sortedSections[key] = cloudData.sections[key];
           });
@@ -343,7 +335,6 @@
           document.getElementById('syncStatusBadge').className = 'sync-badge online'; 
           document.getElementById('syncStatusBadge').innerHTML = '☁️ Cloud Synchronisé';
       } else {
-          // Structure de base si la base de données est totalement vide
           sections = {
             "communication": { title: "Communication", desc: "Informations et calendrier", subs: ["Consignes de la semaine", "Planning", "Divers"] },
             "rappels": { title: "Rappels de 1ère", desc: "Notions indispensables", subs: ["Polynômes", "Dérivation", "Suites 1ère", "Trigonométrie"] }
@@ -356,7 +347,6 @@
       showPage(currentPage);
     }
 
-    // --- SAUVEGARDE D'UN DOCUMENT ---
     async function saveDocForm(e) {
       e.preventDefault();
       const submitBtn = document.getElementById('docModalSubmitBtn');
@@ -414,7 +404,6 @@
       }
     }
 
-    // --- REGROUPEMENT DE L'INTERFACE ---
     function initApp() {
       const nav = document.getElementById('navTabsContainer'); 
       const pages = document.getElementById('mainPagesContainer');
@@ -542,7 +531,6 @@
       await pushToSupabase(); closeCategoryModal(); initApp(); showPage(key);
     }
 
-    // --- GESTION DE L'ORDRE ET STRUCTURE ---
     function openStructureModal() {
       renderTabsOrderList();
       const sel = document.getElementById('structSecSelect'); sel.innerHTML = '';
@@ -588,6 +576,20 @@
 
       await pushToSupabase();
       initApp(); renderTabsOrderList();
+    }
+
+    // --- FONCTION D'EXPORT DE SAUVEGARDE ---
+    function exportData() {
+      const backup = { sections: sections, docs: docs };
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `sauvegarde_perriand_${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
 
     // Démarrage
