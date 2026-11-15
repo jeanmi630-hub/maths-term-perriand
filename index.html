@@ -6,24 +6,44 @@
   <title>Terminale Mathématiques - Lycée Charlotte Perriand</title>
   <style>
     :root { --bg: #f8fafc; --surface: #ffffff; --primary: #4f46e5; --primary-hover: #4338ca; --primary-light: #eef2ff; --text: #0f172a; --muted: #64748b; --border: #e2e8f0; --radius: 12px; --shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02); }
+    
+    /* --- THÈMES PERSONNALISABLES ÉLÈVES --- */
+    body.theme-dark { --bg: #0f172a; --surface: #1e293b; --primary: #6366f1; --primary-hover: #818cf8; --primary-light: #312e81; --text: #f8fafc; --muted: #94a3b8; --border: #334155; }
+    body.theme-dark .brand-title h1, body.theme-dark .page-header h2, body.theme-dark .card-title, body.theme-dark .popup-header h3 { color: #f8fafc; }
+    body.theme-dark .modal-box, body.theme-dark .popup-content, body.theme-dark .popup-header, body.theme-dark .struct-item { background: #1e293b; color: #f8fafc; }
+    body.theme-dark .form-control { background: #0f172a; color: #f8fafc; border-color: #334155; }
+
+    body.theme-sakura { --bg: #fff5f7; --surface: #ffffff; --primary: #db2777; --primary-hover: #be185d; --primary-light: #fce7f3; --text: #3f1d2b; --muted: #9d5c75; --border: #fbcfe8; background-image: radial-gradient(#fbcfe8 1px, transparent 1px), radial-gradient(#f9a8d4 1px, #fff5f7 1px); background-size: 40px 40px; background-position: 0 0, 20px 20px; }
+    body.theme-sakura .brand-title h1, body.theme-sakura .page-header h2, body.theme-sakura .card-title { color: #831843; }
+    body.theme-sakura .hero-overlay { background: linear-gradient(90deg, rgba(131, 24, 67, 0.88) 0%, rgba(190, 24, 93, 0.72) 55%, rgba(131, 24, 67, 0.4) 100%); }
+
+    body.theme-retro { --bg: #120428; --surface: #1d0b3a; --primary: #ff2a85; --primary-hover: #ff0055; --primary-light: #3b0d54; --text: #f0e6ff; --muted: #00f0ff; --border: #591c89; background-image: linear-gradient(rgba(255, 42, 133, 0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.07) 1px, transparent 1px); background-size: 32px 32px; }
+    body.theme-retro .brand-title h1, body.theme-retro .page-header h2, body.theme-retro .card-title, body.theme-retro .popup-header h3 { color: #00f0ff; text-shadow: 0 0 8px rgba(0, 240, 255, 0.35); }
+    body.theme-retro .card { border-color: #ff2a85; box-shadow: 0 0 15px rgba(255, 42, 133, 0.18); }
+    body.theme-retro .modal-box, body.theme-retro .popup-content, body.theme-retro .popup-header, body.theme-retro .struct-item { background: #1d0b3a; color: #f0e6ff; }
+    body.theme-retro .form-control { background: #120428; color: #f0e6ff; border-color: #591c89; }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; transition: background 0.25s, color 0.25s; }
     header { background: var(--surface); border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 50; }
-    .top-bar { max-width: 1240px; margin: 0 auto; padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+    .top-bar { max-width: 1240px; margin: 0 auto; padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
     .brand { display: flex; align-items: center; gap: 0.9rem; text-decoration: none; color: inherit; }
     .brand-logo-container { width: 46px; height: 46px; border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, #4f46e5, #06b6d4); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-shrink: 0; }
     .brand-logo-img { width: 100%; height: 100%; object-fit: cover; }
     .brand-logo-fallback { color: white; font-size: 1.4rem; font-weight: 800; }
     .brand-title h1 { font-size: 1.15rem; font-weight: 800; color: #1e1b4b; }
     .brand-title p { font-size: 0.8rem; color: var(--muted); }
-    .sync-badge { font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.7rem; border-radius: 999px; background: #f1f5f9; color: var(--muted); display: inline-flex; align-items: center; gap: 0.35rem; }
+    .top-actions { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .sync-badge { font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.7rem; border-radius: 999px; background: #f1f5f9; color: #64748b; display: inline-flex; align-items: center; gap: 0.35rem; }
     .sync-badge.online { background: #dcfce7; color: #15803d; }
+    .user-chip { font-size: 0.78rem; font-weight: 700; padding: 0.32rem 0.75rem; border-radius: 999px; background: var(--primary-light); color: var(--primary); display: inline-flex; align-items: center; gap: 0.4rem; }
+    .theme-select { padding: 0.3rem 0.6rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 0.78rem; font-weight: 600; cursor: pointer; }
     nav { max-width: 1240px; margin: 0 auto; padding: 0 1rem; display: flex; gap: 0.35rem; overflow-x: auto; scrollbar-width: none; }
     nav::-webkit-scrollbar { display: none; }
     .nav-btn { padding: 0.85rem 1.05rem; font-size: 0.88rem; font-weight: 600; color: var(--muted); background: transparent; border: none; border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
     .nav-btn:hover { color: var(--primary); }
     .nav-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
-    main { max-width: 1240px; margin: 1.5rem auto 2.5rem; padding: 0 1.5rem; flex: 1; width: 100%; }
+    main { max-width: 1240px; margin: 1.5rem auto 2.5rem; padding: 0 1.5rem; flex: 1; width: 100%; position: relative; z-index: 2; }
     .hero-banner { position: relative; border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; min-height: 230px; display: flex; align-items: center; padding: 2.5rem 2rem; box-shadow: var(--shadow); background-color: #1e1b4b; }
     .hero-banner-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 1; }
     .hero-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(15, 23, 42, 0.90) 0%, rgba(30, 27, 75, 0.78) 50%, rgba(15, 23, 42, 0.45) 100%); z-index: 2; }
@@ -41,8 +61,10 @@
     .sub-pill { padding: 0.4rem 0.85rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; background: var(--surface); border: 1px solid var(--border); color: var(--muted); cursor: pointer; }
     .sub-pill.active, .sub-pill:hover { background: var(--primary-light); color: var(--primary); border-color: #c7d2fe; }
     .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); transition: transform 0.2s, box-shadow 0.2s; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s; position: relative; }
     .card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -3px rgba(0,0,0,0.08); }
+    .card.is-hidden-doc { opacity: 0.62; border: 2px dashed #ef4444; }
+    .hidden-badge { position: absolute; top: 10px; left: 10px; background: #ef4444; color: white; font-size: 0.7rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; z-index: 5; letter-spacing: 0.04em; box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
     .card-thumb { height: 120px; position: relative; display: flex; align-items: center; justify-content: center; color: white; font-size: 2.3rem; font-weight: bold; background-size: cover; background-position: center; }
     .thumb-pdf { background-color: #ef4444; background-image: linear-gradient(135deg, #ef4444, #f97316); }
     .thumb-cours { background-color: #4f46e5; background-image: linear-gradient(135deg, #4f46e5, #06b6d4); }
@@ -51,49 +73,100 @@
     .thumb-video { background-color: #f59e0b; background-image: linear-gradient(135deg, #f59e0b, #d97706); }
     .thumb-web { background-color: #0284c7; background-image: linear-gradient(135deg, #0284c7, #22d3ee); }
     .thumb-info { background-color: #64748b; background-image: linear-gradient(135deg, #64748b, #475569); }
-    .thumb-watermark { position: absolute; right: 12px; bottom: 8px; font-size: 0.72rem; background: rgba(0, 0, 0, 0.55); color: white; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; backdrop-filter: blur(2px); z-index: 3; }
     .card-body { padding: 1.25rem; display: flex; flex-direction: column; flex: 1; }
     .card-category { font-size: 0.75rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.4rem; }
     .card-title { font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.45rem; line-height: 1.35; }
-    .card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.45; margin-bottom: 1.2rem; flex: 1; }
-    .card-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 0.85rem; gap: 0.5rem; }
+    .card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.45; margin-bottom: 1.2rem; flex: 1; white-space: pre-line; }
+    .card-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 0.85rem; gap: 0.5rem; flex-wrap: wrap; }
     .btn { padding: 0.45rem 0.85rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none; }
-    .btn:hover { background: #f1f5f9; }
+    .btn:hover { background: #f1f5f9; color: #0f172a; }
     .btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
-    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-primary:hover { background: var(--primary-hover); color: white; }
     .btn-edit { background: #3b82f6; color: white; border-color: #3b82f6; }
-    .btn-edit:hover { background: #2563eb; }
+    .btn-edit:hover { background: #2563eb; color: white; }
     .btn-danger { background: #ef4444; color: white; border-color: #ef4444; }
-    .popup-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 1.5rem; }
+    .btn-danger:hover { background: #dc2626; color: white; }
+    .btn-vis { background: #f59e0b; color: white; border-color: #f59e0b; }
+    .popup-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.68); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 1.5rem; }
     .popup-backdrop.active { display: flex; }
     .popup-content { background: white; border-radius: var(--radius); width: 100%; max-width: 980px; height: 88vh; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); overflow: hidden; }
     .popup-header { padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #f8fafc; }
     .popup-header h3 { font-size: 1.05rem; font-weight: 700; color: #1e1b4b; }
     .popup-frame { flex: 1; width: 100%; border: none; background: #f8fafc; }
-    .popup-yt-player { display: none; flex-direction: column; flex: 1; background: #0f172a; position: relative; overflow: hidden; }
-    .popup-yt-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: blur(10px) brightness(0.4); transform: scale(1.05); }
-    .popup-yt-box { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 2rem; text-align: center; color: white; }
-    .popup-yt-poster { width: 100%; max-width: 640px; height: 360px; border-radius: 12px; background-size: cover; background-position: center; box-shadow: 0 20px 40px rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; text-decoration: none; transition: transform 0.2s; }
-    .popup-yt-poster:hover { transform: scale(1.02); }
-    .popup-yt-play-btn { width: 72px; height: 72px; background: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(239, 68, 68, 0.5); transition: transform 0.2s, background 0.2s; }
-    .popup-yt-poster:hover .popup-yt-play-btn { transform: scale(1.12); background: #dc2626; }
-    .popup-yt-play-btn svg { width: 32px; height: 32px; fill: white; margin-left: 4px; }
-    .popup-alt { display: none; flex-direction: column; align-items: center; justify-content: center; flex: 1; padding: 2.5rem; text-align: center; background: #f8fafc; }
-    .admin-bar-active { display: none; position: fixed; bottom: 20px; right: 20px; background: #1e1b4b; color: white; padding: 0.75rem 1.25rem; border-radius: 999px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 90; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .admin-bar-active { display: none; position: fixed; bottom: 20px; right: 20px; background: #1e1b4b; color: white; padding: 0.75rem 1.25rem; border-radius: 999px; box-shadow: 0 10px 25px rgba(0,0,0,0.35); z-index: 90; align-items: center; gap: 0.45rem; flex-wrap: wrap; max-width: 95vw; }
     body.is-admin .admin-bar-active { display: flex; }
     body.is-admin .admin-item-btn { display: inline-flex !important; }
     .admin-item-btn { display: none; }
-    .modal-box { background: white; padding: 1.5rem; border-radius: var(--radius); width: 100%; max-width: 620px; max-height: 90vh; overflow-y: auto; }
+    .modal-box { background: white; padding: 1.5rem; border-radius: var(--radius); width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; }
+    .modal-box.wide { max-width: 980px; }
     .form-group { margin-bottom: 1rem; }
     .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.3rem; }
     .form-control { width: 100%; padding: 0.55rem 0.8rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; }
-    .struct-item { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.8rem; background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 0.5rem; }
+    .struct-item { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.8rem; background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 0.5rem; gap: 0.5rem; }
     footer { background: var(--surface); border-top: 1px solid var(--border); text-align: center; padding: 1.5rem; font-size: 0.8rem; color: var(--muted); margin-top: auto; display: flex; justify-content: space-between; align-items: center; max-width: 1240px; margin-left: auto; margin-right: auto; width: 100%; }
     .discrete-lock { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 0.95rem; padding: 4px 8px; border-radius: 4px; }
     .discrete-lock:hover { color: var(--primary); background: #f1f5f9; }
+
+    /* --- TABLEAUX DE SUIVI & OUTILS PROF --- */
+    .admin-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 0.75rem; }
+    .admin-table th, .admin-table td { border-bottom: 1px solid var(--border); padding: 0.55rem 0.6rem; text-align: left; }
+    .admin-table th { background: rgba(79, 70, 229, 0.06); font-weight: 700; cursor: pointer; user-select: none; }
+    .admin-table tr:hover { background: rgba(79, 70, 229, 0.03); }
+    .dot-online { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; margin-right: 5px; box-shadow: 0 0 6px #22c55e; }
+    .dot-offline { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; margin-right: 5px; }
+    .maint-banner { display: none; background: #ef4444; color: white; text-align: center; padding: 0.5rem 1rem; font-size: 0.82rem; font-weight: 700; }
+    body.maint-active .maint-banner { display: block; }
+
+    /* --- PORTAIL DE CONNEXION & ÉCRAN MAINTENANCE --- */
+    .auth-overlay { position: fixed; inset: 0; background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); z-index: 350; display: none; align-items: center; justify-content: center; padding: 1.5rem; }
+    .auth-overlay.active { display: flex; }
+    .auth-card { background: white; color: #0f172a; border-radius: 16px; width: 100%; max-width: 430px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+    .sakura-petal { position: fixed; top: -20px; background: #fbcfe8; border-radius: 150% 0 150% 0; opacity: 0.7; pointer-events: none; z-index: 1; animation: fallPetal linear infinite; }
+    @keyframes fallPetal { to { transform: translateY(105vh) rotate(360deg); } }
   </style>
 </head>
 <body>
+
+  <div id="maintBanner" class="maint-banner">
+    🛠 MODE MAINTENANCE (DS) ACTIF — Les élèves voient actuellement l'écran « Accès suspendu ».
+  </div>
+
+  <!-- PORTAIL D'AUTHENTIFICATION ÉLÈVE / PROFESSEUR -->
+  <div class="auth-overlay" id="loginOverlay">
+    <div class="auth-card">
+      <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:1.25rem;">
+        <div class="brand-logo-container"><span class="brand-logo-fallback">∫</span></div>
+        <div>
+          <h2 style="font-size:1.15rem; font-weight:800; color:#1e1b4b;">Portail Mathématiques</h2>
+          <p style="font-size:0.8rem; color:#64748b;">Lycée Charlotte Perriand — Genech</p>
+        </div>
+      </div>
+
+      <div id="loginMaintenanceAlert" style="display:none; background:#fef2f2; border:1px solid #fecaca; color:#b91c1c; padding:0.85rem; border-radius:8px; margin-bottom:1rem; font-size:0.85rem; font-weight:600;"></div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Identifiant élève (ou « prof »)</label>
+          <input type="text" id="loginUser" class="form-control" placeholder="ex: prenom.nom" required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" id="loginPass" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <p id="loginError" style="color:#ef4444; font-size:0.8rem; font-weight:600; margin-bottom:0.75rem; display:none;"></p>
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:0.65rem;">Se connecter au portail</button>
+      </form>
+
+      <form id="changePassForm" onsubmit="handleFirstPassChange(event)" style="display:none; margin-top:1rem; border-top:1px solid #e2e8f0; padding-top:1rem;">
+        <p style="font-size:0.85rem; font-weight:600; color:#4f46e5; margin-bottom:0.75rem;">🔑 Choisissez votre nouveau mot de passe personnel :</p>
+        <div class="form-group">
+          <label>Nouveau mot de passe (min. 4 caractères)</label>
+          <input type="password" id="newPersonalPass" class="form-control" minlength="4" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Enregistrer et accéder aux cours</button>
+      </form>
+    </div>
+  </div>
 
   <header>
     <div class="top-bar">
@@ -109,8 +182,21 @@
           <p>Lycée Charlotte Perriand — Genech</p>
         </div>
       </a>
-      <div id="syncStatusBadge" class="sync-badge" title="Mode de stockage actif">
-        💾 Connexion au Cloud...
+      <div class="top-actions">
+        <select id="themeSelector" class="theme-select" onchange="applyTheme(this.value)" title="Personnaliser l'ambiance visuelle">
+          <option value="classic">🎨 Thème : Classique</option>
+          <option value="sakura">🌸 Thème : Sakura</option>
+          <option value="retro">🕹️ Thème : Rétro 80s</option>
+          <option value="dark">🌙 Thème : Sombre</option>
+        </select>
+        <div id="userBadge" class="user-chip" style="display:none;">
+          <span id="userNameDisplay">Élève</span>
+          <button onclick="openChangeMyPassModal()" style="background:none; border:none; cursor:pointer; font-size:0.8rem;" title="Changer mon mot de passe">🔑</button>
+          <button onclick="logoutUser()" style="background:none; border:none; cursor:pointer; color:inherit; font-weight:800; margin-left:4px;" title="Se déconnecter">✕</button>
+        </div>
+        <div id="syncStatusBadge" class="sync-badge" title="Mode de stockage actif">
+          💾 Connexion au Cloud...
+        </div>
       </div>
     </div>
     <nav id="navTabsContainer"></nav>
@@ -119,7 +205,7 @@
   <main>
     <div class="hero-banner" id="heroBanner">
       <picture class="hero-banner-bg">
-        <img src="images/lycee-facade.jpeg" alt="Façade du lycée Charlotte Perriand" class="hero-banner-bg">
+        <img src="images/lycee-facade.jpeg" alt="Façade du lycée Charlotte Perriand" class="hero-banner-bg" onerror="this.style.display='none'">
       </picture>
       <div class="hero-overlay"></div>
       <div class="hero-content">
@@ -131,91 +217,279 @@
     <div id="mainPagesContainer"></div>
   </main>
 
+  <!-- VISIONNEUSE DE DOCUMENTS -->
   <div class="popup-backdrop" id="docPopup">
     <div class="popup-content">
       <div class="popup-header">
         <h3 id="popupTitle">Document</h3>
         <div style="display:flex; gap:0.5rem; align-items:center;">
-          <a id="popupDirectOpenBtn" href="#" target="_blank" class="btn" style="display:none; font-size:0.8rem;">↗ Plein écran</a>
+          <a id="popupDirectOpenBtn" href="#" target="_blank" class="btn" style="font-size:0.8rem;">↗ Plein écran / Nouvel onglet</a>
           <button class="btn" onclick="closePopup()">✕ Fermer</button>
         </div>
       </div>
       <iframe id="popupIframe" class="popup-frame" src="" allowfullscreen></iframe>
-      <div id="popupYtPlayer" class="popup-yt-player">
-        <div id="popupYtBg" class="popup-yt-bg"></div>
-        <div class="popup-yt-box">
-          <a id="popupYtLink" href="#" target="_blank" class="popup-yt-poster">
-            <div class="popup-yt-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-          </a>
-          <p id="popupYtDesc" style="margin-top:1rem; max-width:640px; color:#cbd5e1; font-size:0.9rem; line-height:1.4;"></p>
-          <a id="popupYtBtn" href="#" target="_blank" class="btn btn-primary" style="margin-top:1rem;">▶ Lancer la vidéo sur YouTube</a>
-        </div>
-      </div>
     </div>
   </div>
 
+  <!-- BARRE FLOTTANTE PROFESSEUR -->
   <div class="admin-bar-active" id="adminBar">
-    <span style="font-size:0.85rem; font-weight:600; margin-right:0.3rem;">👨‍🏫 Professeur</span>
-    <button class="btn btn-primary" onclick="openAddModal()">+ Nouveau document</button>
-    <button class="btn" onclick="openStructureModal()">⚙️ Structure & Ordre</button>
-    <button class="btn" onclick="openCategoryModal()">➕ Nouvel onglet</button>
-    <button class="btn" onclick="exportData()">💾 Exporter</button>
-    <button class="btn" onclick="logoutAdmin()">Verrouiller</button>
+    <span style="font-size:0.85rem; font-weight:700; margin-right:0.3rem;">👨‍🏫 Professeur</span>
+    <button class="btn btn-primary" onclick="openAddModal()">+ Document</button>
+    <button class="btn" onclick="openVisibilityModal()">👁️ Visibilité</button>
+    <button class="btn" onclick="openTrackingModal()">📊 Suivi & Élèves</button>
+    <button class="btn" onclick="openMaintenanceModal()">🛠 Mode DS</button>
+    <button class="btn" onclick="openBackupModal()">💾 Sauvegarde</button>
+    <button class="btn" onclick="openStructureModal()">⚙️ Structure</button>
+    <button class="btn" onclick="openCategoryModal()">➕ Onglet</button>
+    <button class="btn btn-danger" onclick="logoutAdmin()">Verrouiller</button>
   </div>
 
+  <!-- MODALE : AJOUTER / MODIFIER UN DOCUMENT -->
   <div class="popup-backdrop" id="addModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
         <h3 id="docModalTitle" style="font-size:1.15rem; font-weight:700;">Ajouter un document</h3>
-        <button class="btn" id="closeAddModalBtn" onclick="closeAddModal()">✕</button>
+        <button class="btn" onclick="closeAddModal()">✕</button>
       </div>
       <form id="addDocForm" onsubmit="saveDocForm(event)">
         <input type="hidden" id="editDocId" value="">
         <div class="form-group"><label>Titre</label><input type="text" id="newTitle" class="form-control" required></div>
-        <div class="form-group"><label>Onglet</label><select id="newSection" class="form-control" onchange="syncSubCategories()"></select></div>
-        <div class="form-group"><label>Sous-catégorie</label><select id="newSub" class="form-control"></select></div>
-        <div class="form-group"><label>Type</label>
-          <select id="newType" class="form-control">
-            <option value="pdf">📄 Document PDF</option><option value="mental">🧠 Carte Mentale</option>
-            <option value="cours">📐 Fiche de cours</option><option value="jeu">🎲 Activité</option>
-            <option value="video">▶️ Vidéo</option><option value="web">🌐 Lien Web</option><option value="info">📌 Information</option>
-          </select>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+          <div class="form-group"><label>Onglet</label><select id="newSection" class="form-control" onchange="syncSubCategories()"></select></div>
+          <div class="form-group"><label>Sous-catégorie</label><select id="newSub" class="form-control"></select></div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+          <div class="form-group"><label>Type</label>
+            <select id="newType" class="form-control">
+              <option value="pdf">📄 Document PDF</option><option value="mental">🧠 Carte Mentale</option>
+              <option value="cours">📐 Fiche de cours</option><option value="jeu">🎲 Activité / Jeu</option>
+              <option value="video">▶️ Vidéo</option><option value="web">🌐 Lien Web</option><option value="info">📌 Information</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Visibilité pour les élèves</label>
+            <select id="newVisible" class="form-control">
+              <option value="true">👁️ Visible immédiatement</option>
+              <option value="false">🙈 Face cachée (masqué aux élèves)</option>
+            </select>
+          </div>
         </div>
         <div class="form-group">
           <label>Vignette (Image de fond)</label>
-          <div style="background:#f1f5f9; padding:0.8rem; border-radius:8px; border:1px dashed var(--border); margin-bottom:0.5rem;">
+          <div style="background:#f1f5f9; padding:0.65rem; border-radius:8px; border:1px dashed var(--border); margin-bottom:0.4rem;">
             <input type="file" id="coverFileInput" accept="image/*" class="form-control" onchange="document.getElementById('newCoverImg').value = '(Fichier prêt pour le Cloud)';">
           </div>
           <input type="text" id="newCoverImg" class="form-control" placeholder="URL ou laisser vide">
         </div>
         <div class="form-group">
-          <label>Fichier PDF (ou lien web)</label>
-          <div style="background:#f1f5f9; padding:0.8rem; border-radius:8px; border:1px dashed var(--border); margin-bottom:0.5rem;">
+          <label>Fichier PDF (ou lien web / YouTube)</label>
+          <div style="background:#f1f5f9; padding:0.65rem; border-radius:8px; border:1px dashed var(--border); margin-bottom:0.4rem;">
             <input type="file" id="pdfFileInput" accept=".pdf" class="form-control" onchange="document.getElementById('newUrl').value = '(Fichier prêt pour le Cloud)';">
           </div>
           <input type="text" id="newUrl" class="form-control" placeholder="URL externe">
         </div>
         <div class="form-group"><label>Description</label><textarea id="newDesc" class="form-control" rows="3"></textarea></div>
-        <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1.5rem;">
-          <button type="button" class="btn" onclick="closeAddModal()" id="cancelBtnModal">Annuler</button>
+        <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1.25rem;">
+          <button type="button" class="btn" onclick="closeAddModal()">Annuler</button>
           <button type="submit" id="docModalSubmitBtn" class="btn btn-primary">Publier</button>
         </div>
       </form>
     </div>
   </div>
 
+  <!-- MODALE : VISIBILITÉ DES DOCUMENTS (FACE CACHÉE) -->
+  <div class="popup-backdrop" id="visibilityModal">
+    <div class="modal-box wide">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <div>
+          <h3 style="font-size:1.15rem; font-weight:700;">👁️ Gestion des documents visibles / Face cachée</h3>
+          <p style="font-size:0.8rem; color:var(--muted);">Activez ou masquez vos documents en un clic selon l'avancée du cours.</p>
+        </div>
+        <button class="btn" onclick="document.getElementById('visibilityModal').classList.remove('active')">✕</button>
+      </div>
+      <div style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">
+        <select id="visFilterSection" class="form-control" style="max-width:240px;" onchange="renderVisibilityList()"></select>
+        <input type="text" id="visSearchInput" class="form-control" style="max-width:280px;" placeholder="Rechercher un titre..." oninput="renderVisibilityList()">
+        <button class="btn" onclick="batchSetVisibility(true)">👁️ Tout afficher (filtre)</button>
+        <button class="btn" onclick="batchSetVisibility(false)">🙈 Tout cacher (filtre)</button>
+      </div>
+      <div id="visibilityListContainer" style="max-height:60vh; overflow-y:auto;"></div>
+    </div>
+  </div>
+
+  <!-- MODALE : SUIVI D'ACTIVITÉ & COMPTES ÉLÈVES -->
+  <div class="popup-backdrop" id="trackingModal">
+    <div class="modal-box wide">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <div>
+          <h3 style="font-size:1.15rem; font-weight:700;">📊 Suivi d'activité & Comptes Élèves</h3>
+          <p style="font-size:0.8rem; color:var(--muted);">Connexions, jours travaillés, temps actif et gestion des identifiants.</p>
+        </div>
+        <button class="btn" onclick="document.getElementById('trackingModal').classList.remove('active')">✕</button>
+      </div>
+
+      <div style="display:flex; gap:0.5rem; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.75rem; flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="switchTrackTab('eleves')">👥 Suivi des Élèves</button>
+        <button class="btn" onclick="switchTrackTab('comptes')">🔑 Gérer les Comptes & Mots de passe</button>
+        <button class="btn" onclick="switchTrackTab('docs')">📚 Documents les plus consultés</button>
+      </div>
+
+      <!-- Sous-onglet 1 : Tableau de suivi -->
+      <div id="trackTabEleves">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.5rem;">
+          <span id="trackSummaryText" style="font-size:0.82rem; font-weight:600; color:var(--primary);"></span>
+          <label style="font-size:0.8rem; display:flex; align-items:center; gap:0.4rem;">
+            <input type="checkbox" id="requireAuthToggle" onchange="toggleRequireAuth(this.checked)">
+            Demander obligatoirement un identifiant élève à l'entrée du site
+          </label>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="admin-table" id="studentsTrackTable">
+            <thead>
+              <tr>
+                <th onclick="sortTrackTable('name')">Élève ↕</th>
+                <th onclick="sortTrackTable('username')">Identifiant ↕</th>
+                <th onclick="sortTrackTable('lastLogin')">Dernière connexion ↕</th>
+                <th onclick="sortTrackTable('lastSeen')">Présence ↕</th>
+                <th onclick="sortTrackTable('daysCount')">Jours travaillés ↕</th>
+                <th onclick="sortTrackTable('loginsCount')">Connexions ↕</th>
+                <th onclick="sortTrackTable('activeMinutes')">Temps actif ↕</th>
+                <th onclick="sortTrackTable('docsCount')">Docs ouverts ↕</th>
+              </tr>
+            </thead>
+            <tbody id="studentsTrackTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Sous-onglet 2 : Création de comptes et mots de passe -->
+      <div id="trackTabComptes" style="display:none;">
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1rem; margin-bottom:1.25rem;">
+          <div style="background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid var(--border);">
+            <h4 style="font-size:0.9rem; margin-bottom:0.6rem;">➕ Ajouter des élèves (en lot ou seul)</h4>
+            <p style="font-size:0.76rem; color:var(--muted); margin-bottom:0.5rem;">Un élève par ligne (ex: <code>Jean Dupont</code> ou <code>jean.dupont ; Jean Dupont</code>). L'identifiant est créé automatiquement.</p>
+            <textarea id="bulkStudentsInput" class="form-control" rows="4" placeholder="Alice Martin&#10;Lucas Bernard&#10;Emma Petit"></textarea>
+            <div style="display:flex; gap:0.5rem; align-items:center; margin-top:0.5rem;">
+              <input type="text" id="defaultBulkPass" class="form-control" value="123456Azerty" placeholder="Mot de passe initial">
+              <button class="btn btn-primary" onclick="addBulkStudents()">Créer</button>
+            </div>
+            <label style="font-size:0.75rem; display:flex; align-items:center; gap:0.35rem; margin-top:0.45rem;">
+              <input type="checkbox" id="bulkForceChange" checked> Obliger à personnaliser le mot de passe à la 1ère connexion
+            </label>
+          </div>
+
+          <div style="background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid var(--border);">
+            <h4 style="font-size:0.9rem; margin-bottom:0.6rem;">🔑 Réinitialiser le mot de passe d'un élève</h4>
+            <div class="form-group">
+              <label>Choisir l'élève</label>
+              <select id="resetStudentSelect" class="form-control"></select>
+            </div>
+            <div class="form-group">
+              <label>Nouveau mot de passe provisoire</label>
+              <input type="text" id="resetStudentPass" class="form-control" value="123456Azerty">
+            </div>
+            <label style="font-size:0.75rem; display:flex; align-items:center; gap:0.35rem; margin-bottom:0.6rem;">
+              <input type="checkbox" id="resetForceChange" checked> L'obliger à le changer à sa prochaine connexion
+            </label>
+            <button class="btn btn-primary" onclick="resetStudentPassword()">Réinitialiser</button>
+          </div>
+        </div>
+        <div id="accountsListContainer" style="max-height:38vh; overflow-y:auto;"></div>
+      </div>
+
+      <!-- Sous-onglet 3 : Classement des documents -->
+      <div id="trackTabDocs" style="display:none;">
+        <table class="admin-table">
+          <thead>
+            <tr><th>Document</th><th>Section</th><th>Élèves distincts</th><th>Total d'ouvertures</th></tr>
+          </thead>
+          <tbody id="docsStatsTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : MODE MAINTENANCE / DS -->
+  <div class="popup-backdrop" id="maintenanceModal">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h3 style="font-size:1.15rem; font-weight:700;">🛠 Mode Maintenance / Suspension DS</h3>
+        <button class="btn" onclick="document.getElementById('maintenanceModal').classList.remove('active')">✕</button>
+      </div>
+      <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">
+        Pendant la maintenance, les élèves voient « Accès suspendu » et ne peuvent consulter aucun document. Vous conservez l'intégralité de vos accès enseignant.
+      </p>
+      <div class="form-group">
+        <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.95rem; cursor:pointer;">
+          <input type="checkbox" id="maintActiveCheckbox" style="width:18px; height:18px;">
+          <strong>Suspendre l'accès des élèves maintenant</strong>
+        </label>
+      </div>
+      <div class="form-group">
+        <label>Message affiché aux élèves sur l'écran verrouillé</label>
+        <input type="text" id="maintMessageInput" class="form-control" placeholder="Ex : Interrogation en cours — Accès rétabli à 10h00">
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
+        <button class="btn btn-primary" onclick="saveMaintenanceSettings()">Enregistrer l'état</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALE : SAUVEGARDE & RESTAURATION INTELLIGENTE -->
+  <div class="popup-backdrop" id="backupModal">
+    <div class="modal-box wide">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h3 style="font-size:1.15rem; font-weight:700;">💾 Sauvegarde & Restauration intelligente</h3>
+        <button class="btn" onclick="document.getElementById('backupModal').classList.remove('active')">✕</button>
+      </div>
+      <div style="background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid var(--border); margin-bottom:1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+        <div>
+          <h4 style="font-size:0.92rem; margin-bottom:0.2rem;">Exporter toute la base actuelle (.json)</h4>
+          <p style="font-size:0.78rem; color:var(--muted);">Inclut les 8 sections, tous les documents (visibles et cachés), les comptes élèves et le suivi d'activité.</p>
+        </div>
+        <button class="btn btn-primary" onclick="exportData()">💾 Télécharger la sauvegarde complète</button>
+      </div>
+
+      <h4 style="font-size:0.95rem; margin-bottom:0.5rem;">♻️ Restaurer ou fusionner un fichier JSON (Zéro perte)</h4>
+      <p style="font-size:0.8rem; color:var(--muted); margin-bottom:0.75rem;">
+        Sélectionnez un fichier <code>.json</code> : le système analyse d'abord les différences sans rien écraser. Une sauvegarde de sécurité automatique est téléchargée juste avant l'application.
+      </p>
+      <input type="file" id="restoreFileInput" accept=".json,application/json" class="form-control" onchange="previewRestoreFile(event)" style="margin-bottom:0.75rem;">
+      <label style="font-size:0.8rem; display:flex; align-items:center; gap:0.4rem; margin-bottom:0.75rem;">
+        <input type="checkbox" id="keepNewerCheck" checked> Conserver tout ce qui est déjà présent sur le site et fusionner les nouveautés (Recommandé)
+      </label>
+      <div id="restorePreviewBox" style="display:none; background:#eef2ff; border:1px solid #c7d2fe; padding:1rem; border-radius:8px; margin-bottom:1rem; font-size:0.84rem;"></div>
+      <button id="applyRestoreBtn" class="btn btn-danger" disabled onclick="executeSmartRestore()">♻️ Appliquer la restauration</button>
+    </div>
+  </div>
+
+  <!-- MODALE : CHANGER SON PROPRE MOT DE PASSE (ÉLÈVE) -->
+  <div class="popup-backdrop" id="selfPassModal">
+    <div class="modal-box" style="max-width:420px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h3 style="font-size:1.05rem; font-weight:700;">🔑 Changer mon mot de passe</h3>
+        <button class="btn" onclick="document.getElementById('selfPassModal').classList.remove('active')">✕</button>
+      </div>
+      <form onsubmit="saveSelfPassword(event)">
+        <div class="form-group">
+          <label>Nouveau mot de passe</label>
+          <input type="password" id="selfNewPassInput" class="form-control" minlength="4" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Enregistrer</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE : STRUCTURE & ORDRE -->
   <div class="popup-backdrop" id="structureModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
         <h3 style="font-size:1.15rem; font-weight:700;">Gérer l'ordre & les sous-catégories</h3>
         <button class="btn" onclick="closeStructureModal()">✕</button>
       </div>
-      
       <div style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
         <h4 style="font-size:0.9rem; margin-bottom:0.5rem;">1. Réorganiser les onglets principaux</h4>
         <div id="tabsOrderList"></div>
       </div>
-
       <div class="form-group">
         <h4 style="font-size:0.9rem; margin-bottom:0.5rem;">2. Sous-catégories (séparées par des virgules)</h4>
         <select id="structSecSelect" class="form-control" onchange="renderSubEditor()" style="margin-bottom: 0.5rem;"></select>
@@ -225,6 +499,7 @@
     </div>
   </div>
 
+  <!-- MODALE : CRÉER UN ONGLET -->
   <div class="popup-backdrop" id="categoryModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
@@ -253,13 +528,227 @@
     const DEFAULT_SUPABASE_URL = "https://xydayuntveuscibupgto.supabase.co"; 
     const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5ZGF5dW50dmV1c2NpYnVwZ3RvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MDMyNTcsImV4cCI6MjEwODA3OTI1N30.ketR5e-MimQuqzk5cHLhlN5ZjdZEH_Fq4fNz6UG-Fzo";
 
-    const PREFERRED_ORDER = ["communication", "rappels", "grand-oral", "suites", "fonctions", "espace", "probas"];
-    
+    const PREFERRED_ORDER = ["communication", "rappels", "grand-oral", "suites", "fonctions", "espace", "probas", "sec_1793357506991"];
+
+    // --- BASE DE SECOURS INTÉGRALE (sauvegarde_perriand_2026-11-15.json) ---
+    const FALLBACK_BACKUP = {
+      "sections": {
+        "communication": { "desc": "Informations, calendrier et consignes pour la semaine suivante", "subs": ["Consignes de la semaine", "Planning", "Divers"], "title": "Communication" },
+        "rappels": { "desc": "Notions indispensables, formules de dérivation, second degré et trigonométrie", "subs": ["Polynômes", "Dérivation", "Suites 1ère", "Trigonométrie"], "title": "Rappels des cours de 1ère" },
+        "grand-oral": { "desc": "Guides méthodologiques, critères du jury et propositions de questions transversales", "subs": ["Méthodologie", "Pistes de questions", "Grille d'évaluation"], "title": "Grand Oral" },
+        "suites": { "desc": "Récurrence, variations, théorèmes de comparaison et limites de suites", "subs": ["Récurrence et étude de suites", "Limites de suites", "Suites arithmetico-geometrique", "Méthodes BAC", "Videos"], "title": "Suites" },
+        "fonctions": { "desc": "Dérivation, trigonométrie, logarithme népérien, intégration, primitives et équations différentielles", "subs": ["Dérivation", "Fonctions trigonométriques", "Convexité", "Continuité", "Fonction logarithme", "Primitive", "Équations différentielles", "Intégration"], "title": "Étude de fonctions" },
+        "espace": { "desc": "Repères orthonormés, vecteurs, droites, plans et produit scalaire spatial", "subs": ["Positions relatives", "Vecteurs de l'espace", "Produit scalaire", "Droites et plans : équations", "Methodes BAC", "Videos"], "title": "Géométrie dans l'espace" },
+        "probas": { "desc": "Épreuves de Bernoulli, loi binomiale, variables aléatoires et lois des grands nombres", "subs": ["Schéma de Bernoulli", "Loi binomiale", "Sommes de variables", "Méthodes BAC", "Videos"], "title": "Probabilités" },
+        "sec_1793357506991": { "desc": "Outils de révision, sites intéressants, fiches méthode", "subs": ["Liens", "Outils"], "title": "Liens et outils" }
+      },
+      "docs": [
+        {"id":"doc_1794557846832","sub":"Consignes de la semaine","url":"","desc":"Un sujet sur les suites tiré de l'APMEP  année 2023:\nhttps://www.apmep.fr/Annee-2023","type":"info","title":"Interrogation du vendredi 20 novembre ","section":"communication","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1794302315609","sub":"Vecteurs de l'espace","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1794302314900_Fiches_Revisions_Mathematiques_Terminale_Fiche_9_Chapitre_9_-_Geometrie_dans_l_espace.pdf","desc":"","type":"mental","title":"Fiche synthese vecteurs de l'espace ","section":"espace","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1794302315406_Code_Generated_Image__8_.png"},
+        {"id":"doc_1794302263043","sub":"Vecteurs de l'espace","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1794302261705_vecteurs-de-lespace_6n2ogdbcs3a.pdf","desc":"","type":"mental","title":"Carte mentale vecteurs de l'espace ","section":"espace","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1794302262633_carte_constance_.png"},
+        {"id":"doc_1794302193990","sub":"Vecteurs de l'espace","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1794302218976_cm_termspe_vecteursdroitesplanespace_7donsyek277.pdf","desc":"","type":"mental","title":"carte mentale sur les vecteurs de l'espace ","section":"espace","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1794302193523_carte_2.png"},
+        {"id":"doc_1794302142706","sub":"Positions relatives","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1794302142213_Fiches_Revisions_Mathematiques_Terminale_Fiche_8_Chapitre_8_-_Droites_et_plans_de_l_espace.pdf","desc":"","type":"mental","title":"fiche synthese positions relatives ","section":"espace","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1794302142520_Code_Generated_Image__7_.png"},
+        {"id":"doc_1794302005321","sub":"Positions relatives","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1794302003508_cm_termspe_positionrelativeespace_g0fmhovvs9i.pdf","desc":"","type":"mental","title":"Carte mentale sur les positions relatives ","section":"espace","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1794302004686_carte_1.png"},
+        {"id":"doc_1793720076794","sub":"Consignes de la semaine","url":"","desc":"Un sujet sur les suites tiré de l'APMEP  année 2022:\nhttps://www.apmep.fr/Annee-2022","type":"info","title":"Interrogation du vendredi 13 novembre ","section":"communication","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793699974695","sub":"Pistes de questions","url":"https://www.youtube.com/watch?v=5zTW4zp4UNU&t=144s","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Peut-on cartographier et anticiper la criminalité grâce aux probabilités ?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1793699345134","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793699344512_questions_types_limites__2_.pdf","desc":"Les questions les plus fréquentes au baccalauréat (années 2023 à 2026) ","type":"pdf","title":"Questions classiques sur les suites arithmético-géométriques A MAITRISER ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793699077567","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793699077029_questions_types_limites__1_.pdf","desc":"Les principales questions posées lors des sessions 2023 et 2024 du bac ","type":"pdf","title":"Questions classiques sur les limites 1  A MAITRISER ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793698690329","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793698689713_questions_types_limites.pdf","desc":"Les principales questions posées lors des sessions 2025 et 2026 du bac ","type":"pdf","title":"Questions classiques sur les limites A MAITRISER ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793525243864","sub":"Récurrence et étude de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793525243456_diapo_bilan_suites_ari_et_geo.pdf","desc":"Diaporama bilan sur les suites arithmétiques et géométriques ","type":"pdf","title":"Ce qu'il faut  retenir sur les suites arithmétiques et géométriques ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793525110755","sub":"Limites de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793525110520_ex_redaction_limites.pdf","desc":"","type":"pdf","title":"Rédaction calcul de limites ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793525054530","sub":"Limites de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793525052793_limites-de-suites_cm.pdf","desc":"Une carte mentale complète ( pour s'inspirer ) ","type":"mental","title":"Carte mentale limites ","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793525053625_Capture_cm2.png"},
+        {"id":"doc_1793524528672","sub":"Suites arithmetico-geometrique","url":"https://shootlasuite.netlify.app/","desc":"Jeu pour automatiser les formules sur le suites arithmétiques te géométriques ","type":"jeu","title":"JEU - SHOOT IT","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793524565991_Capture_d_ecran_2026-11-01_101541.png"},
+        {"id":"doc_1793524269869","sub":"Videos","url":"https://www.youtube.com/watch?v=aaj9HOvFV1g","desc":"","type":"video","title":"TYPE classique BAC SUITES Assez complet pas facile Term Spé Maths","section":"suites","coverImg":""},
+        {"id":"doc_1793524168646","sub":"Videos","url":"https://www.youtube.com/watch?v=D3wl9sCy5h8&list=PLUfJOEwIb2c4NxpoFAJxbYtTA8bEgF8Gv&index=11","desc":"","type":"video","title":" Dire si une suite CONVERGE - THÉORÈME SUITE MONOTONE ","section":"suites","coverImg":""},
+        {"id":"doc_1793524101451","sub":"Videos","url":"https://www.youtube.com/watch?v=EamanhMuFkc&list=PLUfJOEwIb2c4NxpoFAJxbYtTA8bEgF8Gv&index=13","desc":"","type":"video","title":"Fiche LIMITE de SUITES : TOUS LES CAS DE FIGURE ","section":"suites","coverImg":""},
+        {"id":"doc_1793524051656","sub":"Videos","url":"https://www.youtube.com/watch?v=-JXlKzCWX8U&list=PLUfJOEwIb2c4NxpoFAJxbYtTA8bEgF8Gv&index=12","desc":"","type":"video","title":"LIMITE de suites GÉOMÉTRIQUES (q^n)","section":"suites","coverImg":""},
+        {"id":"doc_1793523979023","sub":"Videos","url":"https://www.youtube.com/watch?v=QbnZ8fNkqMI","desc":"","type":"video","title":"Sens de VARIATION d'une suite - DIFFERENCE","section":"suites","coverImg":""},
+        {"id":"doc_1793523929887","sub":"Videos","url":"https://www.youtube.com/watch?v=7YHZKVVtWuY","desc":"","type":"video","title":"Sens de VARIATION d'une suite - QUOTIENT ","section":"suites","coverImg":""},
+        {"id":"doc_1793523867302","sub":"Videos","url":"https://www.youtube.com/watch?v=FiuPcZ4AsW4","desc":"","type":"video","title":"Sens de VARIATION d'une suite - étude de FONCTION","section":"suites","coverImg":""},
+        {"id":"doc_1793523811990","sub":"Videos","url":"https://www.youtube.com/watch?v=nMwl0MZdllE","desc":"","type":"video","title":"Reconnaître une suite ARITHMÉTIQUE et GÉOMÉTRIQUE","section":"suites","coverImg":""},
+        {"id":"doc_1793523752688","sub":"Videos","url":"https://www.youtube.com/watch?v=xANmYOd4FY4","desc":"","type":"video","title":"Trouver la forme EXPLICITE d'une suite ARITHMÉTIQUE","section":"suites","coverImg":""},
+        {"id":"doc_1793523700284","sub":"Videos","url":"https://www.youtube.com/watch?v=qsWKScOEjic","desc":"","type":"video","title":"Trouver la forme EXPLICITE d'une suite GÉOMÉTRIQUE","section":"suites","coverImg":""},
+        {"id":"doc_1793523657871","sub":"Videos","url":"https://www.youtube.com/watch?v=UgzCOUeHg5A","desc":"","type":"video","title":"ALGORITHME qui calcule le RANG d'une suite","section":"suites","coverImg":""},
+        {"id":"doc_1793523603336","sub":"Videos","url":"https://www.youtube.com/watch?v=lThMuQMFZXE","desc":"","type":"video","title":"Suites EXPLICITES ou RÉCURRENTES ?","section":"suites","coverImg":""},
+        {"id":"doc_1793523549916","sub":"Videos","url":"https://www.youtube.com/watch?v=9MN73QZP_cA","desc":"","type":"video","title":"Démontrer par Récurrence qu'une suite est MINORÉE ou MAJORÉE - Exercice Corrigé","section":"suites","coverImg":""},
+        {"id":"doc_1793523466594","sub":"Suites 1ère","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793523466039_diap-ex-2suites_ari_et_geo_2_w06lsyssp7.pdf","desc":"Un exercice complet rappelant les formules à connaître ","type":"pdf","title":"Exercice de rappel 2: comparaison suites arithmétiques et géométriques ","section":"rappels","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793523430427","sub":"Suites 1ère","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793523429920_diap-ex-suites_ari_et_geo_exo_epv99mm0fcu.pdf","desc":"Un exercice complet rappelant les formules à connaître ","type":"pdf","title":"Exercice de rappel 1 : comparaison suites arithmétiques et géométriques ","section":"rappels","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793523329523","sub":"Suites 1ère","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793523328883_presentation_suites_rappels-2026_wotgiunx1js__1_.pdf","desc":"Un rappel complet des notions à maîtriser en fin de première ","type":"pdf","title":"Diaporama de rappels ","section":"rappels","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793523107585","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793523107309_ie4_tspe-11_ujqa3sox4k__1_.pdf","desc":"Corrigé de l'exercice 3 de la méthode 2","type":"pdf","title":"Methode 2: Obtenir la formule explicite par récurrence- CORRIGE Exercice 3 ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793523061842","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793523061531_ie4_tspe-10_n1sk3iii5z__1_.pdf","desc":"Exercice à trous ","type":"pdf","title":"Methode 2: Obtenir la formule explicite par récurrence- Exercice 3 ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793523026024","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793523025732_ie4_tspe-9_adzrpyu0h2d__1_.pdf","desc":"Corrigé de l'exercice 2 de la méthode 2","type":"pdf","title":"Methode 2: Obtenir la formule explicite par récurrence- CORRIGE Exercice 2 ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793522980103","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793522977178_ie4_tspe-8_8vhmu7zlsbo__1_.pdf","desc":"Exercice à trous ","type":"pdf","title":"Methode 2: Obtenir la formule explicite par récurrence- Exercice 2","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793522948051","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793522947538_ie4_tspe-7_eo7vi5ejjxk__1_.pdf","desc":"Corrigé de l'exercice 1 de la méthode 2","type":"pdf","title":"Methode 2: Obtenir la formule explicite par récurrence- CORRIGE Exercice 1 ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793522896618","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793522896282_ie4_tspe-6_jwwo6bmhc7c__1_.pdf","desc":"Exercice à trous ","type":"pdf","title":"Methode 2: Obtenir la formule explicite par récurrence- Exercice 1 ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793521659195","sub":"Outils","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793521658719_Guide_Creation_Fiches_de_Revision_IA.pdf","desc":"TUTO réalisé par Maxime  pour réaliser des fiches de synthèse à l'aide de l'IA","type":"pdf","title":"Creer une fiche de révision à l'aide de l'IA ","section":"sec_1793357506991","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793359635582","sub":"Videos","url":"https://www.youtube.com/watch?v=U6xLEFED-Ps&source_ve_path=MjM4NTE&embeds_referring_euri=https%3A%2F%2Fdigipad.app%2F","desc":"","type":"video","title":"Démontrer par Récurrence qu'une suite est CROISSANTE ou DÉCROISSANTE","section":"suites","coverImg":""},
+        {"id":"doc_1793359561148","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793359560732_ie4_tspe-22_c0yv4q9h4oh__1_.pdf","desc":"Corrige exercice 4 methode 3","type":"pdf","title":"Methode 3: Montrer la croissance ou la décroissance -CORRIGE Exercice 4 ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793359527905","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793359527548_ie4_tspe-21_y25cyhzlscp__1_.pdf","desc":"Exercice à trous ","type":"pdf","title":"Methode 3: Montrer la croissance ou la décroissance -Exercice 4","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793359471941","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793359471433_ie4_tspe-20_ti736ci7rq8__1_.pdf","desc":"Corrige exercice 3 methode 3","type":"pdf","title":"Methode 3: Montrer la croissance ou la décroissance - CORRIGE Exercice 3","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793359425316","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793359424847_ie4_tspe-19_r1by0fggzso__1_.pdf","desc":"Exercice à trous ","type":"pdf","title":"Methode 3: Montrer la croissance ou la décroissance -Exercice 3","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793359387323","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793359386966_ie4_tspe-15_ghsnvqjnxgo__1_.pdf","desc":"Corrige exercice 2 methode 3","type":"pdf","title":"Methode 3: Montrer la croissance ou la décroissance - CORRIGE Exercice 2 ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793359348636","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793359348360_ie4_tspe-14_6z7q6iwrt8k__1_.pdf","desc":"Exercice à trous ","type":"pdf","title":"Methode 3: Montrer la croissance ou la décroissance -Exercice 2 ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793359318669","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793359318356_ie4_tspe-13_63ghv22y296__1_.pdf","desc":"Corrigé exercice 1 méthode 3","type":"pdf","title":"Methode 3: Montrer la croissance ou la décroissance -CORRIGE Exercice 1 ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793359258132","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793359257775_ie4_tspe-12_bdbq1a3p2d9__1_.pdf","desc":"Exercice à trous ","type":"pdf","title":"Methode 3: Montrer la croissance ou la décroissance -Exercice 1 ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793358997836","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793358997600_ie4_tspe-18_teixwlqc7n__1_.pdf","desc":"Corrige de la méthode 4","type":"pdf","title":"Methode 4: Encadrer en utilisant une fonction et la récurrence -CORRIGE ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793358958616","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793358958056_ie4_tspe-17_1qbmg2hhwd1j__1_.pdf","desc":"Exercice à trous","type":"pdf","title":"Methode 4: Encadrer en utilisant une fonction et la récurrence -Exercice ","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793358806340","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793358806050_ie4_tspe-5_5p5kqxbzau4__1_.pdf","desc":"Corrigé exercice 3 méthode 1","type":"pdf","title":"Methode 1: majorer , minorer ou borner avec la récurrence  CORRIGE - Exercice 3","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793358766970","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793358766710_ie4_tspe-4_f12ntuulei__1_.pdf","desc":"Exercice à trous ","type":"pdf","title":"Methode 1: majorer , minorer ou borner avec la récurrence - Exercice 3","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793358725217","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793358724795_ie4_tspe-3_lg98frvp3i9__1_.pdf","desc":"Corrige de l'exercice 2 méthode 1","type":"pdf","title":"Methode 1: majorer , minorer ou borner avec la récurrence  CORRIGE - Exercice 2","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793358684432","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793358684150_fiches_rec-2_2pes7jf5nle__1_.pdf","desc":"Exercice à trous ","type":"pdf","title":"Methode 1: majorer , minorer ou borner avec la récurrence  - Exercice 2","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793358647382","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793358647121_fiches_rec-1_afqw67qos5__1_.pdf","desc":"Corrigé de l'exercice 1 methode 1","type":"pdf","title":"Methode 1: majorer , minorer ou borner avec la récurrence  CORRIGE - Exercice 1","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793358601567","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793358601071_fiches_rec_wojgg0out9__1_.pdf","desc":"Un exercice à trous ","type":"pdf","title":"Methode 1: majorer , minorer ou borner avec la récurrence - Exercice 1","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793358376131","sub":"Trigonométrie","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793358375868_6._Trigonometrie.pdf","desc":"Le cours de première ","type":"pdf","title":"Synthèse du cours de trigonométrie de 1ere ","section":"rappels","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793358326864","sub":"Trigonométrie","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793358326490_6__039_._Le_cercle_trigonometrique.pdf","desc":"Cercle et valeurs remarquables ","type":"pdf","title":"Cercle trigonométrique ","section":"rappels","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793358120542","sub":"Outils","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793358120123_Creer_une_fiche_de_revision_avec_l-IA_1.pdf","desc":"TUTO réalisé par Arielle pour réaliser des fiches à l'aide de CANVA et de l'IA","type":"info","title":"Créer une fiche de révision avec l'IA et CANVA ","section":"sec_1793357506991","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793357858065","sub":"Liens","url":"https://www.apmep.fr/Annee-2023","desc":"Sujets et corrigés ","type":"video","title":"APMEP 2023","section":"sec_1793357506991","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793357857830_apmep_1.png"},
+        {"id":"doc_1793357808520","sub":"Liens","url":"https://www.apmep.fr/Annee-2024","desc":"Sujets et corrigés ","type":"web","title":"APMPEP 2024","section":"sec_1793357506991","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793357808334_apmep_1.png"},
+        {"id":"doc_1793357758186","sub":"Liens","url":"https://www.apmep.fr/Annee-2025","desc":"Sujets et corrigés ","type":"web","title":"APMEP 2025","section":"sec_1793357506991","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793357757925_apmep_1.png"},
+        {"id":"doc_1793357554966","sub":"Liens","url":"https://www.apmep.fr/Annee-2026","desc":"Sujets et corrigés ","type":"web","title":"APMEP 2026","section":"sec_1793357506991","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793357685612_apmep_1.png"},
+        {"id":"doc_1793289352139","sub":"Dérivation","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793289351918_chap_2_calcul_deri-3_euw36ezhkxo.pdf","desc":"","type":"pdf","title":"Dérivation de fonctions composées CORRIGE Exercice 2","section":"fonctions","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793289325716","sub":"Dérivation","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793289325402_chap_2_calcul_deri-2_rzr25a9ng0g.pdf","desc":"","type":"pdf","title":"Dérivation de fonctions composées Exercice 2","section":"fonctions","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793289302886","sub":"Dérivation","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793289302525_chap_2_calcul_deri-1_6tilyrrb82o.pdf","desc":"","type":"pdf","title":"Dérivation de fonctions composées CORRIGE Exercice 1","section":"fonctions","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793289251156","sub":"Dérivation","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793289250773_chap_2_calcul_deri_fjwkbdz0n6.pdf","desc":"","type":"pdf","title":"Dérivation de fonctions composées Exercice 1","section":"fonctions","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793289182895","sub":"Dérivation","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793289207748_calcul_deri-1_u9e61sn4qmc.pdf","desc":"","type":"pdf","title":"Derivation de fonctions composées","section":"fonctions","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_1793288990745","sub":"Dérivation","url":"https://duckfonctions.netlify.app","desc":"Jeu pour automatiser le calcul de dérivées ","type":"web","title":"JEU - DERIV HUNT","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793289073651_jeu_derihunt.png"},
+        {"id":"doc_1793288872167","sub":"Dérivation","url":"(Fichier prêt pour le Cloud)","desc":"Toutes les dérivées à savoir pour le BAC ","type":"mental","title":"Derivées à connaître carte mentale ","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793288871636_Capture_d_ecran_2026-10-29_164652.png"},
+        {"id":"doc_1793288717844","sub":"Fonctions trigonométriques","url":"https://www.youtube.com/watch?v=KcPv2_HdHdA&t=1s","desc":"","type":"video","title":"DÉRIVATION des Fonctions TRIGO - Exercice Corrigé","section":"fonctions","coverImg":""},
+        {"id":"doc_1793288655215","sub":"Dérivation","url":"https://www.youtube.com/watch?v=UgiE3X09enI","desc":"","type":"video","title":"Exponentielle - dérivation - exp(u) IMPORTANT","section":"fonctions","coverImg":""},
+        {"id":"doc_1793288596995","sub":"Dérivation","url":"https://www.youtube.com/watch?v=TCI5yUZ0Lv8","desc":"","type":"video","title":"Dérivée de 1 / U^n :Cours et 10 exemples ","section":"fonctions","coverImg":""},
+        {"id":"doc_1793288483213","sub":"Fonctions trigonométriques","url":"https://www.youtube.com/watch?v=ol6UtCpFDQM","desc":"","type":"pdf","title":"Etudier une fonction trigonométrique 4/4 : Représentation","section":"fonctions","coverImg":""},
+        {"id":"doc_1793288447999","sub":"Fonctions trigonométriques","url":"https://www.youtube.com/watch?v=X6vJog_xQRY","desc":"","type":"video","title":"Etudier une fonction trigonométrique 3/4 : Variations","section":"fonctions","coverImg":""},
+        {"id":"doc_1793288413857","sub":"Fonctions trigonométriques","url":"https://www.youtube.com/watch?v=s3S85RL06ks","desc":"","type":"video","title":"Etudier une fonction trigonométrique 2/4 : Périodicité ","section":"fonctions","coverImg":""},
+        {"id":"doc_1793288373995","sub":"Fonctions trigonométriques","url":"https://www.youtube.com/watch?v=uOXv5XnAiNk","desc":"","type":"video","title":"Etudier une fonction trigonométrique 1/4 : Parité","section":"fonctions","coverImg":""},
+        {"id":"doc_1793288128429","sub":"Fonctions trigonométriques","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793288127166_cm_1spe_fonctionstrigonometriques_32nrghd6cc2.pdf","desc":"Carte mentale ","type":"mental","title":"Carte de synthese","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793288127650_Capture_d_ecran_2026-10-23_104219.png"},
+        {"id":"doc_1793288067413","sub":"Fonctions trigonométriques","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793288067143_ie_trigo-2_ocs3um5uhf8.pdf","desc":"","type":"pdf","title":"IE de Trigonométrie ","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1793288033545","sub":"Fonctions trigonométriques","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793288032248_ie_trigo-1_cz7mmufyhf.pdf","desc":"","type":"pdf","title":"IE de Trigonométrie : corrigé ","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1793287995454","sub":"Fonctions trigonométriques","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793287995081_type-bac-cor_1xsdcc4gat1.pdf","desc":"Corrigés détaillés de la fiche ","type":"pdf","title":"Corrections détaillées de la fiche  ","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1793287953462","sub":"Fonctions trigonométriques","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793287952923_type-bac_v29xzuzhz8q.pdf","desc":"Rappels du cours et  des méthodes puis  exercices","type":"pdf","title":"fiche d'exercices ","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1793287785471","sub":"Fonctions trigonométriques","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793287784973_trigo-8_5trcgzi999m.pdf","desc":"","type":"pdf","title":"Corrige exercice 3","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1793287754323","sub":"Fonctions trigonométriques","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793287754059_trigo-7_6rr2m1furm6.pdf","desc":"","type":"pdf","title":"Exercice 3","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1793287732296","sub":"Fonctions trigonométriques","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793287731931_trigo-5_r5x7x18vp3.pdf","desc":"","type":"pdf","title":"Corrigé exercice 2","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1793287702351","sub":"Fonctions trigonométriques","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793287701999_trigo-4_6x533gv8uij.pdf","desc":"","type":"pdf","title":"Exercice 2","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1793287677855","sub":"Fonctions trigonométriques","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793287677530_trigo-3_ahc6v70sil.pdf","desc":"","type":"pdf","title":"Corrigé exercice 1","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1793287626008","sub":"Fonctions trigonométriques","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793287625545_trigo-2_zc1ppjc0d.pdf","desc":"","type":"pdf","title":"Exercice 1","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1792745541230","sub":"Suites arithmetico-geometrique","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792745540481_dm-maths-final_xeg73zl4swd__1_.pdf","desc":"Correction détaillée avec points de vigilance ","type":"jeu","title":"Corrigé du \"sujet classique\" ","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1792745477750","sub":"Suites arithmetico-geometrique","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792745477354_exo-type_mpevfa60sa8__1_.pdf","desc":"Sujet à maîtriser ","type":"jeu","title":"Sujet classique ","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1792745388772","sub":"Suites arithmetico-geometrique","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792745387804_sujets-suites-ari-et-geo_q1pgl516uh.pdf","desc":"Diaporama d'étude ","type":"pdf","title":"Etude d'une suite arithmético géométrique - analyse détaillée ","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1792745347517","sub":"Suites arithmetico-geometrique","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792745347179_exos_ari_et_geo_bis_su0oti9aujp.pdf","desc":"Méthodes et questions classiques ","type":"pdf","title":"Etude d'une suite arithmético géométrique 3","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1792745317612","sub":"Suites arithmetico-geometrique","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792745317231_exo_sag_ter_uyb0widx1k__1_.pdf","desc":"Méthodes et questions classiques ","type":"pdf","title":"Etude d'une suite arithmético géométrique 2","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1792745283652","sub":"Suites arithmetico-geometrique","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792745283223_exo_classique_ari_et_geo_1w3dc38dv3e__1_.pdf","desc":"Méthodes et questions classiques ","type":"pdf","title":"Etude d'une suite arithmético géométrique 1","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1792745211857","sub":"Suites arithmetico-geometrique","url":"https://youtu.be/P1aMNEg1X3w?si=qn6RvtxKG2Pi5wh0","desc":"","type":"video","title":"Video exercice classique ","section":"suites","coverImg":""},
+        {"id":"doc_1792745059397","sub":"Limites de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792745058516_cm_termspe_limitesdesuites.pdf","desc":"Synthèse des notions à connaître ","type":"mental","title":"Carte mentale ","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792745058797_Capture_d_ecran_2026-10-23_104219.png"},
+        {"id":"doc_1792744832799","sub":"Limites de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792744832247_exemple-die_miwyud0wxcf.pdf","desc":"Un exemple d'IE pour se préparer ","type":"info","title":"Exemple d'IE ","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1792744757120","sub":"Limites de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792744756380_correction-type-bac-cor-1_709iyvh1ued.pdf","desc":"Correction détaillée ","type":"jeu","title":"Corrigé fiche 2","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660043034_lycee-facade.jpeg"},
+        {"id":"doc_1792744702836","sub":"Limites de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792744701593_type-bac-cor_7y781g26p73.pdf","desc":"Correction détaillée ","type":"jeu","title":"Corrigé fiche 1","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792744702551_lycee-facade.jpeg"},
+        {"id":"doc_1792744603170","sub":"Limites de suites","url":"","desc":"Théorèmes de convergence - corrigés disponible sur le site ","type":"jeu","title":"Exercices pour s'entraîner -fiche 2","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792744638455_lycee-facade.jpeg"},
+        {"id":"doc_1792744568304","sub":"Limites de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792744566842_type-bac_6v03krir0y6.pdf","desc":"Calculs de limites - corrigés disponible sur le site ","type":"jeu","title":"Exercices pour s'entraîner -fiche 1","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792744567817_lycee-facade.jpeg"},
+        {"id":"doc_1792744319072","sub":"Pistes de questions","url":"https://youtu.be/iBnubtqKBM4?si=L39Id8ZtZftK3f1C","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Peut-on arrêter totalement le développement d'une épidémie?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792744264585","sub":"Pistes de questions","url":"https://youtu.be/gI1I1guv_C8?si=dKyZ9Tfqb_OmShe3","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Comment réussir un tir parfait au basket?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792744195485","sub":"Pistes de questions","url":"https://youtu.be/_joQXtLviGI?si=WmhbjNvWfS0ETRIC","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Peut-on modéliser les prix de l'immobilier?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792744153877","sub":"Pistes de questions","url":"https://youtu.be/zSNpzIB8jlU?si=__8rER7kzW4F3MFa","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":" Le paradoxe de Monty Hall","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792744110149","sub":"Pistes de questions","url":"https://youtu.be/XJdp-xcAnVQ?si=sg572uPGgKTYVCba","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Comment réduire les embouteillages grâce aux maths?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792744051884","sub":"Pistes de questions","url":"https://youtu.be/rwQ8Tdt-sAA?si=l6sXs11x12P5-Lh0","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":" Quelle étrange loi se cache derrière la répartition des chiffres dans le monde?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743994634","sub":"Pistes de questions","url":"https://youtu.be/IIWbt_nT6bU?si=p6oQeKBTZSREHa_n","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Peut-on améliorer nos chances de gagner des paris sportifs?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743935507","sub":"Pistes de questions","url":"https://youtu.be/nJ7PvsA2Rh8?si=_8FoE4SRRocfbOgN","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Comment la théorie du chaos change notre vision du monde?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743869297","sub":"Pistes de questions","url":"https://youtu.be/zZ6xa1kWkYI?si=27X8Fm8DFQcWHLrN","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Peut-on atteindre la lune avec une feuille ?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743814632","sub":"Pistes de questions","url":"https://youtu.be/5oV2nNCxE_Q?si=sYF5FZw22vPxmlmG","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":" Pi ,pourquoi est-ce un nombre univers?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743723828","sub":"Pistes de questions","url":"https://youtu.be/bGHoE075Lr0?si=PNXcnwsmj5jYg34L","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":" Les sondages sont-ils fiables?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743680634","sub":"Pistes de questions","url":"https://youtu.be/WxZ80MGfSSM?si=pubU0OVkolJC7KjD","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Comment une IA effectue-t-elle des pronostics sportifs?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743632681","sub":"Pistes de questions","url":"https://youtu.be/zUx5dPTlHwc?si=AASGq5firMBE24Su","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Modéliser l' essor de la Seconde Main","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743589489","sub":"Pistes de questions","url":"https://youtu.be/3mUGgxU0lZI?si=s-HnuS8tPlBpDRc1","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Comment les mathématiques optimisent l'efficacité des voitures ?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743526392","sub":"Pistes de questions","url":"https://youtu.be/Iz8X0qnWqTU?si=k_zJIM86T9a3vjiB","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Comment les maths protègent nos données?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743477783","sub":"Pistes de questions","url":"https://youtu.be/8FW0mpJTwGc?si=Q1WSb3KP0eYI3nX6","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"L échelle de Richter et les Logarithmes","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743442890","sub":"Pistes de questions","url":"https://youtu.be/hbDMqvjajSM?si=XM6-rj0Vu3pxW7QC","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Le nombre d'or","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743396701","sub":"Pistes de questions","url":"https://youtu.be/H1sYBdhCNkc?si=cJxLHotBabfNDIkF","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Comment estimer des aires en utilisant le hasard?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743330161","sub":"Pistes de questions","url":"https://youtu.be/HRsYKSAxqGw?si=Fa1BGVDOZUK6tRAX","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Peut- on modéliser mathématiquement une bataille?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743285999","sub":"Pistes de questions","url":"https://youtu.be/WQyo3AiOsvo?si=-K5vHjTFaLUCWWFa","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Comment prévoir les résultats d'une équipe grâce aux maths?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743234705","sub":"Pistes de questions","url":"https://youtu.be/Q7LwZH8JjPg?si=jKJti4lLziATqxwL","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Comment décrire une fractale","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743180724","sub":"Pistes de questions","url":"https://youtu.be/aToFaGZ20y0?si=LEeLDOj7pB1gQhL0","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":" Zoom sur l'affaire Sally Clark","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743118119","sub":"Pistes de questions","url":"https://youtu.be/tU_S8-o4LNo?si=M-vHrwpYCIyIGAeT","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":" Comment modéliser la trajectoire d'un ballon ?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743066834","sub":"Pistes de questions","url":"https://youtu.be/zfRYvhIorgw?si=Fnj4fVWQ2omDhFwv","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":" Améliorer les performances sportives grâce aux maths","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792743016134","sub":"Pistes de questions","url":"https://youtu.be/bi6Fplg-NpM?si=lcYpe83V4sdqcR21","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Déterminer l'heure d'un décès","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742953286","sub":"Pistes de questions","url":"https://youtu.be/5cO0pjQ_jjg?si=AJKw3PoQcm2jT5YU","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Comment coacher une équipe avec des maths?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742896806","sub":"Pistes de questions","url":"https://youtu.be/eHqDPe0MKbY?si=ezbk2ZBG7UVRZwZp","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Arnaque et maths","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742850047","sub":"Pistes de questions","url":"https://youtu.be/USXFMb9zYGw?si=wDiWYDgCV9pgX3BY","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"A quoi sert le coefficient de Gini?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742800419","sub":"Pistes de questions","url":"https://youtu.be/4oM5iZ2zV_4?si=AE6w-Ey3UMkkxR82","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Peut-on anticiper le cours de la bourse grâce aux maths?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742725852","sub":"Pistes de questions","url":"https://youtu.be/DgZ5v6UANew?si=54WWlEGe665mSvXV","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Peut-on générer de l'aléatoire ?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742678382","sub":"Pistes de questions","url":"https://youtu.be/aE7K4B1EJmk?si=C1VfRe_PI1Fhtd3c","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":" Le penalty est -il un pur hasard?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742611982","sub":"Pistes de questions","url":"https://youtu.be/Ly-F2FV9cPE?si=G83zHXnSaBsfoAsn","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Démasquer des fraudeurs grâce aux maths?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742557597","sub":"Pistes de questions","url":"https://youtu.be/T9AgHQmMtEc?si=heBl-JcDVDMPCDBe","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Combien de temps un signe mettra -t-il pour écrire le mot mathématiques?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742508490","sub":"Pistes de questions","url":"https://youtu.be/XM96jy4QZTs?si=KVdo5JD2zHnnWo7w","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Peut-on calculer la longueur d'une côte?","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742444002","sub":"Pistes de questions","url":"https://youtu.be/wac1XOHRkuY?si=EKoCnw8zqgLuQsn_","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer)","type":"video","title":"Loi binomiale et vaccin ","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742398700","sub":"Pistes de questions","url":"https://youtu.be/dr_oZLJefkU?si=Zm3fLz9LUua0soUt","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer) ","type":"video","title":"Peut-on peindre la trompette de Gabriel? ","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742344907","sub":"Pistes de questions","url":"https://youtu.be/e_1Jxec3c7g?si=VwZ3Xew-OIxfc2gY","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer) ","type":"video","title":"Modéliser une épidémie","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742286931","sub":"Pistes de questions","url":"https://youtu.be/WV_HavMrzOE?si=god7wv4v3kXOJ28f","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer) ","type":"video","title":"Modeliser les jeux de hasard ","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742241655","sub":"Pistes de questions","url":"https://youtu.be/lOeKV6r0iyc?si=gml7p5k5_DHmplyn","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer) ","type":"video","title":"Modeliser la propagation d'une rumeur ","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742189163","sub":"Pistes de questions","url":"https://youtu.be/ZHrZNLZTnPQ?si=wxVIPfsnyeSyxjd7","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer) ","type":"video","title":"Emprisonnée à cause des maths? ","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742111078","sub":"Pistes de questions","url":"https://youtu.be/M-mmOVoh4Hg?si=GSuWf1kfaQL96TJt","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer) ","type":"video","title":"Les maths de la draft NBA","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792742058410","sub":"Pistes de questions","url":"https://youtu.be/JCfbQ_t1H2o?si=regNiwFJK0ZoIjeZ","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer) ","type":"video","title":"La regle de Lhopital ","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792741978980","sub":"Pistes de questions","url":"https://youtu.be/Q_zHbhjod-k?si=DjzPTXN4f38N9JYj","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer) ","type":"video","title":"Loi bionmiale et prise de décision ","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792741926956","sub":"Pistes de questions","url":"https://youtu.be/1B6I6RAXt0U?si=NQmitZT-j89comdB","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer) ","type":"video","title":"De l'art mathématique ? ","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792741766023","sub":"Pistes de questions","url":"https://youtu.be/rXlM42W1jck?si=rxCXUQTknzfqb7b2","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer) ","type":"video","title":"Les maths au tribunal ","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792687432521","sub":"Fonctions trigonométriques","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792687431028_derivation___cos_et_sin.pdf","desc":"Fiche de révision ","type":"mental","title":"Fiche de revision fonctions trigonométriques ","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792687431784_sin_et_cos_.png"},
+        {"id":"doc_1792687314413","sub":"Dérivation","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792687313028_derivation___cos_et_sin.pdf","desc":"Fiche de révision dérivation (en seconde page) ","type":"mental","title":"Fiche de révision ","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792687313672_derivation_.png"},
+        {"id":"doc_1792687159950","sub":"Dérivation","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792687159303_Fiches_Revisions_Mathematiques_Terminale_Fiche_3_Chapitre_3_-_Derivation_et_Convexite.pdf","desc":"rappel de cours + exercice type bac ","type":"cours","title":"Fiche cours et méthode : dérivation ","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792687159720_Code_Generated_Image__3_.png"},
+        {"id":"doc_1792686987141","sub":"Limites de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792686986560_Fiches_Revisions_Mathematiques_Terminale_Fiche_4_Chapitre_4_-_Limites_de_suites.pdf","desc":"Rappels de cours + exercice type bac ","type":"cours","title":"Fiche cours et méthode : limites de suites","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792686986903_Code_Generated_Image__4_.png"},
+        {"id":"doc_1792686912912","sub":"Récurrence et étude de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792686912093_Fiches_Revisions_Mathematiques_Terminale_Fiche_2_Chapitre_2_-_Les_Suites.pdf","desc":"Rappel de cours + exercice type bac ","type":"cours","title":"Fiche cours et méthode :les suites ","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792686912627_Code_Generated_Image__2_.png"},
+        {"id":"doc_1792686813851","sub":"Récurrence et étude de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792686813125_Fiches_Revisions_Mathematiques_Terminale_Fiche_1_Chapitre_1_-_La_Recurrence.pdf","desc":"Rappel de cours + exercice type ","type":"cours","title":"Fiche cours et méthode : la récurrence ","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792686813559_Code_Generated_Image__1_.png"},
+        {"id":"doc_1792686494963","sub":"Récurrence et étude de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792686493675_les_suites.pdf","desc":"Fiche de révision ","type":"mental","title":"Fiche de révision ","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792686494307_Capture_d_ecran_2026-10-22_182716.png"},
+        {"id":"doc_1792686273525","sub":"Limites de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792686271974_limites_de_suites.pdf","desc":"Fiche de révision ","type":"mental","title":"Fiche de révision ","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792686272793_const_suites.png"},
+        {"id":"doc_1792686034401","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792686033407_fiche_smethodes__8_.pdf","desc":"Méthode détaillée ","type":"pdf","title":"Comment montrer qu'une suite est géométrique ","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792686034028_lycee-facade.jpeg"},
+        {"id":"doc_1792685986052","sub":"Méthodes BAC","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792685984345_fiche_smethodes__7_.pdf","desc":"Méthode détaillée ","type":"pdf","title":"Comment montrer qu'une suite est géométrique 1","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792685985764_lycee-facade.jpeg"},
+        {"id":"doc_1792685783084","sub":"Suites 1ère","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792685781690_1792659745186_suites-ari-geo-1ere--cm_tskff4ooe0p.pdf","desc":"Une carte mentale avec toutes les formules ","type":"mental","title":"Rappels suites arithmétiques et géométriques ","section":"rappels","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792685782235_Gemini_Generated_Image_yer2n4yer2n4yer2.jpg"},
+        {"id":"doc_1792685678905","sub":"Limites de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792685677578_fiche_smethodes__4_.pdf","desc":"Exemples de limites avec des suites géométriques : très très classique!","type":"pdf","title":"Limites de suites géométriques ","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792685678690_lycee-facade.jpeg"},
+        {"id":"doc_1792685491516","sub":"Limites de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792685490464_fiche_smethodes__3_.pdf","desc":"Exemples d'utilisation de la méthode la plus \"classique\"","type":"pdf","title":"Lever une indétermination par factorisation ","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792685491214_lycee-facade.jpeg"},
+        {"id":"doc_1792685355470","sub":"Limites de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792685354611_fiche_smethodes__1_.pdf","desc":"Exemples illustrés et rappels de cours ","type":"pdf","title":"Utilisation des théorèmes de comparaison ","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792685355051_lycee-facade.jpeg"},
+        {"id":"doc_1792685205525","sub":"Limites de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792685204696_fiche_smethodes.pdf","desc":"Exemples illustrés et rappels de cours ","type":"pdf","title":"Notion de convergence ","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792685205224_lycee-facade.jpeg"},
+        {"id":"doc_1792660681632","sub":"Dérivation","url":"https://www.youtube.com/watch?v=ipQfj_1aC5A","desc":"Video complète avec des exemples ","type":"video","title":"Dérivation u^n","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660680496_Gemini_Generated_Image_fwet04fwet04fwet.jpg"},
+        {"id":"doc_1792660353565","sub":"Dérivation","url":"https://www.youtube.com/watch?v=Nyb8az2dbnk","desc":"Video complète avec des exemples ","type":"video","title":"dérivation de racine de u","section":"fonctions","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660508630_Gemini_Generated_Image_fwet04fwet04fwet.jpg"},
+        {"id":"doc_1792660148429","sub":"Dérivation","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660147981_derivation_vcaa31fwb57.pdf","desc":"fiche complète détaillant l'étude d'un polynome de degré 3","type":"pdf","title":"Etude des variations via la dérivation ","section":"rappels","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660148243_lycee-facade.jpeg"},
+        {"id":"doc_1792660043279","sub":"Dérivation","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660042497_derivation-1ere_gihjnz938td.pdf","desc":"Principales formules + méthode ","type":"mental","title":"carte mentale de rappels ","section":"rappels","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1793358196873_cm_deri.png"},
+        {"id":"doc_1792659448850","sub":"Pistes de questions","url":"https://youtu.be/69h72kfOhSk?si=OYf23jRlZJ5IlQur","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer) ","type":"video","title":"L'exponentielle en architecture ","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792659396049","sub":"Pistes de questions","url":"https://youtu.be/oGHKvitOtuE?si=K2X-Qcx0dYe9lZrd","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer) ","type":"video","title":"Enigma","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792659330359","sub":"Pistes de questions","url":"https://youtu.be/ly38CDDYoH4?si=trIrxjtzkHHIv6BE","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer) ","type":"video","title":"La gamme pythagoricienne ","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792659251956","sub":"Pistes de questions","url":"https://youtu.be/-h4u2wzWgwo?si=0R46je8ELgbIU45B","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer) ","type":"video","title":"Surbooking","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792659075179","sub":"Pistes de questions","url":"https://youtu.be/DPwrzCmjWrA?si=LrM9AaMBySb-x8tw","desc":"Exemple de sujet  :vidéo détaillant le potentiel traitement d'une question ( à retravailler et étoffer) ","type":"video","title":"Filles et maths ","section":"grand-oral","coverImg":""},
+        {"id":"doc_1792658881366","sub":"Divers","url":"","desc":"Pour me contacter :\nmaths-perriand@laposte.net ","type":"pdf","title":"Mail de contact ","section":"communication","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792658880835_lycee-facade.jpeg"},
+        {"id":"1","sub":"Consignes de la semaine","url":"","desc":"Un sujet sur les suites tiré de l'APMEP  année 2021:\nhttps://www.apmep.fr/Annee-2021\n","type":"info","title":"Interrogation du lundi 2 novembre ","section":"communication","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_exp_poly","sub":"Dérivation","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792659819017_exp__poly_srl0naajtya.pdf","desc":"Guide méthodologique en 5 étapes pour dériver f(x) = (ax+b)e^(cx+d), factoriser par l'exponentielle et dresser le tableau de variations.","type":"cours","title":"Méthode pas à pas : Polynôme × Exponentielle","section":"fonctions","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_go_auto","sub":"Méthodologie","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792658935315_grille-auto-aval-grand-oral_aqloy0g388f_gjje2nlvqsv.pdf","desc":"Grille d'observation entre pairs ou personnelle : posture, voix, rythme, clarté mathématique et vulgarisation.","type":"cours","title":"Fiche d'auto-évaluation et d'entraînement oral","section":"grand-oral","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_go_grille","sub":"Grille d'évaluation","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792658966781_grille_evaluation-go-1_m5nj0ul77p.pdf","desc":"Les 5 compétences officielles du B.O. : prestation orale, parole en continu, solidité des connaissances, échange et argumentation.","type":"pdf","title":"Grille officielle d'évaluation du Grand Oral","section":"grand-oral","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_go_themes","sub":"Pistes de questions","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792658994087_exemples-de-themes.pdf","desc":"Recueil complet de thèmes mathématiques et bi-disciplinaires (Physique, SES, SVT, HGGSP, NSI) pour orienter le choix du sujet.","type":"pdf","title":"Idées de thèmes et pistes pour le Grand Oral","section":"grand-oral","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_poly_carte","sub":"Polynômes","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792659483164_carte_heuristique_2nddeg_ylw5v3epooa.pdf","desc":"Synthèse visuelle organisée : passage de l'équation ax²+bx+c=0 à la fonction, paraboles et synthèses graphiques.","type":"mental","title":"Carte mentale : Le second degré en un clin d'œil","section":"rappels","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660559909_Gemini_Generated_Image_yer2n4yer2n4yer2.jpg"},
+        {"id":"doc_poly_essentiel","sub":"Polynômes","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792659557453_polynomes_s3sx85m2rg.pdf","desc":"Formules indispensables à maîtriser en début d'année : sommet S(alpha; beta), calcul de Delta et règle d'or des signes.","type":"cours","title":"Fiche mémo : L'essentiel pour la Terminale","section":"rappels","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_poly_f1","sub":"Polynômes","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792659576271_f1-racines-equa-facto_456lqasy7n4.pdf","desc":"Méthodologie complète sur le calcul du discriminant, la recherche des racines réelles et la factorisation du trinôme avec exercices guidés.","type":"pdf","title":"Fiche 1 : Racines, équations & factorisation","section":"rappels","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_poly_f2","sub":"Polynômes","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792659603269_f2-formes-dun-poly_kixvroep8q.pdf","desc":"Utiliser et passer entre les formes développée, canonique et factorisée. Variations, sommet et modélisation de problèmes concrets.","type":"pdf","title":"Fiche 2 : Les trois formes du second degré","section":"rappels","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_poly_rappels","sub":"Polynômes","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792659631193_rappels_polynomes_krevtj0lvf.pdf","desc":"Fiche de rappel illustrée : paraboles orientées vers le haut ou le bas, formules canoniques et factorisées du trinôme.","type":"cours","title":"Fiche de synthèse : Formes, racines & signes","section":"rappels","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_poly_tb","sub":"Polynômes","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792659655977_tb_degre21_dokiva3b5b.pdf","desc":"Tableau comparatif croisant les signes de a et de Delta : racines, factorisation, positions relatives et tableaux de signes.","type":"cours","title":"Tableau récapitulatif du second degré","section":"rappels","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_recu_exemples_sommes","sub":"Récurrence et étude de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792659694041_recurrence_gs2kx0hkyoi__1_.pdf","desc":"Modèles complets de rédactions rigoureuses : somme des premiers entiers, somme des carrés et démonstration de divisibilité par récurrence.","type":"cours","title":"Exemples types : Égalités, sommes & divisibilité","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_recu_grenouille","sub":"Récurrence et étude de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792659707368_grenouille-et-recurrence_fi4jkb632g9.pdf","desc":"Métaphore imagée pour mémoriser intuitivement le principe de récurrence : monter sur la 1ère marche et passer d'une marche à la suivante.","type":"mental","title":"Illustration visuelle : La grenouille et l'escalier","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_recu_methode_bac","sub":"Récurrence et étude de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792659719711_recu-_7nkci316cag__1_.pdf","desc":"Guide méthodologique complet en 4 étapes (initialisation, hérédité, conclusion) avec un exemple classique guidé sur une suite définie par une fonction.","type":"cours","title":"Fiche méthode : Raisonnement par récurrence (Type Bac)","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_suites_cm_globale","sub":"Récurrence et étude de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792659758691_cm_termspe_suitesnumeriques_rqve9ve1q9i__1_.pdf","desc":"Synthèse visuelle de Terminale : sens de variation, suites arithmétiques et géométriques, majoration, minoration et sommes de termes.","type":"mental","title":"Carte mentale : Panorama des suites numériques","section":"suites","coverImg":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792660618242_Gemini_Generated_Image_yer2n4yer2n4yer2.jpg"},
+        {"id":"doc_suites_memo_bornes","sub":"Récurrence et étude de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792659777467_les-suites_b5iudac8xqp.pdf","desc":"Fiche synthétique sur les définitions de suites majorées, minorées, bornées, limites de suites géométriques et méthodes d'encadrement.","type":"cours","title":"Fiche mémo : Propriétés, bornes & comportements","section":"suites","coverImg":"images/lycee-facade.jpeg"},
+        {"id":"doc_suites_plan_travail","sub":"Récurrence et étude de suites","url":"https://xydayuntveuscibupgto.supabase.co/storage/v1/object/public/fichiers/1792659802915_plan-de-travail_chap1-2024_al325yn3xbt.pdf","desc":"Feuille de route complète du chapitre : savoir-faire prioritaires, liste d'exercices d'entraînement, algorithmes Python et liens vidéos de révision.","type":"pdf","title":"Plan de travail & Objectifs : Suites et récurrence","section":"suites","coverImg":"images/lycee-facade.jpeg"}
+      ]
+    };
+
     let sections = {}; 
     let docs = [];
+    // Astuce sans SQL : on stocke la configuration d'authentification, les élèves et la maintenance dans sections._portal_meta
+    let portalMeta = {
+      requireAuth: true,
+      maintenance: { active: false, message: "DS en cours — L'accès aux ressources est temporairement suspendu." },
+      students: {} // username -> { username, name, password, forceChange, lastLogin, lastSeen, loginsCount, activeMinutes, daysWorked:[], docsOpened:{} }
+    };
+
     let currentPage = ""; 
     let activeSubFilter = "all"; 
     let isAdmin = false;
+    let currentStudent = null; // username de l'élève connecté
+    let pendingRestoreData = null;
+    let trackSortCol = "name";
+    let trackSortAsc = true;
 
     async function fetchFromSupabase() {
       try {
@@ -272,9 +761,10 @@
       } catch (e) { return null; }
     }
 
-    async function pushToSupabase() {
+    async function pushToSupabase(silent = false) {
       try {
-        const payload = { id: 'main', sections: sections, docs: docs, updated_at: new Date().toISOString() };
+        const sectionsToSave = Object.assign({}, sections, { _portal_meta: portalMeta });
+        const payload = { id: 'main', sections: sectionsToSave, docs: docs, updated_at: new Date().toISOString() };
         
         const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state`, {
           method: 'POST',
@@ -293,12 +783,12 @@
           return true;
         } else {
           const errorMsg = await res.text();
-          if (isAdmin) alert("Erreur lors de la sauvegarde : \n" + errorMsg);
+          if (isAdmin && !silent) alert("Erreur lors de la sauvegarde : \n" + errorMsg);
           return false;
         }
       } catch (e) { 
-          if (isAdmin) alert("Problème de connexion internet.");
-          return false;
+        if (isAdmin && !silent) alert("Problème de connexion internet.");
+        return false;
       }
     }
 
@@ -316,37 +806,239 @@
       return null;
     }
 
+    function loadSectionsAndMeta(rawSections, rawDocs) {
+      if (rawSections && rawSections._portal_meta) {
+        portalMeta = Object.assign({
+          requireAuth: true,
+          maintenance: { active: false, message: "DS en cours — L'accès aux ressources est temporairement suspendu." },
+          students: {}
+        }, rawSections._portal_meta);
+      }
+      let sortedSections = {};
+      PREFERRED_ORDER.forEach(key => {
+        if (rawSections[key] && key !== '_portal_meta') sortedSections[key] = rawSections[key];
+      });
+      Object.keys(rawSections).forEach(key => {
+        if (!sortedSections[key] && key !== '_portal_meta') sortedSections[key] = rawSections[key];
+      });
+      sections = sortedSections;
+      docs = (rawDocs || []).map(d => ({ ...d, visible: d.visible !== false }));
+    }
+
     async function startApplication() {
-      localStorage.removeItem('perriand_sections_v27');
+      const savedTheme = localStorage.getItem('perriand_theme') || 'classic';
+      document.getElementById('themeSelector').value = savedTheme;
+      applyTheme(savedTheme);
 
       const cloudData = await fetchFromSupabase();
-      
-      if (cloudData && cloudData.sections) {
-          let sortedSections = {};
-          PREFERRED_ORDER.forEach(key => {
-            if (cloudData.sections[key]) sortedSections[key] = cloudData.sections[key];
-          });
-          Object.keys(cloudData.sections).forEach(key => {
-            if (!sortedSections[key]) sortedSections[key] = cloudData.sections[key];
-          });
-          
-          sections = sortedSections;
-          docs = cloudData.docs || [];
-          document.getElementById('syncStatusBadge').className = 'sync-badge online'; 
-          document.getElementById('syncStatusBadge').innerHTML = '☁️ Cloud Synchronisé';
+      if (cloudData && cloudData.sections && Object.keys(cloudData.sections).length > 0) {
+        loadSectionsAndMeta(cloudData.sections, cloudData.docs);
+        document.getElementById('syncStatusBadge').className = 'sync-badge online'; 
+        document.getElementById('syncStatusBadge').innerHTML = '☁️ Cloud Synchronisé';
       } else {
-          sections = {
-            "communication": { title: "Communication", desc: "Informations et calendrier", subs: ["Consignes de la semaine", "Planning", "Divers"] },
-            "rappels": { title: "Rappels de 1ère", desc: "Notions indispensables", subs: ["Polynômes", "Dérivation", "Suites 1ère", "Trigonométrie"] }
-          };
-          docs = [];
+        loadSectionsAndMeta(FALLBACK_BACKUP.sections, FALLBACK_BACKUP.docs);
+        document.getElementById('syncStatusBadge').innerHTML = '💾 Sauvegarde Locale Active';
       }
 
       currentPage = Object.keys(sections)[0];
       initApp(); 
       showPage(currentPage);
+      checkSessionAndMaintenance();
+      startActivityTracker();
     }
 
+    // --- GESTION DES THÈMES VISUELS (CLASSIQUE, SAKURA, RÉTRO, SOMBRE) ---
+    let sakuraInterval = null;
+    function applyTheme(themeName) {
+      document.body.classList.remove('theme-dark', 'theme-sakura', 'theme-retro');
+      if (themeName !== 'classic') document.body.classList.add('theme-' + themeName);
+      localStorage.setItem('perriand_theme', themeName);
+
+      document.querySelectorAll('.sakura-petal').forEach(el => el.remove());
+      if (sakuraInterval) { clearInterval(sakuraInterval); sakuraInterval = null; }
+      if (themeName === 'sakura') {
+        sakuraInterval = setInterval(() => {
+          if (document.hidden) return;
+          const petal = document.createElement('div');
+          petal.className = 'sakura-petal';
+          const size = 8 + Math.random() * 8;
+          petal.style.width = size + 'px';
+          petal.style.height = size + 'px';
+          petal.style.left = (Math.random() * 100) + 'vw';
+          petal.style.animationDuration = (6 + Math.random() * 6) + 's';
+          document.body.appendChild(petal);
+          setTimeout(() => petal.remove(), 12000);
+        }, 900);
+      }
+    }
+
+    // --- AUTHENTIFICATION ÉLÈVES & MODE MAINTENANCE ---
+    function checkSessionAndMaintenance() {
+      document.body.classList.toggle('maint-active', !!(portalMeta.maintenance && portalMeta.maintenance.active));
+      const savedAdmin = sessionStorage.getItem('perriand_admin') === 'true';
+      const savedStudent = localStorage.getItem('perriand_student');
+
+      if (savedAdmin) {
+        isAdmin = true;
+        document.body.classList.add('is-admin');
+        document.getElementById('loginOverlay').classList.remove('active');
+        updateUserBadge("👨‍🏫 M. Poppe (Prof)");
+        renderPageCards();
+        return;
+      }
+
+      if (portalMeta.maintenance && portalMeta.maintenance.active) {
+        const alertBox = document.getElementById('loginMaintenanceAlert');
+        alertBox.style.display = 'block';
+        alertBox.textContent = "🔒 ACCÈS SUSPENDU : " + (portalMeta.maintenance.message || "Maintenance ou évaluation en cours.");
+        document.getElementById('loginOverlay').classList.add('active');
+        return;
+      } else {
+        document.getElementById('loginMaintenanceAlert').style.display = 'none';
+      }
+
+      if (savedStudent && portalMeta.students[savedStudent]) {
+        currentStudent = savedStudent;
+        recordStudentLogin(currentStudent, false);
+        document.getElementById('loginOverlay').classList.remove('active');
+        updateUserBadge("🎓 " + portalMeta.students[currentStudent].name);
+        return;
+      }
+
+      if (portalMeta.requireAuth && Object.keys(portalMeta.students).length > 0) {
+        document.getElementById('loginOverlay').classList.add('active');
+      }
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById('loginUser').value.trim().toLowerCase();
+      const pass = document.getElementById('loginPass').value;
+      const err = document.getElementById('loginError');
+      err.style.display = 'none';
+
+      // Accès Professeur direct
+      if ((user === 'prof' || user === 'admin' || user === 'poppe') && pass === 'perriand2026') {
+        isAdmin = true;
+        sessionStorage.setItem('perriand_admin', 'true');
+        document.body.classList.add('is-admin');
+        document.getElementById('loginOverlay').classList.remove('active');
+        updateUserBadge("👨‍🏫 M. Poppe (Prof)");
+        renderPageCards();
+        return;
+      }
+
+      if (portalMeta.maintenance && portalMeta.maintenance.active) {
+        err.textContent = "L'accès élève est temporairement suspendu pendant l'évaluation.";
+        err.style.display = 'block';
+        return;
+      }
+
+      const st = portalMeta.students[user];
+      if (!st || st.password !== pass) {
+        err.textContent = "Identifiant ou mot de passe incorrect.";
+        err.style.display = 'block';
+        return;
+      }
+
+      currentStudent = user;
+      if (st.forceChange) {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('changePassForm').style.display = 'block';
+        return;
+      }
+
+      completeStudentLogin(user);
+    }
+
+    async function handleFirstPassChange(e) {
+      e.preventDefault();
+      const newP = document.getElementById('newPersonalPass').value;
+      if (!currentStudent || !portalMeta.students[currentStudent]) return;
+      portalMeta.students[currentStudent].password = newP;
+      portalMeta.students[currentStudent].forceChange = false;
+      document.getElementById('changePassForm').style.display = 'none';
+      document.getElementById('loginForm').style.display = 'block';
+      await completeStudentLogin(currentStudent);
+    }
+
+    async function completeStudentLogin(username) {
+      localStorage.setItem('perriand_student', username);
+      document.getElementById('loginOverlay').classList.remove('active');
+      updateUserBadge("🎓 " + portalMeta.students[username].name);
+      await recordStudentLogin(username, true);
+    }
+
+    function updateUserBadge(label) {
+      const b = document.getElementById('userBadge');
+      b.style.display = 'inline-flex';
+      document.getElementById('userNameDisplay').textContent = label;
+    }
+
+    function logoutUser() {
+      localStorage.removeItem('perriand_student');
+      sessionStorage.removeItem('perriand_admin');
+      currentStudent = null;
+      isAdmin = false;
+      document.body.classList.remove('is-admin');
+      document.getElementById('userBadge').style.display = 'none';
+      renderPageCards();
+      checkSessionAndMaintenance();
+    }
+
+    function openChangeMyPassModal() {
+      if (!currentStudent) return;
+      document.getElementById('selfNewPassInput').value = '';
+      document.getElementById('selfPassModal').classList.add('active');
+    }
+
+    async function saveSelfPassword(e) {
+      e.preventDefault();
+      if (!currentStudent || !portalMeta.students[currentStudent]) return;
+      portalMeta.students[currentStudent].password = document.getElementById('selfNewPassInput').value;
+      portalMeta.students[currentStudent].forceChange = false;
+      await pushToSupabase(true);
+      document.getElementById('selfPassModal').classList.remove('active');
+      alert("✅ Votre nouveau mot de passe est enregistré.");
+    }
+
+    // --- SUIVI D'ACTIVITÉ AUTOMATIQUE (CONNEXIONS, JOURS TRAVAILLÉS, TEMPS ACTIF) ---
+    async function recordStudentLogin(username, incrementLoginCount) {
+      const st = portalMeta.students[username];
+      if (!st) return;
+      const nowIso = new Date().toISOString();
+      const today = nowIso.split('T')[0];
+      if (incrementLoginCount) {
+        st.lastLogin = nowIso;
+        st.loginsCount = (st.loginsCount || 0) + 1;
+      }
+      st.lastSeen = nowIso;
+      st.daysWorked = st.daysWorked || [];
+      if (!st.daysWorked.includes(today)) st.daysWorked.push(today);
+      await pushToSupabase(true);
+    }
+
+    function startActivityTracker() {
+      setInterval(async () => {
+        const cloud = await fetchFromSupabase();
+        if (cloud && cloud.sections && cloud.sections._portal_meta) {
+          portalMeta.maintenance = cloud.sections._portal_meta.maintenance || portalMeta.maintenance;
+          if (!isAdmin && portalMeta.maintenance.active) checkSessionAndMaintenance();
+        }
+        if (currentStudent && !document.hidden && portalMeta.students[currentStudent]) {
+          const st = portalMeta.students[currentStudent];
+          const nowIso = new Date().toISOString();
+          const today = nowIso.split('T')[0];
+          st.lastSeen = nowIso;
+          st.activeMinutes = (st.activeMinutes || 0) + 1;
+          st.daysWorked = st.daysWorked || [];
+          if (!st.daysWorked.includes(today)) st.daysWorked.push(today);
+          await pushToSupabase(true);
+        }
+      }, 60000);
+    }
+
+    // --- CRUD DOCUMENTS & VISIBILITÉ ("FACE CACHÉE") ---
     async function saveDocForm(e) {
       e.preventDefault();
       const submitBtn = document.getElementById('docModalSubmitBtn');
@@ -372,6 +1064,7 @@
           sub: document.getElementById('newSub').value, 
           title: document.getElementById('newTitle').value,
           type: document.getElementById('newType').value, 
+          visible: document.getElementById('newVisible').value === 'true',
           coverImg: finalCover,
           desc: document.getElementById('newDesc').value, 
           url: finalUrl
@@ -388,12 +1081,20 @@
         if (success) {
           closeAddModal(); 
           renderPageCards();
-          if(isAdmin) alert("✅ Document publié et sauvegardé sur le Cloud avec succès !");
         }
       } finally { 
         submitBtn.textContent = "Publier"; 
         submitBtn.disabled = false; 
       }
+    }
+
+    async function toggleDocVisibility(id) {
+      const d = docs.find(item => item.id === id);
+      if (!d) return;
+      d.visible = (d.visible === false) ? true : false;
+      await pushToSupabase(true);
+      renderPageCards();
+      if (document.getElementById('visibilityModal').classList.contains('active')) renderVisibilityList();
     }
 
     async function deleteDoc(id) {
@@ -410,6 +1111,7 @@
       nav.innerHTML = ''; pages.innerHTML = '';
       
       Object.keys(sections).forEach(secKey => {
+        if (secKey === '_portal_meta') return;
         const sec = sections[secKey];
         const btn = document.createElement('button');
         btn.className = 'nav-btn' + (secKey === currentPage ? ' active' : ''); 
@@ -427,7 +1129,7 @@
     }
 
     function showPage(pageKey) {
-      if (!sections[pageKey]) pageKey = Object.keys(sections)[0];
+      if (!sections[pageKey] || pageKey === '_portal_meta') pageKey = Object.keys(sections)[0];
       currentPage = pageKey; activeSubFilter = "all";
       const hero = document.getElementById('heroBanner'); if (hero) hero.style.display = (pageKey === "communication") ? "flex" : "none";
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.textContent === sections[pageKey].title));
@@ -454,7 +1156,12 @@
 
     function renderPageCards() {
       const grid = document.getElementById('grid-' + currentPage); if (!grid) return;
-      const filtered = docs.filter(d => d.section === currentPage && (activeSubFilter === 'all' || d.sub === activeSubFilter));
+      const filtered = docs.filter(d => {
+        if (d.section !== currentPage) return false;
+        if (activeSubFilter !== 'all' && d.sub !== activeSubFilter) return false;
+        if (!isAdmin && d.visible === false) return false;
+        return true;
+      });
       if (filtered.length === 0) { grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: var(--muted);"><p>Aucun document pour le moment.</p></div>`; return; }
 
       const themes = { mental: { i: "🧠", c: "thumb-mental" }, pdf: { i: "📄", c: "thumb-pdf" }, cours: { i: "📐", c: "thumb-cours" }, jeu: { i: "🎲", c: "thumb-jeu" }, video: { i: "▶️", c: "thumb-video" }, web: { i: "🌐", c: "thumb-web" }, info: { i: "📌", c: "thumb-info" } };
@@ -464,25 +1171,46 @@
         let ytId = extractYouTubeId(item.url);
         let cover = item.coverImg ? item.coverImg.trim() : (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : "");
         let style = cover ? `style="background-image: linear-gradient(rgba(15,23,42,0.3), rgba(15,23,42,0.7)), url('${cover}'); background-size: cover; background-position: center;"` : "";
+        const isHidden = item.visible === false;
 
-        const card = document.createElement('div'); card.className = 'card';
+        const card = document.createElement('div');
+        card.className = 'card' + (isHidden ? ' is-hidden-doc' : '');
         card.innerHTML = `
+          ${isHidden ? '<span class="hidden-badge">🙈 CACHÉ AUX ÉLÈVES</span>' : ''}
           <div class="card-thumb ${t.c}" ${style}><span style="position:relative; z-index:2;">${t.i}</span></div>
           <div class="card-body">
-            <span class="card-category">${item.sub || 'Général'}</span><h3 class="card-title">${item.title}</h3><p class="card-desc">${item.desc}</p>
+            <span class="card-category">${item.sub || 'Général'}</span><h3 class="card-title">${item.title}</h3><p class="card-desc">${item.desc || ''}</p>
             <div class="card-actions">
-              <button class="btn btn-primary" onclick="openDocPopup('${item.id}')">👁 Consulter</button>
-              <div class="admin-item-btn" style="gap:0.35rem;"><button class="btn btn-edit" onclick="openEditModal('${item.id}')">✏️</button><button class="btn btn-danger" onclick="deleteDoc('${item.id}')">🗑</button></div>
+              ${item.url ? `<button class="btn btn-primary" onclick="openDocPopup('${item.id}')">👁 Consulter</button>` : `<span style="font-size:0.78rem; color:var(--muted); font-weight:600;">📌 Note d'information</span>`}
+              <div class="admin-item-btn" style="gap:0.3rem;">
+                <button class="btn btn-vis" onclick="toggleDocVisibility('${item.id}')" title="Afficher / Cacher aux élèves">${isHidden ? '👁️' : '🙈'}</button>
+                <button class="btn btn-edit" onclick="openEditModal('${item.id}')" title="Modifier">✏️</button>
+                <button class="btn btn-danger" onclick="deleteDoc('${item.id}')" title="Supprimer">🗑</button>
+              </div>
             </div>
           </div>`;
         grid.appendChild(card);
       });
     }
 
-    function openDocPopup(id) {
+    async function openDocPopup(id) {
       const item = docs.find(d => d.id === id); if (!item) return;
+
+      // Enregistrement de la consultation pour l'élève connecté
+      if (currentStudent && portalMeta.students[currentStudent]) {
+        const st = portalMeta.students[currentStudent];
+        st.docsOpened = st.docsOpened || {};
+        st.docsOpened[id] = (st.docsOpened[id] || 0) + 1;
+        st.lastSeen = new Date().toISOString();
+        pushToSupabase(true);
+      }
+
       document.getElementById('popupTitle').textContent = item.title;
-      let url = item.url; const ytId = extractYouTubeId(url);
+      let url = item.url ? item.url.trim() : "";
+      if (url && !url.startsWith('http') && !url.startsWith('/')) url = 'https://' + url;
+      document.getElementById('popupDirectOpenBtn').href = url;
+
+      const ytId = extractYouTubeId(url);
       if (ytId) url = `https://www.youtube.com/embed/${ytId}?rel=0&autoplay=1`;
       document.getElementById('popupIframe').src = url;
       document.getElementById('docPopup').classList.add('active');
@@ -491,27 +1219,53 @@
     function closePopup() { document.getElementById('popupIframe').src = ''; document.getElementById('docPopup').classList.remove('active'); }
 
     function promptAdmin() {
-      if (isAdmin) { isAdmin = false; document.body.classList.remove('is-admin'); renderPageCards(); return; }
+      if (isAdmin) { logoutAdmin(); return; }
       const pass = prompt("Mot de passe enseignant :");
-      if (pass === "perriand2026") { isAdmin = true; document.body.classList.add('is-admin'); renderPageCards(); }
+      if (pass === "perriand2026") {
+        isAdmin = true;
+        sessionStorage.setItem('perriand_admin', 'true');
+        document.body.classList.add('is-admin');
+        document.getElementById('loginOverlay').classList.remove('active');
+        updateUserBadge("👨‍🏫 M. Poppe (Prof)");
+        renderPageCards();
+      }
     }
     
-    function logoutAdmin() { isAdmin = false; document.body.classList.remove('is-admin'); renderPageCards(); }
+    function logoutAdmin() {
+      isAdmin = false;
+      sessionStorage.removeItem('perriand_admin');
+      document.body.classList.remove('is-admin');
+      renderPageCards();
+      checkSessionAndMaintenance();
+    }
+
+    // Raccourci clavier Ctrl+Maj+A pour le professeur
+    window.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        e.preventDefault();
+        promptAdmin();
+      }
+    });
 
     function openAddModal() {
       document.getElementById('addDocForm').reset(); document.getElementById('editDocId').value = "";
       document.getElementById('docModalTitle').textContent = "Ajouter un document";
       const sel = document.getElementById('newSection'); sel.innerHTML = '';
-      Object.keys(sections).forEach(k => { const opt = document.createElement('option'); opt.value = k; opt.textContent = sections[k].title; sel.appendChild(opt); });
-      sel.value = currentPage; syncSubCategories(); document.getElementById('addModal').classList.add('active');
+      Object.keys(sections).forEach(k => { if(k === '_portal_meta') return; const opt = document.createElement('option'); opt.value = k; opt.textContent = sections[k].title; sel.appendChild(opt); });
+      sel.value = currentPage; syncSubCategories();
+      document.getElementById('newVisible').value = "true";
+      document.getElementById('addModal').classList.add('active');
     }
     
     function openEditModal(id) {
       const item = docs.find(d => d.id === id); if (!item) return;
       openAddModal(); document.getElementById('editDocId').value = item.id;
+      document.getElementById('docModalTitle').textContent = "Modifier le document";
       document.getElementById('newSection').value = item.section; syncSubCategories();
       document.getElementById('newSub').value = item.sub; document.getElementById('newTitle').value = item.title;
-      document.getElementById('newType').value = item.type; document.getElementById('newCoverImg').value = item.coverImg || "";
+      document.getElementById('newType').value = item.type;
+      document.getElementById('newVisible').value = (item.visible === false) ? "false" : "true";
+      document.getElementById('newCoverImg').value = item.coverImg || "";
       document.getElementById('newUrl').value = item.url || ""; document.getElementById('newDesc').value = item.desc || "";
     }
     
@@ -522,6 +1276,350 @@
       (sections[document.getElementById('newSection').value]?.subs || []).forEach(sub => { const o = document.createElement('option'); o.value = sub; o.textContent = sub; s.appendChild(o); });
     }
 
+    // --- GESTION GROUPÉE DE LA VISIBILITÉ DES DOCUMENTS ---
+    function openVisibilityModal() {
+      const sel = document.getElementById('visFilterSection');
+      sel.innerHTML = '<option value="all">Toutes les sections</option>';
+      Object.keys(sections).forEach(k => {
+        if (k === '_portal_meta') return;
+        const o = document.createElement('option'); o.value = k; o.textContent = sections[k].title; sel.appendChild(o);
+      });
+      sel.value = currentPage;
+      renderVisibilityList();
+      document.getElementById('visibilityModal').classList.add('active');
+    }
+
+    function renderVisibilityList() {
+      const secFilter = document.getElementById('visFilterSection').value;
+      const q = document.getElementById('visSearchInput').value.trim().toLowerCase();
+      const box = document.getElementById('visibilityListContainer');
+      box.innerHTML = '';
+
+      const list = docs.filter(d => (secFilter === 'all' || d.section === secFilter) && (!q || d.title.toLowerCase().includes(q) || (d.sub && d.sub.toLowerCase().includes(q))));
+      if (list.length === 0) { box.innerHTML = '<p style="color:var(--muted); padding:1rem;">Aucun document correspondant.</p>'; return; }
+
+      list.forEach(d => {
+        const isVis = d.visible !== false;
+        const row = document.createElement('div');
+        row.className = 'struct-item';
+        row.innerHTML = `
+          <div>
+            <strong style="font-size:0.86rem;">${d.title}</strong>
+            <div style="font-size:0.75rem; color:var(--muted);">${sections[d.section]?.title || d.section} • ${d.sub || ''}</div>
+          </div>
+          <button class="btn ${isVis ? 'btn-primary' : 'btn-danger'}" onclick="toggleDocVisibility('${d.id}')">
+            ${isVis ? '👁️ Visible élève' : '🙈 Face cachée'}
+          </button>
+        `;
+        box.appendChild(row);
+      });
+    }
+
+    async function batchSetVisibility(state) {
+      const secFilter = document.getElementById('visFilterSection').value;
+      const q = document.getElementById('visSearchInput').value.trim().toLowerCase();
+      docs.forEach(d => {
+        if ((secFilter === 'all' || d.section === secFilter) && (!q || d.title.toLowerCase().includes(q))) {
+          d.visible = state;
+        }
+      });
+      await pushToSupabase();
+      renderVisibilityList();
+      renderPageCards();
+    }
+
+    // --- GESTION DU SUIVI ÉLÈVES & COMPTES ---
+    function openTrackingModal() {
+      document.getElementById('requireAuthToggle').checked = !!portalMeta.requireAuth;
+      renderStudentsTrackTable();
+      renderAccountsManagement();
+      renderDocsStatsTable();
+      document.getElementById('trackingModal').classList.add('active');
+    }
+
+    function switchTrackTab(tab) {
+      document.getElementById('trackTabEleves').style.display = (tab === 'eleves') ? 'block' : 'none';
+      document.getElementById('trackTabComptes').style.display = (tab === 'comptes') ? 'block' : 'none';
+      document.getElementById('trackTabDocs').style.display = (tab === 'docs') ? 'block' : 'none';
+    }
+
+    async function toggleRequireAuth(checked) {
+      portalMeta.requireAuth = checked;
+      await pushToSupabase(true);
+    }
+
+    function formatDateShort(iso) {
+      if (!iso) return "Jamais";
+      const d = new Date(iso);
+      return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }) + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function sortTrackTable(col) {
+      if (trackSortCol === col) trackSortAsc = !trackSortAsc;
+      else { trackSortCol = col; trackSortAsc = true; }
+      renderStudentsTrackTable();
+    }
+
+    function renderStudentsTrackTable() {
+      const tbody = document.getElementById('studentsTrackTbody');
+      tbody.innerHTML = '';
+      const arr = Object.values(portalMeta.students || {}).map(s => {
+        const docsCount = Object.values(s.docsOpened || {}).reduce((a, b) => a + b, 0);
+        const daysCount = (s.daysWorked || []).length;
+        const isOnline = s.lastSeen && (Date.now() - new Date(s.lastSeen).getTime() < 5 * 60 * 1000);
+        return { ...s, docsCount, daysCount, isOnline };
+      });
+
+      document.getElementById('trackSummaryText').textContent = `${arr.length} élève(s) inscrit(s) • ${arr.filter(x => x.daysCount > 0).length} actif(s)`;
+
+      arr.sort((a, b) => {
+        let va = a[trackSortCol] || '';
+        let vb = b[trackSortCol] || '';
+        if (typeof va === 'string') return trackSortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+        return trackSortAsc ? (va - vb) : (vb - va);
+      });
+
+      if (arr.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--muted);">Aucun compte élève créé. Cliquez sur l'onglet « 🔑 Gérer les Comptes & Mots de passe » pour ajouter votre liste d'élèves.</td></tr>`;
+        return;
+      }
+
+      arr.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${s.name}</strong></td>
+          <td><code>${s.username}</code></td>
+          <td>${formatDateShort(s.lastLogin)}</td>
+          <td><span class="${s.isOnline ? 'dot-online' : 'dot-offline'}"></span>${s.isOnline ? 'En ligne' : formatDateShort(s.lastSeen)}</td>
+          <td><strong>${s.daysCount} j</strong></td>
+          <td>${s.loginsCount || 0}</td>
+          <td>${s.activeMinutes || 0} min</td>
+          <td>${s.docsCount}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function normalizeUsername(nameStr) {
+      return nameStr.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, ".").replace(/^\.+|\.+$/g, "");
+    }
+
+    async function addBulkStudents() {
+      const raw = document.getElementById('bulkStudentsInput').value.trim();
+      const pass = document.getElementById('defaultBulkPass').value.trim() || "123456Azerty";
+      const force = document.getElementById('bulkForceChange').checked;
+      if (!raw) return;
+
+      let added = 0;
+      raw.split('\n').forEach(line => {
+        const clean = line.trim();
+        if (!clean) return;
+        let username = "", displayName = "";
+        if (clean.includes(';')) {
+          const parts = clean.split(';');
+          username = normalizeUsername(parts[0]);
+          displayName = parts[1].trim();
+        } else {
+          displayName = clean;
+          username = normalizeUsername(clean);
+        }
+        if (username && !portalMeta.students[username]) {
+          portalMeta.students[username] = {
+            username, name: displayName, password: pass, forceChange: force,
+            lastLogin: null, lastSeen: null, loginsCount: 0, activeMinutes: 0, daysWorked: [], docsOpened: {}
+          };
+          added++;
+        }
+      });
+
+      document.getElementById('bulkStudentsInput').value = '';
+      await pushToSupabase();
+      renderStudentsTrackTable();
+      renderAccountsManagement();
+      alert(`✅ ${added} compte(s) élève(s) ajouté(s) avec succès.`);
+    }
+
+    function renderAccountsManagement() {
+      const sel = document.getElementById('resetStudentSelect');
+      const box = document.getElementById('accountsListContainer');
+      sel.innerHTML = ''; box.innerHTML = '';
+
+      const list = Object.values(portalMeta.students || {}).sort((a, b) => a.name.localeCompare(b.name));
+      list.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.username;
+        opt.textContent = `${s.name} (${s.username})`;
+        sel.appendChild(opt);
+
+        const item = document.createElement('div');
+        item.className = 'struct-item';
+        item.innerHTML = `
+          <div>
+            <strong>${s.name}</strong> — Identifiant : <code>${s.username}</code>
+            ${s.forceChange ? '<span style="font-size:0.72rem; color:#d97706; margin-left:6px;">(Changement MDP requis)</span>' : ''}
+          </div>
+          <button class="btn btn-danger" onclick="deleteStudentAccount('${s.username}')">🗑 Supprimer</button>
+        `;
+        box.appendChild(item);
+      });
+    }
+
+    async function resetStudentPassword() {
+      const u = document.getElementById('resetStudentSelect').value;
+      const p = document.getElementById('resetStudentPass').value.trim();
+      const f = document.getElementById('resetForceChange').checked;
+      if (!u || !portalMeta.students[u] || !p) return;
+      portalMeta.students[u].password = p;
+      portalMeta.students[u].forceChange = f;
+      await pushToSupabase();
+      renderAccountsManagement();
+      alert(`✅ Mot de passe de ${portalMeta.students[u].name} réinitialisé à : ${p}`);
+    }
+
+    async function deleteStudentAccount(username) {
+      if (!confirm(`Supprimer le compte élève ${username} ?`)) return;
+      delete portalMeta.students[username];
+      await pushToSupabase();
+      renderStudentsTrackTable();
+      renderAccountsManagement();
+    }
+
+    function renderDocsStatsTable() {
+      const tbody = document.getElementById('docsStatsTbody');
+      tbody.innerHTML = '';
+      const counts = {};
+      Object.values(portalMeta.students || {}).forEach(s => {
+        Object.entries(s.docsOpened || {}).forEach(([docId, num]) => {
+          if (!counts[docId]) counts[docId] = { students: 0, views: 0 };
+          counts[docId].students += 1;
+          counts[docId].views += num;
+        });
+      });
+
+      const ranked = docs.map(d => ({
+        doc: d,
+        students: counts[d.id]?.students || 0,
+        views: counts[d.id]?.views || 0
+      })).filter(x => x.views > 0).sort((a, b) => b.views - a.views);
+
+      if (ranked.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:1.5rem; color:var(--muted);">Aucune consultation enregistrée pour le moment.</td></tr>`;
+        return;
+      }
+
+      ranked.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><strong>${r.doc.title}</strong></td><td>${sections[r.doc.section]?.title || r.doc.section}</td><td>${r.students} élève(s)</td><td><strong>${r.views} fois</strong></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // --- MODE MAINTENANCE / DS ---
+    function openMaintenanceModal() {
+      document.getElementById('maintActiveCheckbox').checked = !!(portalMeta.maintenance && portalMeta.maintenance.active);
+      document.getElementById('maintMessageInput').value = portalMeta.maintenance?.message || "DS en cours — Accès rétabli en fin de séance.";
+      document.getElementById('maintenanceModal').classList.add('active');
+    }
+
+    async function saveMaintenanceSettings() {
+      portalMeta.maintenance = {
+        active: document.getElementById('maintActiveCheckbox').checked,
+        message: document.getElementById('maintMessageInput').value.trim()
+      };
+      document.body.classList.toggle('maint-active', portalMeta.maintenance.active);
+      await pushToSupabase();
+      document.getElementById('maintenanceModal').classList.remove('active');
+      alert(portalMeta.maintenance.active ? "🛠 Mode Maintenance activé : l'accès des élèves est suspendu." : "✅ Mode Maintenance désactivé : l'accès des élèves est rétabli.");
+    }
+
+    // --- SAUVEGARDE & RESTAURATION INTELLIGENTE ---
+    function openBackupModal() {
+      document.getElementById('restoreFileInput').value = '';
+      document.getElementById('restorePreviewBox').style.display = 'none';
+      document.getElementById('applyRestoreBtn').disabled = true;
+      pendingRestoreData = null;
+      document.getElementById('backupModal').classList.add('active');
+    }
+
+    function exportData(prefix = "sauvegarde_perriand") {
+      const sectionsWithMeta = Object.assign({}, sections, { _portal_meta: portalMeta });
+      const backup = { sections: sectionsWithMeta, docs: docs, exportedAt: new Date().toISOString() };
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${prefix}_${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function previewRestoreFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const json = JSON.parse(e.target.result);
+          if (!json.sections || !Array.isArray(json.docs)) {
+            alert("Ce fichier JSON ne contient pas la structure attendue (sections / docs).");
+            return;
+          }
+          pendingRestoreData = json;
+          const existingIds = new Set(docs.map(d => d.id));
+          const newDocsCount = json.docs.filter(d => !existingIds.has(d.id)).length;
+          const commonDocsCount = json.docs.length - newDocsCount;
+          const fileStudents = json.sections._portal_meta?.students ? Object.keys(json.sections._portal_meta.students).length : 0;
+
+          const box = document.getElementById('restorePreviewBox');
+          box.style.display = 'block';
+          box.innerHTML = `
+            <strong>🔍 Analyse du fichier avant restauration :</strong><br>
+            • Sections dans le fichier : <strong>${Object.keys(json.sections).filter(k => k !== '_portal_meta').length}</strong><br>
+            • Documents dans le fichier : <strong>${json.docs.length}</strong> (dont <strong>${newDocsCount}</strong> nouveau(x) à ajouter et <strong>${commonDocsCount}</strong> déjà présent(s))<br>
+            • Comptes élèves trouvés dans le fichier : <strong>${fileStudents}</strong>
+          `;
+          document.getElementById('applyRestoreBtn').disabled = false;
+        } catch (err) {
+          alert("Fichier JSON invalide.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    async function executeSmartRestore() {
+      if (!pendingRestoreData) return;
+      // Téléchargement d'une sauvegarde de sécurité automatique avant d'écrire
+      exportData("sauvegarde_avant_restauration");
+
+      const keepNewer = document.getElementById('keepNewerCheck').checked;
+      if (keepNewer) {
+        Object.keys(pendingRestoreData.sections).forEach(k => {
+          if (k === '_portal_meta') return;
+          if (!sections[k]) sections[k] = pendingRestoreData.sections[k];
+        });
+        if (pendingRestoreData.sections._portal_meta?.students) {
+          Object.entries(pendingRestoreData.sections._portal_meta.students).forEach(([u, st]) => {
+            if (!portalMeta.students[u]) portalMeta.students[u] = st;
+          });
+        }
+        const existingMap = new Map(docs.map(d => [d.id, d]));
+        pendingRestoreData.docs.forEach(d => {
+          if (!existingMap.has(d.id)) docs.push({ ...d, visible: d.visible !== false });
+        });
+      } else {
+        loadSectionsAndMeta(pendingRestoreData.sections, pendingRestoreData.docs);
+      }
+
+      await pushToSupabase();
+      initApp();
+      showPage(Object.keys(sections)[0]);
+      document.getElementById('backupModal').classList.remove('active');
+      alert("✅ Restauration effectuée avec succès et synchronisée sur le Cloud !");
+    }
+
+    // --- CATÉGORIES & STRUCTURE ---
     function openCategoryModal() { document.getElementById('categoryModal').classList.add('active'); }
     function closeCategoryModal() { document.getElementById('categoryModal').classList.remove('active'); }
     
@@ -534,7 +1632,7 @@
     function openStructureModal() {
       renderTabsOrderList();
       const sel = document.getElementById('structSecSelect'); sel.innerHTML = '';
-      Object.keys(sections).forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = sections[k].title; sel.appendChild(o); });
+      Object.keys(sections).forEach(k => { if(k === '_portal_meta') return; const o = document.createElement('option'); o.value = k; o.textContent = sections[k].title; sel.appendChild(o); });
       sel.value = currentPage; renderSubEditor(); document.getElementById('structureModal').classList.add('active');
     }
     
@@ -550,7 +1648,7 @@
 
     function renderTabsOrderList() {
       const container = document.getElementById('tabsOrderList'); container.innerHTML = '';
-      const keys = Object.keys(sections);
+      const keys = Object.keys(sections).filter(k => k !== '_portal_meta');
       keys.forEach((k, idx) => {
         const item = document.createElement('div'); item.className = 'struct-item';
         item.innerHTML = `
@@ -565,7 +1663,7 @@
     }
 
     async function moveTab(key, direction) {
-      const keys = Object.keys(sections); const index = keys.indexOf(key);
+      const keys = Object.keys(sections).filter(k => k !== '_portal_meta'); const index = keys.indexOf(key);
       const newIndex = index + direction;
       const targetKey = keys[newIndex];
       keys[newIndex] = key; keys[index] = targetKey;
@@ -576,20 +1674,6 @@
 
       await pushToSupabase();
       initApp(); renderTabsOrderList();
-    }
-
-    // --- FONCTION D'EXPORT DE SAUVEGARDE ---
-    function exportData() {
-      const backup = { sections: sections, docs: docs };
-      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `sauvegarde_perriand_${new Date().toISOString().split('T')[0]}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
     }
 
     // Démarrage
