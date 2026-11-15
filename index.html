@@ -249,6 +249,7 @@
     <button class="btn" onclick="openBackupModal()">💾 Sauvegarde</button>
     <button class="btn" onclick="openStructureModal()">⚙️ Structure</button>
     <button class="btn" onclick="openCategoryModal()">➕ Onglet</button>
+    <button class="btn" onclick="openChangeMyPassModal()" title="Modifier mon mot de passe enseignant">🔑 MDP Prof</button>
     <button class="btn btn-danger" onclick="logoutAdmin()">Verrouiller</button>
   </div>
 
@@ -373,9 +374,12 @@
       <div id="trackTabComptes" style="display:none;">
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1rem; margin-bottom:1.25rem;">
           <div style="background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid var(--border);">
-            <h4 style="font-size:0.9rem; margin-bottom:0.6rem;">➕ Ajouter des élèves (en lot ou seul)</h4>
-            <p style="font-size:0.76rem; color:var(--muted); margin-bottom:0.5rem;">Un élève par ligne (ex: <code>Jean Dupont</code> ou <code>jean.dupont ; Jean Dupont</code>). L'identifiant est créé automatiquement.</p>
-            <textarea id="bulkStudentsInput" class="form-control" rows="4" placeholder="Alice Martin&#10;Lucas Bernard&#10;Emma Petit"></textarea>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.3rem;">
+              <h4 style="font-size:0.9rem;">➕ Ajouter des élèves</h4>
+              <button type="button" class="btn" style="font-size:0.74rem; padding:0.25rem 0.55rem;" onclick="prefillCSVStudents()">⚡ Pré-remplir mes 45 élèves</button>
+            </div>
+            <p style="font-size:0.76rem; color:var(--muted); margin-bottom:0.5rem;">Un élève par ligne (ex: <code>jean.dupont ; Jean Dupont</code>).</p>
+            <textarea id="bulkStudentsInput" class="form-control" rows="4" placeholder="Alice Martin&#10;Lucas Bernard"></textarea>
             <div style="display:flex; gap:0.5rem; align-items:center; margin-top:0.5rem;">
               <input type="text" id="defaultBulkPass" class="form-control" value="123456Azerty" placeholder="Mot de passe initial">
               <button class="btn btn-primary" onclick="addBulkStudents()">Créer</button>
@@ -470,19 +474,19 @@
     </div>
   </div>
 
-  <!-- MODALE : CHANGER SON PROPRE MOT DE PASSE (ÉLÈVE) -->
+  <!-- MODALE : CHANGER SON PROPRE MOT DE PASSE (ÉLÈVE OU PROFESSEUR) -->
   <div class="popup-backdrop" id="selfPassModal">
     <div class="modal-box" style="max-width:420px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-        <h3 style="font-size:1.05rem; font-weight:700;">🔑 Changer mon mot de passe</h3>
+        <h3 id="selfPassModalTitle" style="font-size:1.05rem; font-weight:700;">🔑 Changer mon mot de passe</h3>
         <button class="btn" onclick="document.getElementById('selfPassModal').classList.remove('active')">✕</button>
       </div>
       <form onsubmit="saveSelfPassword(event)">
         <div class="form-group">
-          <label>Nouveau mot de passe</label>
+          <label>Nouveau mot de passe (min. 4 caractères)</label>
           <input type="password" id="selfNewPassInput" class="form-control" minlength="4" required>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Enregistrer</button>
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Enregistrer sur le Cloud</button>
       </form>
     </div>
   </div>
@@ -537,6 +541,53 @@
     const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5ZGF5dW50dmV1c2NpYnVwZ3RvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MDMyNTcsImV4cCI6MjEwODA3OTI1N30.ketR5e-MimQuqzk5cHLhlN5ZjdZEH_Fq4fNz6UG-Fzo";
 
     const PREFERRED_ORDER = ["communication", "rappels", "grand-oral", "suites", "fonctions", "espace", "probas", "sec_1793357506991"];
+
+    // --- LISTE PRÉ-CONFIGURÉE DES 45 ÉLÈVES (CSV 16 & CSV 17) ---
+    const PRELOADED_CSV_STUDENTS = `clara.almeida.de.freitas ; Clara ALMEIDA DE FREITAS (T09)
+emma.azzaro ; Emma AZZARO (T01)
+emma.balloy ; Emma BALLOY (T06)
+maelys.berteloot ; Maelys BERTELOOT (T11)
+victor.blaud ; Victor BLAUD (T02)
+marius.comble ; Marius COMBLE (T05)
+celeste.darloy ; Celeste DARLOY (T10)
+raphael.dubois ; Raphaël DUBOIS (T01)
+alyzee.gournay ; Alyzée GOURNAY (T06)
+gabriela.grebert ; Gabriela GREBERT (T05)
+solveig.herbin ; Solveig HERBIN (T11)
+bastien.lacoste ; Bastien LACOSTE (T04)
+hortense.lama ; Hortense LAMA (T07)
+caly.letoquart ; Caly LÉTOQUART (T11)
+louna.mairie ; Louna MAIRIE (T02)
+angie.masclet ; Angie MASCLET (T10)
+charles.masquelier ; Charles MASQUELIER (T06)
+camille.mullet ; Camille MULLET (T08)
+victor.pirrion ; Victor PIRRION (T08)
+mathis.terrier ; Mathis TERRIER (T01)
+arthur.vanaerde ; Arthur VANAERDE (T01)
+nell.varlet ; Nell VARLET (T07)
+tom.berton.poissinet ; Tom BERTON POISSINET (T06)
+margot.bourghelle ; Margot BOURGHELLE (T10)
+arthur.cauvin.bruni ; Arthur CAUVIN--BRUNI (T01)
+alexian.debusschere ; Alexian DEBUSSCHERE (T01)
+valentine.deweirdt ; Valentine DEWEIRDT (T06)
+anatole.dhennin.dehay ; Anatole DHENNIN-DEHAY (T10)
+hugo.dutoit ; Hugo DUTOIT (T04)
+arielle.jahan ; Arielle JAHAN (T04)
+tom.labbe ; Tom LABBE (T06)
+max.lalau ; Max LALAU (T10)
+jules.longuepe ; Jules LONGUEPE (T10)
+alexandre.mahe ; Alexandre MAHÉ (T06)
+pablo.martines ; Pablo MARTINES (T07)
+leane.muller ; Léane MULLER (T09)
+arthur.parent ; Arthur PARENT (T06)
+clement.piens ; Clément PIENS (T10)
+lily.poette ; Lily POËTTE (T06)
+prunelle.pouillart ; Prunelle POUILLART (T10)
+thomas.rooryck ; Thomas ROORYCK (T06)
+leo.ruffin ; Léo RUFFIN (T02)
+maxime.vabois ; Maxime VABOIS (T06)
+celian.vandenbulcke ; Célian VANDENBULCKE (T11)
+selene.vincent ; Sélène VINCENT (T11)`;
 
     // --- BASE DE SECOURS INTÉGRALE (sauvegarde_perriand_2026-11-15.json) ---
     const FALLBACK_BACKUP = {
@@ -745,6 +796,7 @@
     let docs = [];
     let portalMeta = {
       requireAuth: true,
+      adminPass: "perriand2026",
       maintenance: { active: false, message: "DS en cours — L'accès aux ressources est temporairement suspendu." },
       students: {}
     };
@@ -817,6 +869,7 @@
       if (rawSections && rawSections._portal_meta) {
         portalMeta = Object.assign({
           requireAuth: true,
+          adminPass: "perriand2026",
           maintenance: { active: false, message: "DS en cours — L'accès aux ressources est temporairement suspendu." },
           students: {}
         }, rawSections._portal_meta);
@@ -912,7 +965,6 @@
         return;
       }
 
-      // Verrouillage systématique si non connecté
       document.getElementById('loginOverlay').classList.add('active');
     }
 
@@ -923,8 +975,9 @@
       const err = document.getElementById('loginError');
       err.style.display = 'none';
 
-      // Accès Professeur direct
-      if ((user === 'prof' || user === 'admin' || user === 'poppe') && pass === 'perriand2026') {
+      const currentAdminPass = portalMeta.adminPass || "perriand2026";
+      // Accès Professeur direct (accepte le mot de passe personnalisé sur Supabase)
+      if ((user === 'prof' || user === 'admin' || user === 'poppe') && pass === currentAdminPass) {
         isAdmin = true;
         sessionStorage.setItem('perriand_admin', 'true');
         document.body.classList.add('is-admin');
@@ -993,15 +1046,27 @@
     }
 
     function openChangeMyPassModal() {
-      if (!currentStudent) return;
+      if (!currentStudent && !isAdmin) return;
+      document.getElementById('selfPassModalTitle').textContent = isAdmin ? "🔑 Changer mon mot de passe Professeur" : "🔑 Changer mon mot de passe élève";
       document.getElementById('selfNewPassInput').value = '';
       document.getElementById('selfPassModal').classList.add('active');
     }
 
     async function saveSelfPassword(e) {
       e.preventDefault();
+      const newPass = document.getElementById('selfNewPassInput').value.trim();
+      if (!newPass) return;
+
+      if (isAdmin) {
+        portalMeta.adminPass = newPass;
+        await pushToSupabase();
+        document.getElementById('selfPassModal').classList.remove('active');
+        alert("✅ Votre nouveau mot de passe Professeur est enregistré sur le Cloud !");
+        return;
+      }
+
       if (!currentStudent || !portalMeta.students[currentStudent]) return;
-      portalMeta.students[currentStudent].password = document.getElementById('selfNewPassInput').value;
+      portalMeta.students[currentStudent].password = newPass;
       portalMeta.students[currentStudent].forceChange = false;
       await pushToSupabase(true);
       document.getElementById('selfPassModal').classList.remove('active');
@@ -1226,7 +1291,8 @@
     function promptAdmin() {
       if (isAdmin) { logoutAdmin(); return; }
       const pass = prompt("Mot de passe enseignant :");
-      if (pass === "perriand2026") {
+      const currentAdminPass = portalMeta.adminPass || "perriand2026";
+      if (pass === currentAdminPass) {
         isAdmin = true;
         sessionStorage.setItem('perriand_admin', 'true');
         document.body.classList.add('is-admin');
@@ -1352,6 +1418,10 @@
       await pushToSupabase(true);
     }
 
+    function prefillCSVStudents() {
+      document.getElementById('bulkStudentsInput').value = PRELOADED_CSV_STUDENTS;
+    }
+
     function formatDateShort(iso) {
       if (!iso) return "Jamais";
       const d = new Date(iso);
@@ -1384,7 +1454,7 @@
       });
 
       if (arr.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--muted);">Aucun compte élève créé. Cliquez sur l'onglet « 🔑 Gérer les Comptes & Mots de passe » pour ajouter votre liste d'élèves.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--muted);">Aucun compte élève créé. Cliquez sur l'onglet « 🔑 Gérer les Comptes & Mots de passe » puis sur « ⚡ Pré-remplir mes 45 élèves ».</td></tr>`;
         return;
       }
 
