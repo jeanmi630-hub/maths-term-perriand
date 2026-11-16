@@ -153,27 +153,12 @@
     .nav-btn:hover { color: var(--primary); }
     .nav-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 
-    /* BARRE D'ACCÈS RAPIDE (CALCULATRICE NUMWORKS DIRECTE) */
-    .quick-tools-bar {
-      max-width: 1240px; margin: 0.85rem auto 0; padding: 0 1.5rem;
-      display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; position: relative; z-index: 3;
-    }
-    .tool-pill {
-      display: inline-flex; align-items: center; gap: 0.35rem;
-      font-size: 0.78rem; font-weight: 700; padding: 0.4rem 0.9rem;
-      border-radius: 999px; background: var(--surface); color: var(--text);
-      border: 1.5px solid var(--border); cursor: pointer; text-decoration: none;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.03); transition: all 0.18s ease;
-    }
-    .tool-pill:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); box-shadow: 0 6px 12px -4px rgba(79,70,229,0.2); }
-
-    main { max-width: 1240px; margin: 1.1rem auto 2rem; padding: 0 1.5rem; flex: 1; width: 100%; position: relative; z-index: 3; }
-    .hero-banner { position: relative; border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; min-height: 220px; display: flex; align-items: center; padding: 2.2rem 2rem; box-shadow: var(--shadow); background-color: #1e1b4b; }
+    main { max-width: 1240px; margin: 1.5rem auto 2rem; padding: 0 1.5rem; flex: 1; width: 100%; position: relative; z-index: 3; }
+    .hero-banner { position: relative; border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; min-height: 210px; display: flex; align-items: center; padding: 2.2rem 2rem; box-shadow: var(--shadow); background-color: #1e1b4b; }
     .hero-banner-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 1; }
     .hero-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(15, 23, 42, 0.90) 0%, rgba(30, 27, 75, 0.78) 50%, rgba(15, 23, 42, 0.45) 100%); z-index: 2; transition: background 0.4s; }
     .hero-content { position: relative; z-index: 3; max-width: 650px; color: white; }
-    .hero-tag { display: inline-block; padding: 0.25rem 0.75rem; background: rgba(255, 255, 255, 0.18); border-radius: 999px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.75rem; backdrop-filter: blur(4px); }
-    .hero-content h2 { font-size: 1.7rem; font-weight: 800; line-height: 1.25; margin-bottom: 0.5rem; }
+    .hero-content h2 { font-size: 1.75rem; font-weight: 800; line-height: 1.25; margin-bottom: 0.55rem; }
     .hero-content p { font-size: 0.95rem; color: #e2e8f0; line-height: 1.5; }
 
     .page-view { display: none; }
@@ -305,7 +290,7 @@
     .auth-overlay { position: fixed; inset: 0; background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); z-index: 350; display: none; align-items: center; justify-content: center; padding: 1.5rem; }
     .auth-overlay.active { display: flex; }
     .auth-card { background: white; color: #0f172a; border-radius: 16px; width: 100%; max-width: 430px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-    body:has(#loginOverlay.active) header, body:has(#loginOverlay.active) .quick-tools-bar, body:has(#loginOverlay.active) main, body:has(#loginOverlay.active) .math-bench-wrap, body:has(#loginOverlay.active) footer { display: none !important; }
+    body:has(#loginOverlay.active) header, body:has(#loginOverlay.active) main, body:has(#loginOverlay.active) .math-bench-wrap, body:has(#loginOverlay.active) footer { display: none !important; }
   </style>
 </head>
 <body>
@@ -386,7 +371,6 @@
           <option value="retro">🕹️ Thème : Rétro 80s</option>
           <option value="dark">🌙 Thème : Nuit Étoilée</option>
         </select>
-        <button id="toggleAnimBtn" class="btn" onclick="toggleAnimations()" style="padding:0.3rem 0.55rem; font-size:0.76rem;" title="Activer / Mettre en pause les objets animés">✨ Anim : ON</button>
         <div id="userBadge" class="user-chip" style="display:none;">
           <span id="userNameDisplay">Élève</span>
           <button onclick="openChangeMyPassModal()" style="background:none; border:none; cursor:pointer; font-size:0.8rem;" title="Changer mon mot de passe">🔑</button>
@@ -400,11 +384,6 @@
     <nav id="navTabsContainer"></nav>
   </header>
 
-  <!-- BARRE D'ACCÈS RAPIDE : CALCULATRICE NUMWORKS DIRECTE -->
-  <div class="quick-tools-bar">
-    <button type="button" class="tool-pill" onclick="openQuickTool('numworks')">🧮 Calculatrice NumWorks</button>
-  </div>
-
   <main>
     <div class="hero-banner" id="heroBanner">
       <picture class="hero-banner-bg">
@@ -412,7 +391,6 @@
       </picture>
       <div class="hero-overlay"></div>
       <div class="hero-content">
-        <span class="hero-tag" id="heroSeasonTag">Espace Numérique de Cours</span>
         <h2>Bienvenue sur le portail de Mathématiques</h2>
         <p>Retrouvez l'ensemble des cours, feuilles d'exercices, cartes mentales et sujets de préparation au baccalauréat et au Grand Oral. Touchez n'importe quel document pour l'afficher directement.</p>
       </div>
@@ -443,7 +421,7 @@
         <div id="imgDirectContainer" style="display:none; flex:1; overflow:auto; align-items:center; justify-content:center; padding:1rem; background:#0f172a;">
           <img id="popupDirectImg" src="" alt="Aperçu" style="max-width:100%; height:auto; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
         </div>
-        <!-- Iframe pour vidéos, jeux HTML5 et Calculatrice NumWorks directe -->
+        <!-- Iframe pour vidéos et jeux HTML5 -->
         <iframe id="popupIframe" class="popup-frame" src="" allowfullscreen></iframe>
       </div>
     </div>
@@ -900,9 +878,8 @@ selene.vincent ; Sélène VINCENT (T11)`;
     let trackSortCol = "name";
     let trackSortAsc = true;
 
-    // État du moteur d'animations et PDF
+    // État du moteur d'animations (toujours actif) et PDF
     let activeThemeName = "classic";
-    let animationsEnabled = localStorage.getItem('perriand_anim') !== 'off';
     let particles = [];
     let flyerInterval = null;
     let currentPdfDoc = null;
@@ -985,7 +962,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
     async function startApplication() {
       initAmbientEngine();
-      updateAnimButtonLabel();
 
       const cloudData = await fetchFromSupabase();
       if (cloudData && cloudData.sections && Object.keys(cloudData.sections).length > 0) {
@@ -1014,7 +990,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
        ========================================================================= */
     const THEME_CONFIGS = {
       classic: {
-        tag: "Espace Numérique de Cours • Spécialité Maths",
         particles: ["π", "∫", "∑", "∞", "√x", "Δ", "◇", "△"],
         color: "rgba(79, 70, 229, 0.22)",
         flyers: [
@@ -1025,7 +1000,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
         ]
       },
       noel: {
-        tag: "Espace Numérique de Cours • Spécialité Maths",
         particles: ["❄", "❅", "❆", "✦", "•"],
         color: "rgba(14, 165, 233, 0.45)",
         flyers: [
@@ -1036,7 +1010,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
         ]
       },
       ete: {
-        tag: "Espace Numérique de Cours • Spécialité Maths",
         particles: ["☀️", "🫧", "✦", "◦"],
         color: "rgba(245, 158, 11, 0.35)",
         flyers: [
@@ -1047,7 +1020,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
         ]
       },
       sakura: {
-        tag: "Espace Numérique de Cours • Spécialité Maths",
         particles: ["🌸", "💮", "✿"],
         color: "rgba(219, 39, 119, 0.3)",
         flyers: [
@@ -1057,7 +1029,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
         ]
       },
       retro: {
-        tag: "Espace Numérique de Cours • Spécialité Maths",
         particles: ["★", "✦", "0", "1", "π", "∑"],
         color: "rgba(0, 240, 255, 0.4)",
         flyers: [
@@ -1068,7 +1039,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
         ]
       },
       dark: {
-        tag: "Espace Numérique de Cours • Spécialité Maths",
         particles: ["✦", "★", "·", "π", "∞"],
         color: "rgba(148, 163, 184, 0.35)",
         flyers: [
@@ -1085,13 +1055,8 @@ selene.vincent ; Sélène VINCENT (T11)`;
       if (activeThemeName !== 'classic') document.body.classList.add('theme-' + activeThemeName);
       if (saveUserChoice) localStorage.setItem('perriand_user_theme', activeThemeName);
 
-      const tagEl = document.getElementById('heroSeasonTag');
-      if (tagEl && THEME_CONFIGS[activeThemeName]) tagEl.textContent = THEME_CONFIGS[activeThemeName].tag;
-
       resetParticlesForTheme();
-      if (animationsEnabled) {
-        setTimeout(() => triggerPassingObject(false), 600);
-      }
+      setTimeout(() => triggerPassingObject(), 600);
     }
 
     async function setGlobalDefaultTheme() {
@@ -1100,26 +1065,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
       await pushToSupabase();
       const labels = { classic: "Usuel (Maths)", noel: "Noël & Hiver", ete: "Été & Soleil", sakura: "Sakura", retro: "Rétro 80s", dark: "Nuit Étoilée" };
       alert(`🎨 Le thème « ${labels[activeThemeName] || activeThemeName} » est désormais le thème par défaut du portail pour tous vos élèves !`);
-    }
-
-    function toggleAnimations() {
-      animationsEnabled = !animationsEnabled;
-      localStorage.setItem('perriand_anim', animationsEnabled ? 'on' : 'off');
-      updateAnimButtonLabel();
-      const canvas = document.getElementById('ambientCanvas');
-      const flyers = document.getElementById('flyersLayer');
-      if (!animationsEnabled) {
-        if (canvas) { const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); }
-        if (flyers) flyers.innerHTML = '';
-      } else {
-        resetParticlesForTheme();
-        triggerPassingObject(true);
-      }
-    }
-
-    function updateAnimButtonLabel() {
-      const btn = document.getElementById('toggleAnimBtn');
-      if (btn) btn.textContent = animationsEnabled ? "✨ Anim : ON" : "⏸ Anim : OFF";
     }
 
     function resetParticlesForTheme() {
@@ -1157,7 +1102,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       resetParticlesForTheme();
 
       function animateLoop() {
-        if (animationsEnabled && !document.hidden) {
+        if (!document.hidden) {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           const cfg = THEME_CONFIGS[activeThemeName] || THEME_CONFIGS.classic;
           ctx.fillStyle = cfg.color;
@@ -1185,12 +1130,11 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
       if (flyerInterval) clearInterval(flyerInterval);
       flyerInterval = setInterval(() => {
-        if (animationsEnabled && !document.hidden) triggerPassingObject(false);
+        if (!document.hidden) triggerPassingObject();
       }, 12000);
     }
 
-    function triggerPassingObject(forceNow = false) {
-      if (!animationsEnabled && !forceNow) return;
+    function triggerPassingObject() {
       const layer = document.getElementById('flyersLayer');
       if (!layer) return;
 
@@ -1217,7 +1161,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
     }
 
     /* =========================================================================
-       VISIONNEUSE DIRECTE DE DOCUMENTS (PDF.JS MOBILE + NUMWORKS DIRECT)
+       VISIONNEUSE DIRECTE DE DOCUMENTS (PDF.JS MOBILE + IMAGES + VIDÉOS)
        ========================================================================= */
     function isPdfUrl(url, itemType) {
       if (!url) return false;
@@ -1256,7 +1200,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       document.getElementById('popupDirectOpenBtn').href = url;
       const downloadBtn = document.getElementById('popupDownloadBtn');
       downloadBtn.href = url;
-      downloadBtn.style.display = (type === 'calculator') ? 'none' : 'inline-flex';
+      downloadBtn.style.display = 'inline-flex';
 
       const pdfContainer = document.getElementById('pdfDirectContainer');
       const imgContainer = document.getElementById('imgDirectContainer');
@@ -1311,7 +1255,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
         }
       }
 
-      // 4. Application Web / Jeu HTML5 / Calculatrice NumWorks en plein cadre direct
+      // 4. Application Web / Jeu HTML5
       iframe.style.display = 'block';
       iframe.src = url;
     }
@@ -1356,13 +1300,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
       document.getElementById('pdfDirectContainer').innerHTML = '';
       currentPdfDoc = null;
       document.getElementById('docPopup').classList.remove('active');
-    }
-
-    function openQuickTool(tool) {
-      if (tool === 'numworks') {
-        // Lien d'intégration direct officiel NumWorks : affiche directement la calculatrice sans le site autour
-        openUniversalViewer('🧮 Calculatrice NumWorks', 'https://www.numworks.com/simulator/embed.html', 'calculator');
-      }
     }
 
     /* =========================================================================
