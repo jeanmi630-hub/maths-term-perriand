@@ -99,7 +99,7 @@
     .flying-object {
       position: absolute; pointer-events: none; user-select: none;
       will-change: transform; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
-      white-space: nowrap; font-weight: 700;
+      white-space: nowrap;
     }
     @keyframes flyLeftToRight {
       0% { transform: translate3d(-180px, 0, 0) rotate(var(--rot-start, -4deg)); opacity: 0; }
@@ -153,14 +153,14 @@
     .nav-btn:hover { color: var(--primary); }
     .nav-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 
-    /* BARRE D'OUTILS RAPIDES (INSPIRÉE DU COLLÈGUE) */
+    /* BARRE D'ACCÈS RAPIDE (CALCULATRICE NUMWORKS DIRECTE) */
     .quick-tools-bar {
       max-width: 1240px; margin: 0.85rem auto 0; padding: 0 1.5rem;
       display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; position: relative; z-index: 3;
     }
     .tool-pill {
       display: inline-flex; align-items: center; gap: 0.35rem;
-      font-size: 0.76rem; font-weight: 700; padding: 0.38rem 0.85rem;
+      font-size: 0.78rem; font-weight: 700; padding: 0.4rem 0.9rem;
       border-radius: 999px; background: var(--surface); color: var(--text);
       border: 1.5px solid var(--border); cursor: pointer; text-decoration: none;
       box-shadow: 0 2px 4px rgba(0,0,0,0.03); transition: all 0.18s ease;
@@ -266,7 +266,7 @@
       #pdfDirectContainer { padding: 0.4rem 0.2rem; gap: 0.5rem; }
     }
 
-    /* FRESQUE VECTORIELLE "LE BUREAU DU MATHÉMATICIEN" (INSPIRÉE DE LA PAILLASSE DU COLLÈGUE) */
+    /* FRESQUE VECTORIELLE "LE BUREAU DU MATHÉMATICIEN" */
     .math-bench-wrap {
       width: 100%; margin-top: 2.5rem; position: relative; z-index: 3; pointer-events: none;
     }
@@ -400,12 +400,9 @@
     <nav id="navTabsContainer"></nav>
   </header>
 
-  <!-- BARRE D'OUTILS MATHÉMATIQUES RAPIDES (OUVERTURE DIRECTE SANS QUITTER LA PAGE) -->
+  <!-- BARRE D'ACCÈS RAPIDE : CALCULATRICE NUMWORKS DIRECTE -->
   <div class="quick-tools-bar">
     <button type="button" class="tool-pill" onclick="openQuickTool('numworks')">🧮 Calculatrice NumWorks</button>
-    <button type="button" class="tool-pill" onclick="openQuickTool('geogebra')">📈 Grapheur GeoGebra</button>
-    <button type="button" class="tool-pill" onclick="openTrigoReferenceModal()">⭕ Cercle Trigo & Formules BAC</button>
-    <button type="button" class="tool-pill" onclick="triggerPassingObject(true)" title="Faire passer une animation maintenant">🚀 Faire passer un objet</button>
   </div>
 
   <main>
@@ -446,52 +443,8 @@
         <div id="imgDirectContainer" style="display:none; flex:1; overflow:auto; align-items:center; justify-content:center; padding:1rem; background:#0f172a;">
           <img id="popupDirectImg" src="" alt="Aperçu" style="max-width:100%; height:auto; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
         </div>
-        <!-- Iframe pour vidéos, jeux HTML5 et outils -->
+        <!-- Iframe pour vidéos, jeux HTML5 et Calculatrice NumWorks directe -->
         <iframe id="popupIframe" class="popup-frame" src="" allowfullscreen></iframe>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODALE AIDE-MÉMOIRE CERCLE TRIGO & DÉRIVÉES / PRIMITIVES -->
-  <div class="popup-backdrop" id="trigoModal" onclick="if(event.target===this) this.classList.remove('active')">
-    <div class="modal-box wide">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-        <h3 style="font-size:1.15rem; font-weight:800;">⭕ Aide-mémoire Terminale : Trigonométrie, Limites & Dérivées</h3>
-        <button class="btn" onclick="document.getElementById('trigoModal').classList.remove('active')">✕</button>
-      </div>
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1rem; font-size:0.84rem;">
-        <div style="background:var(--bg); padding:1rem; border-radius:10px; border:1px solid var(--border);">
-          <h4 style="color:var(--primary); margin-bottom:0.5rem;">📐 Valeurs remarquables</h4>
-          <table class="admin-table" style="margin-top:0;">
-            <thead><tr><th>$x$</th><th>$0$</th><th>$\pi/6$</th><th>$\pi/4$</th><th>$\pi/3$</th><th>$\pi/2$</th></tr></thead>
-            <tbody>
-              <tr><td><strong>$\cos(x)$</strong></td><td>$1$</td><td>$\frac{\sqrt{3}}{2}$</td><td>$\frac{\sqrt{2}}{2}$</td><td>$\frac{1}{2}$</td><td>$0$</td></tr>
-              <tr><td><strong>$\sin(x)$</strong></td><td>$0$</td><td>$\frac{1}{2}$</td><td>$\frac{\sqrt{2}}{2}$</td><td>$\frac{\sqrt{3}}{2}$</td><td>$1$</td></tr>
-            </tbody>
-          </table>
-          <p style="margin-top:0.6rem; font-size:0.78rem; color:var(--muted);">$\cos^2(x) + \sin^2(x) = 1$ • $e^{i\pi} + 1 = 0$</p>
-        </div>
-        <div style="background:var(--bg); padding:1rem; border-radius:10px; border:1px solid var(--border);">
-          <h4 style="color:var(--primary); margin-bottom:0.5rem;">⚡ Dérivées & Primitives clés</h4>
-          <ul style="list-style:none; line-height:1.8;">
-            <li>• $(u^n)' = n \cdot u' \cdot u^{n-1}$</li>
-            <li>• $(e^u)' = u' \cdot e^u$</li>
-            <li>• $(\ln(u))' = \dfrac{u'}{u}$ sur $u(x) > 0$</li>
-            <li>• $(\cos(u))' = -u' \cdot \sin(u)$</li>
-            <li>• $(\sin(u))' = u' \cdot \cos(u)$</li>
-            <li>• Éq. diff. $y' = ay + b \iff y(x) = Ce^{ax} - \frac{b}{a}$</li>
-          </ul>
-        </div>
-        <div style="background:var(--bg); padding:1rem; border-radius:10px; border:1px solid var(--border);">
-          <h4 style="color:var(--primary); margin-bottom:0.5rem;">🚀 Croissances comparées</h4>
-          <ul style="list-style:none; line-height:1.8;">
-            <li>• $\lim_{x \to +\infty} \dfrac{e^x}{x^n} = +\infty$</li>
-            <li>• $\lim_{x \to -\infty} x^n e^x = 0$</li>
-            <li>• $\lim_{x \to +\infty} \dfrac{\ln(x)}{x^n} = 0$</li>
-            <li>• $\lim_{x \to 0^+} x^n \ln(x) = 0$</li>
-            <li>• Somme géométrique : $1+q+\dots+q^n = \dfrac{1-q^{n+1}}{1-q}$</li>
-          </ul>
-        </div>
       </div>
     </div>
   </div>
@@ -774,10 +727,10 @@
     </div>
   </div>
 
-  <!-- FRESQUE VECTORIELLE "LE BUREAU DU MATHÉMATICIEN" (CLIN D'ŒIL À LA PAILLASSE DU COLLÈGUE) -->
+  <!-- FRESQUE VECTORIELLE "LE BUREAU DU MATHÉMATICIEN" -->
   <div class="math-bench-wrap" aria-hidden="true">
     <svg class="math-bench-svg" viewBox="0 0 1200 185" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Pile de livres de Mathématiques (Euler, Gauss, Analyse) -->
+      <!-- Pile de livres de Mathématiques -->
       <rect x="45" y="152" width="135" height="22" rx="4" fill="#4f46e5" stroke="#312e81" stroke-width="2"/>
       <rect x="52" y="157" width="120" height="12" rx="2" fill="#eef2ff"/>
       <text x="112" y="167" text-anchor="middle" font-size="9" font-weight="700" fill="#312e81" font-family="monospace">ANALYSE &amp; SUITES</text>
@@ -786,7 +739,7 @@
       <rect x="64" y="110" width="102" height="20" rx="4" fill="#db2777" stroke="#831843" stroke-width="2"/>
       <text x="115" y="123" text-anchor="middle" font-size="8.5" font-weight="700" fill="#ffffff" font-family="monospace">PROBABILITÉS</text>
 
-      <!-- Solide platonicien (Icosaèdre / Pyramide filaire) -->
+      <!-- Solide platonicien -->
       <g stroke="#6366f1" stroke-width="2" stroke-linejoin="round" fill="rgba(99,102,241,0.12)">
         <polygon points="265,95 225,165 305,165"/>
         <polygon points="265,95 305,165 330,140"/>
@@ -795,7 +748,7 @@
         <line x1="330" y1="140" x2="285" y2="142" stroke-dasharray="3 3"/>
       </g>
 
-      <!-- Écran Traceur de Courbes (f(x) = sin(x) et tangente) -->
+      <!-- Écran Traceur de Courbes -->
       <rect x="380" y="55" width="230" height="118" rx="10" fill="#1e293b" stroke="#475569" stroke-width="4"/>
       <rect x="394" y="68" width="165" height="92" rx="5" fill="#0f2922"/>
       <g stroke="#1e4d3f" stroke-width="1">
@@ -834,18 +787,16 @@
         <circle cx="825" cy="116" r="2.2"/><circle cx="845" cy="116" r="2.2"/><circle cx="865" cy="116" r="2.2"/>
         <circle cx="815" cy="130" r="2.2"/><circle cx="835" cy="130" r="2.2"/><circle cx="855" cy="130" r="2.2"/><circle cx="875" cy="130" r="2.2"/>
       </g>
-      <!-- Histogramme Gaussien -->
       <rect x="812" y="162" width="10" height="9" fill="#f59e0b"/>
       <rect x="826" y="153" width="10" height="18" fill="#f59e0b"/>
       <rect x="840" y="142" width="10" height="29" fill="#ef4444"/>
       <rect x="854" y="154" width="10" height="17" fill="#f59e0b"/>
       <rect x="868" y="163" width="10" height="8" fill="#f59e0b"/>
 
-      <!-- Équerre, Compas et Mug "π" fumant -->
+      <!-- Équerre et Tasse "π" fumante -->
       <polygon points="940,172 1015,172 940,95" fill="rgba(251,191,36,0.35)" stroke="#d97706" stroke-width="2"/>
       <polygon points="952,160 986,160 952,125" fill="var(--bg)" stroke="#d97706" stroke-width="1.5"/>
 
-      <!-- Tasse du Professeur -->
       <path d="M 1065 118 Q 1060 102, 1068 90" stroke="#94a3b8" stroke-width="2" fill="none" stroke-linecap="round">
         <animate attributeName="d" dur="2.5s" repeatCount="indefinite"
           values="M 1065 118 Q 1060 102, 1068 90; M 1065 118 Q 1072 102, 1063 88; M 1065 118 Q 1060 102, 1068 90"/>
@@ -1046,7 +997,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
         document.getElementById('syncStatusBadge').innerHTML = '💾 Mode Hors-Ligne';
       }
 
-      // Choix du thème : préférence personnelle de l'utilisateur ou thème saisonnier défini par le professeur
       const userTheme = localStorage.getItem('perriand_user_theme');
       const initialTheme = userTheme || portalMeta.defaultTheme || 'classic';
       document.getElementById('themeSelector').value = initialTheme;
@@ -1060,68 +1010,71 @@ selene.vincent ; Sélène VINCENT (T11)`;
     }
 
     /* =========================================================================
-       MOTEUR D'ANIMATIONS THÉMATIQUES & OBJETS QUI PASSENT (NOËL, ÉTÉ, USUEL...)
+       MOTEUR D'ANIMATIONS THÉMATIQUES & OBJETS QUI PASSENT (SANS AUCUN TEXTE)
        ========================================================================= */
     const THEME_CONFIGS = {
       classic: {
-        tag: "📐 Espace Numérique de Cours • Spécialité Maths",
-        particles: ["π", "∫", "∑", "∞", "√x", "Δ", "e^{iπ}", "cos(x)", "ln(x)", "◇", "△"],
+        tag: "Espace Numérique de Cours • Spécialité Maths",
+        particles: ["π", "∫", "∑", "∞", "√x", "Δ", "◇", "△"],
         color: "rgba(79, 70, 229, 0.22)",
         flyers: [
-          { html: `<svg width="68" height="36" viewBox="0 0 68 36"><polygon points="2,18 66,2 44,34 32,22" fill="#6366f1" opacity="0.85"/><polygon points="2,18 66,2 32,22" fill="#818cf8" opacity="0.9"/></svg>`, size: "1rem" },
-          { html: `🚀 <span style="font-size:0.75rem; background:rgba(79,70,229,0.12); color:#4f46e5; padding:2px 7px; border-radius:99px;">y = ax² + bx + c</span>`, size: "1.4rem" },
-          { html: `✨ <span style="font-family:serif; font-style:italic; color:#4f46e5;">e<sup>iπ</sup> + 1 = 0</span>`, size: "1.15rem" },
-          { html: `📐 <span style="font-size:0.78rem; color:#0284c7;">lim (1 + 1/n)<sup>n</sup> = e</span>`, size: "1.2rem" }
+          { html: `<svg width="64" height="34" viewBox="0 0 68 36"><polygon points="2,18 66,2 44,34 32,22" fill="#6366f1" opacity="0.85"/><polygon points="2,18 66,2 32,22" fill="#818cf8" opacity="0.9"/></svg>`, size: "1rem" },
+          { html: `<svg width="46" height="46" viewBox="0 0 48 48"><polygon points="24,4 44,18 36,42 12,42 4,18" fill="rgba(99,102,241,0.18)" stroke="#4f46e5" stroke-width="2"/><line x1="24" y1="4" x2="24" y2="26" stroke="#4f46e5" stroke-width="1.5"/><line x1="4" y1="18" x2="24" y2="26" stroke="#4f46e5" stroke-width="1.5"/><line x1="44" y1="18" x2="24" y2="26" stroke="#4f46e5" stroke-width="1.5"/><line x1="12" y1="42" x2="24" y2="26" stroke="#4f46e5" stroke-width="1.5"/><line x1="36" y1="42" x2="24" y2="26" stroke="#4f46e5" stroke-width="1.5"/></svg>`, size: "1rem" },
+          { html: `🚀`, size: "1.7rem" },
+          { html: `🛰️`, size: "1.6rem" }
         ]
       },
       noel: {
-        tag: "🎄 Édition Hiver & Fêtes de Noël • Joyeuses Révisions !",
+        tag: "Espace Numérique de Cours • Spécialité Maths",
         particles: ["❄", "❅", "❆", "✦", "•"],
         color: "rgba(14, 165, 233, 0.45)",
         flyers: [
-          { html: `🦌🦌🛷🎅✨`, size: "1.9rem" },
-          { html: `🌠 <span style="font-size:0.8rem; color:#dc2626; background:rgba(255,255,255,0.85); padding:2px 8px; border-radius:99px;">Joyeuses Fêtes !</span>`, size: "1.5rem" },
+          { html: `🦌🦌🛷🎅`, size: "1.9rem" },
+          { html: `🌠`, size: "1.7rem" },
           { html: `⛄❄️`, size: "1.7rem" },
-          { html: `🎄🎁✨`, size: "1.6rem" }
+          { html: `🎄🎁`, size: "1.6rem" }
         ]
       },
       ete: {
-        tag: "☀️ Ambiance Estivale • Cap sur le Baccalauréat & le Grand Oral !",
+        tag: "Espace Numérique de Cours • Spécialité Maths",
         particles: ["☀️", "🫧", "✦", "◦"],
         color: "rgba(245, 158, 11, 0.35)",
         flyers: [
-          { html: `🎈🌤️`, size: "2rem" },
-          { html: `⛵🌊`, size: "1.8rem" },
-          { html: `🕊️🕊️`, size: "1.5rem" },
-          { html: `🏖️🕶️ <span style="font-size:0.75rem; color:#0369a1; background:rgba(255,255,255,0.8); padding:2px 8px; border-radius:99px;">Bel été !</span>`, size: "1.4rem" }
+          { html: `🎈`, size: "2rem" },
+          { html: `⛵`, size: "1.9rem" },
+          { html: `🕊️`, size: "1.6rem" },
+          { html: `🦋`, size: "1.6rem" }
         ]
       },
       sakura: {
-        tag: "🌸 Printemps Japonais • Révisions Sereines",
+        tag: "Espace Numérique de Cours • Spécialité Maths",
         particles: ["🌸", "💮", "✿"],
         color: "rgba(219, 39, 119, 0.3)",
         flyers: [
-          { html: `🦋🌸`, size: "1.6rem" },
-          { html: `🕊️✨`, size: "1.6rem" }
+          { html: `🦋`, size: "1.6rem" },
+          { html: `🕊️`, size: "1.6rem" },
+          { html: `🌸`, size: "1.5rem" }
         ]
       },
       retro: {
-        tag: "🕹️ Mode Arcade Synthwave 80s • High Score en Maths !",
+        tag: "Espace Numérique de Cours • Spécialité Maths",
         particles: ["★", "✦", "0", "1", "π", "∑"],
         color: "rgba(0, 240, 255, 0.4)",
         flyers: [
-          { html: `🛸✨ <span style="font-size:0.75rem; color:#00f0ff; text-shadow:0 0 6px #00f0ff;">SUITES SHOOT</span>`, size: "1.6rem" },
-          { html: `🚀⚡`, size: "1.7rem" },
-          { html: `🌠`, size: "1.8rem" }
+          { html: `🛸`, size: "1.8rem" },
+          { html: `🚀`, size: "1.7rem" },
+          { html: `👾`, size: "1.7rem" },
+          { html: `🌠`, size: "1.7rem" }
         ]
       },
       dark: {
-        tag: "🌙 Mode Nuit Étoilée • Confort Visuel",
+        tag: "Espace Numérique de Cours • Spécialité Maths",
         particles: ["✦", "★", "·", "π", "∞"],
         color: "rgba(148, 163, 184, 0.35)",
         flyers: [
-          { html: `☄️✨`, size: "1.6rem" },
-          { html: `🛰️`, size: "1.6rem" }
+          { html: `☄️`, size: "1.7rem" },
+          { html: `🛰️`, size: "1.7rem" },
+          { html: `🚀`, size: "1.6rem" }
         ]
       }
     };
@@ -1230,11 +1183,10 @@ selene.vincent ; Sélène VINCENT (T11)`;
       }
       requestAnimationFrame(animateLoop);
 
-      // Objets thématiques qui traversent périodiquement l'écran
       if (flyerInterval) clearInterval(flyerInterval);
       flyerInterval = setInterval(() => {
         if (animationsEnabled && !document.hidden) triggerPassingObject(false);
-      }, 15000);
+      }, 12000);
     }
 
     function triggerPassingObject(forceNow = false) {
@@ -1249,7 +1201,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       const el = document.createElement('div');
       el.className = 'flying-object';
       el.innerHTML = item.html;
-      el.style.fontSize = item.size || '1.5rem';
+      el.style.fontSize = item.size || '1.6rem';
 
       const topVh = 10 + Math.random() * 68;
       const duration = 9 + Math.random() * 6;
@@ -1265,7 +1217,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
     }
 
     /* =========================================================================
-       VISIONNEUSE DIRECTE DE DOCUMENTS (PDF.JS MOBILE + OUTILS RAPIDES)
+       VISIONNEUSE DIRECTE DE DOCUMENTS (PDF.JS MOBILE + NUMWORKS DIRECT)
        ========================================================================= */
     function isPdfUrl(url, itemType) {
       if (!url) return false;
@@ -1302,7 +1254,9 @@ selene.vincent ; Sélène VINCENT (T11)`;
     async function openUniversalViewer(title, url, type = 'pdf') {
       document.getElementById('popupTitle').textContent = title;
       document.getElementById('popupDirectOpenBtn').href = url;
-      document.getElementById('popupDownloadBtn').href = url;
+      const downloadBtn = document.getElementById('popupDownloadBtn');
+      downloadBtn.href = url;
+      downloadBtn.style.display = (type === 'calculator') ? 'none' : 'inline-flex';
 
       const pdfContainer = document.getElementById('pdfDirectContainer');
       const imgContainer = document.getElementById('imgDirectContainer');
@@ -1327,7 +1281,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
         return;
       }
 
-      // 2. Image directe (Carte mentale .png/.jpg, etc.)
+      // 2. Image directe
       if (isImageUrl(url)) {
         imgContainer.style.display = 'flex';
         document.getElementById('popupDirectImg').src = url;
@@ -1346,7 +1300,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
           await renderAllPdfPages();
           return;
         } catch (err) {
-          // Repli automatique vers Google Viewer sur mobile si serveur externe bloque CORS
           const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
           pdfContainer.style.display = 'none';
           pdfControls.style.display = 'none';
@@ -1358,7 +1311,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
         }
       }
 
-      // 4. Application Web / Jeu HTML5 / Outil
+      // 4. Application Web / Jeu HTML5 / Calculatrice NumWorks en plein cadre direct
       iframe.style.display = 'block';
       iframe.src = url;
     }
@@ -1407,14 +1360,9 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
     function openQuickTool(tool) {
       if (tool === 'numworks') {
-        openUniversalViewer('🧮 Calculatrice NumWorks en ligne', 'https://www.numworks.com/fr/simulateur/', 'web');
-      } else if (tool === 'geogebra') {
-        openUniversalViewer('📈 Grapheur & Suite GeoGebra', 'https://www.geogebra.org/classic', 'web');
+        // Lien d'intégration direct officiel NumWorks : affiche directement la calculatrice sans le site autour
+        openUniversalViewer('🧮 Calculatrice NumWorks', 'https://www.numworks.com/simulator/embed.html', 'calculator');
       }
-    }
-
-    function openTrigoReferenceModal() {
-      document.getElementById('trigoModal').classList.add('active');
     }
 
     /* =========================================================================
@@ -1733,7 +1681,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
         card.className = 'card' + (isHidden ? ' is-hidden-doc' : '') + (hasUrl ? ' clickable-card' : '');
         card.style.animationDelay = `${Math.min(idx * 0.04, 0.4)}s`;
 
-        // Clic direct n'importe où sur la carte pour ouvrir le document immédiatement
         if (hasUrl) {
           card.onclick = (e) => {
             if (e.target.closest('.admin-item-btn')) return;
