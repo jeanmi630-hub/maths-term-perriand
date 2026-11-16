@@ -10,67 +10,200 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Maths Term">
   <link rel="apple-touch-icon" href="images/logo.png">
+  <!-- Librairie PDF.js pour affichage direct des PDF sur mobile sans bouton "Ouvrir" -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
-    :root { --bg: #f8fafc; --surface: #ffffff; --primary: #4f46e5; --primary-hover: #4338ca; --primary-light: #eef2ff; --text: #0f172a; --muted: #64748b; --border: #e2e8f0; --radius: 12px; --shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02); }
-    
-    body.theme-dark { --bg: #0f172a; --surface: #1e293b; --primary: #6366f1; --primary-hover: #818cf8; --primary-light: #312e81; --text: #f8fafc; --muted: #94a3b8; --border: #334155; }
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+    }
+
+    /* THÈME SOMBRE (NUIT ÉTOILÉE) */
+    body.theme-dark {
+      --bg: #0f172a; --surface: #1e293b; --primary: #6366f1; --primary-hover: #818cf8;
+      --primary-light: #312e81; --text: #f8fafc; --muted: #94a3b8; --border: #334155;
+    }
     body.theme-dark .brand-title h1, body.theme-dark .page-header h2, body.theme-dark .card-title, body.theme-dark .popup-header h3 { color: #f8fafc; }
     body.theme-dark .modal-box, body.theme-dark .popup-content, body.theme-dark .popup-header, body.theme-dark .struct-item { background: #1e293b; color: #f8fafc; }
     body.theme-dark .form-control { background: #0f172a; color: #f8fafc; border-color: #334155; }
 
-    body.theme-sakura { --bg: #fff5f7; --surface: #ffffff; --primary: #db2777; --primary-hover: #be185d; --primary-light: #fce7f3; --text: #3f1d2b; --muted: #9d5c75; --border: #fbcfe8; background-image: radial-gradient(#fbcfe8 1px, transparent 1px), radial-gradient(#f9a8d4 1px, #fff5f7 1px); background-size: 40px 40px; background-position: 0 0, 20px 20px; }
+    /* THÈME NOËL / HIVER */
+    body.theme-noel {
+      --bg: #f0fdf4; --surface: #ffffff; --primary: #dc2626; --primary-hover: #b91c1c;
+      --primary-light: #fef2f2; --text: #14532d; --muted: #166534; --border: #bbf7d0;
+      background-image: radial-gradient(circle at 20% 20%, rgba(220, 38, 38, 0.05) 0%, transparent 45%),
+                        radial-gradient(circle at 80% 80%, rgba(22, 101, 52, 0.08) 0%, transparent 50%);
+    }
+    body.theme-noel .brand-title h1, body.theme-noel .page-header h2, body.theme-noel .card-title { color: #14532d; }
+    body.theme-noel .hero-overlay { background: linear-gradient(90deg, rgba(20, 83, 45, 0.92) 0%, rgba(185, 28, 28, 0.78) 60%, rgba(20, 83, 45, 0.5) 100%); }
+    body.theme-noel .card { border-color: #bbf7d0; box-shadow: 0 6px 16px -3px rgba(20, 83, 45, 0.08); }
+
+    /* THÈME ÉTÉ / SOLEIL */
+    body.theme-ete {
+      --bg: #fffbeb; --surface: #ffffff; --primary: #0284c7; --primary-hover: #0369a1;
+      --primary-light: #e0f2fe; --text: #0c4a6e; --muted: #0369a1; --border: #fde68a;
+      background: linear-gradient(180deg, #e0f2fe 0%, #fffbeb 45%, #fef3c7 100%);
+      background-attachment: fixed;
+    }
+    body.theme-ete .brand-title h1, body.theme-ete .page-header h2, body.theme-ete .card-title { color: #0c4a6e; }
+    body.theme-ete .hero-overlay { background: linear-gradient(90deg, rgba(2, 132, 199, 0.88) 0%, rgba(245, 158, 11, 0.75) 65%, rgba(2, 132, 199, 0.4) 100%); }
+    body.theme-ete .card { border-color: #bae6fd; box-shadow: 0 6px 16px -3px rgba(2, 132, 199, 0.1); }
+
+    /* THÈME SAKURA */
+    body.theme-sakura {
+      --bg: #fff5f7; --surface: #ffffff; --primary: #db2777; --primary-hover: #be185d;
+      --primary-light: #fce7f3; --text: #3f1d2b; --muted: #9d5c75; --border: #fbcfe8;
+      background-image: radial-gradient(#fbcfe8 1px, transparent 1px), radial-gradient(#f9a8d4 1px, #fff5f7 1px);
+      background-size: 40px 40px; background-position: 0 0, 20px 20px;
+    }
     body.theme-sakura .brand-title h1, body.theme-sakura .page-header h2, body.theme-sakura .card-title { color: #831843; }
     body.theme-sakura .hero-overlay { background: linear-gradient(90deg, rgba(131, 24, 67, 0.88) 0%, rgba(190, 24, 93, 0.72) 55%, rgba(131, 24, 67, 0.4) 100%); }
 
-    body.theme-retro { --bg: #120428; --surface: #1d0b3a; --primary: #ff2a85; --primary-hover: #ff0055; --primary-light: #3b0d54; --text: #f0e6ff; --muted: #00f0ff; --border: #591c89; background-image: linear-gradient(rgba(255, 42, 133, 0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.07) 1px, transparent 1px); background-size: 32px 32px; }
+    /* THÈME RÉTRO 80s */
+    body.theme-retro {
+      --bg: #120428; --surface: #1d0b3a; --primary: #ff2a85; --primary-hover: #ff0055;
+      --primary-light: #3b0d54; --text: #f0e6ff; --muted: #00f0ff; --border: #591c89;
+      background-image: linear-gradient(rgba(255, 42, 133, 0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.07) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
     body.theme-retro .brand-title h1, body.theme-retro .page-header h2, body.theme-retro .card-title, body.theme-retro .popup-header h3 { color: #00f0ff; text-shadow: 0 0 8px rgba(0, 240, 255, 0.35); }
     body.theme-retro .card { border-color: #ff2a85; box-shadow: 0 0 15px rgba(255, 42, 133, 0.18); }
     body.theme-retro .modal-box, body.theme-retro .popup-content, body.theme-retro .popup-header, body.theme-retro .struct-item { background: #1d0b3a; color: #f0e6ff; }
     body.theme-retro .form-control { background: #120428; color: #f0e6ff; border-color: #591c89; }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; transition: background 0.25s, color 0.25s; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--text); min-height: 100vh;
+      display: flex; flex-direction: column; transition: background 0.3s, color 0.3s;
+      overflow-x: hidden;
+    }
+
+    /* SCÈNE D'ANIMATION D'ARRIÈRE-PLAN & OBJETS QUI PASSENT */
+    #ambientCanvas {
+      position: fixed; inset: 0; width: 100vw; height: 100vh;
+      pointer-events: none; z-index: 1;
+    }
+    #flyersLayer {
+      position: fixed; inset: 0; width: 100vw; height: 100vh;
+      pointer-events: none; z-index: 2; overflow: hidden;
+    }
+    .flying-object {
+      position: absolute; pointer-events: none; user-select: none;
+      will-change: transform; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+      white-space: nowrap; font-weight: 700;
+    }
+    @keyframes flyLeftToRight {
+      0% { transform: translate3d(-180px, 0, 0) rotate(var(--rot-start, -4deg)); opacity: 0; }
+      8% { opacity: var(--max-op, 0.85); }
+      50% { transform: translate3d(50vw, var(--wave-y, -25px), 0) rotate(var(--rot-mid, 4deg)); }
+      92% { opacity: var(--max-op, 0.85); }
+      100% { transform: translate3d(110vw, var(--end-y, 10px), 0) rotate(var(--rot-end, -2deg)); opacity: 0; }
+    }
+    @keyframes flyRightToLeft {
+      0% { transform: translate3d(110vw, 0, 0) scaleX(-1) rotate(var(--rot-start, -4deg)); opacity: 0; }
+      8% { opacity: var(--max-op, 0.85); }
+      50% { transform: translate3d(45vw, var(--wave-y, -25px), 0) scaleX(-1) rotate(var(--rot-mid, 4deg)); }
+      92% { opacity: var(--max-op, 0.85); }
+      100% { transform: translate3d(-180px, var(--end-y, 10px), 0) scaleX(-1) rotate(var(--rot-end, -2deg)); opacity: 0; }
+    }
+
+    /* Guirlande lumineuse pour le thème Noël */
+    .noel-garland {
+      display: none; height: 14px; width: 100%; overflow: hidden;
+      justify-content: space-around; align-items: center;
+      background: rgba(20, 83, 45, 0.08); border-bottom: 1px dashed #bbf7d0;
+    }
+    body.theme-noel .noel-garland { display: flex; }
+    .bulb {
+      width: 9px; height: 11px; border-radius: 50% 50% 60% 60%;
+      animation: twinkleBulb 1.6s infinite alternate ease-in-out;
+    }
+    .bulb:nth-child(4n+1) { background: #ef4444; box-shadow: 0 0 8px #ef4444; animation-delay: 0s; }
+    .bulb:nth-child(4n+2) { background: #eab308; box-shadow: 0 0 8px #eab308; animation-delay: 0.4s; }
+    .bulb:nth-child(4n+3) { background: #22c55e; box-shadow: 0 0 8px #22c55e; animation-delay: 0.8s; }
+    .bulb:nth-child(4n)   { background: #3b82f6; box-shadow: 0 0 8px #3b82f6; animation-delay: 1.2s; }
+    @keyframes twinkleBulb { from { opacity: 0.45; transform: scale(0.88); } to { opacity: 1; transform: scale(1.12); } }
+
     header { background: var(--surface); border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 50; }
     .top-bar { max-width: 1240px; margin: 0 auto; padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
     .brand { display: flex; align-items: center; gap: 0.9rem; text-decoration: none; color: inherit; }
-    .brand-logo-container { width: 46px; height: 46px; border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, #4f46e5, #06b6d4); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-shrink: 0; }
+    .brand-logo-container { width: 46px; height: 46px; border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, var(--primary), #06b6d4); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-shrink: 0; }
     .brand-logo-img { width: 100%; height: 100%; object-fit: cover; }
     .brand-logo-fallback { color: white; font-size: 1.4rem; font-weight: 800; }
     .brand-title h1 { font-size: 1.15rem; font-weight: 800; color: #1e1b4b; }
     .brand-title p { font-size: 0.8rem; color: var(--muted); }
-    .top-actions { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .top-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
     .sync-badge { font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.7rem; border-radius: 999px; background: #f1f5f9; color: #64748b; display: inline-flex; align-items: center; gap: 0.35rem; }
     .sync-badge.online { background: #dcfce7; color: #15803d; }
     .user-chip { font-size: 0.78rem; font-weight: 700; padding: 0.32rem 0.75rem; border-radius: 999px; background: var(--primary-light); color: var(--primary); display: inline-flex; align-items: center; gap: 0.4rem; }
-    .theme-select { padding: 0.3rem 0.6rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+    .theme-select { padding: 0.32rem 0.6rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+
     nav { max-width: 1240px; margin: 0 auto; padding: 0 1rem; display: flex; gap: 0.35rem; overflow-x: auto; scrollbar-width: none; }
     nav::-webkit-scrollbar { display: none; }
     .nav-btn { padding: 0.85rem 1.05rem; font-size: 0.88rem; font-weight: 600; color: var(--muted); background: transparent; border: none; border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
     .nav-btn:hover { color: var(--primary); }
     .nav-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
-    main { max-width: 1240px; margin: 1.5rem auto 2.5rem; padding: 0 1.5rem; flex: 1; width: 100%; position: relative; z-index: 2; }
-    .hero-banner { position: relative; border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; min-height: 230px; display: flex; align-items: center; padding: 2.5rem 2rem; box-shadow: var(--shadow); background-color: #1e1b4b; }
+
+    /* BARRE D'OUTILS RAPIDES (INSPIRÉE DU COLLÈGUE) */
+    .quick-tools-bar {
+      max-width: 1240px; margin: 0.85rem auto 0; padding: 0 1.5rem;
+      display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; position: relative; z-index: 3;
+    }
+    .tool-pill {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.76rem; font-weight: 700; padding: 0.38rem 0.85rem;
+      border-radius: 999px; background: var(--surface); color: var(--text);
+      border: 1.5px solid var(--border); cursor: pointer; text-decoration: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03); transition: all 0.18s ease;
+    }
+    .tool-pill:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); box-shadow: 0 6px 12px -4px rgba(79,70,229,0.2); }
+
+    main { max-width: 1240px; margin: 1.1rem auto 2rem; padding: 0 1.5rem; flex: 1; width: 100%; position: relative; z-index: 3; }
+    .hero-banner { position: relative; border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; min-height: 220px; display: flex; align-items: center; padding: 2.2rem 2rem; box-shadow: var(--shadow); background-color: #1e1b4b; }
     .hero-banner-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 1; }
-    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(15, 23, 42, 0.90) 0%, rgba(30, 27, 75, 0.78) 50%, rgba(15, 23, 42, 0.45) 100%); z-index: 2; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(15, 23, 42, 0.90) 0%, rgba(30, 27, 75, 0.78) 50%, rgba(15, 23, 42, 0.45) 100%); z-index: 2; transition: background 0.4s; }
     .hero-content { position: relative; z-index: 3; max-width: 650px; color: white; }
     .hero-tag { display: inline-block; padding: 0.25rem 0.75rem; background: rgba(255, 255, 255, 0.18); border-radius: 999px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.75rem; backdrop-filter: blur(4px); }
     .hero-content h2 { font-size: 1.7rem; font-weight: 800; line-height: 1.25; margin-bottom: 0.5rem; }
     .hero-content p { font-size: 0.95rem; color: #e2e8f0; line-height: 1.5; }
-    .page-view { display: none; animation: fadeIn 0.2s ease-in-out; }
-    .page-view.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-    .page-header { margin-bottom: 1.75rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border); }
+
+    .page-view { display: none; }
+    .page-view.active { display: block; animation: pageSlideIn 0.28s cubic-bezier(0.22, 1, 0.36, 1); }
+    @keyframes pageSlideIn { from { opacity: 0; transform: translateY(8px) scale(0.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+    .page-header { margin-bottom: 1.5rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border); }
     .page-header h2 { font-size: 1.55rem; font-weight: 800; color: #1e1b4b; }
     .page-header p { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
     .sub-filter-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-    .sub-pill { padding: 0.4rem 0.85rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; background: var(--surface); border: 1px solid var(--border); color: var(--muted); cursor: pointer; }
-    .sub-pill.active, .sub-pill:hover { background: var(--primary-light); color: var(--primary); border-color: #c7d2fe; }
-    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow); transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s; position: relative; }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -3px rgba(0,0,0,0.08); }
+    .sub-pill { padding: 0.4rem 0.85rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; background: var(--surface); border: 1px solid var(--border); color: var(--muted); cursor: pointer; transition: all 0.15s; }
+    .sub-pill.active, .sub-pill:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 1.4rem; }
+    .card {
+      background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow);
+      transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease, border-color 0.2s ease;
+      position: relative; animation: cardPop 0.35s backwards;
+    }
+    .card.clickable-card { cursor: pointer; }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 14px 28px -6px rgba(0,0,0,0.12); border-color: var(--primary); }
+    @keyframes cardPop { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
     .card.is-hidden-doc { opacity: 0.62; border: 2px dashed #ef4444; }
     .hidden-badge { position: absolute; top: 10px; left: 10px; background: #ef4444; color: white; font-size: 0.7rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; z-index: 5; letter-spacing: 0.04em; box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
-    .card-thumb { height: 120px; position: relative; display: flex; align-items: center; justify-content: center; color: white; font-size: 2.3rem; font-weight: bold; background-size: cover; background-position: center; }
+    .card-thumb { height: 120px; position: relative; display: flex; align-items: center; justify-content: center; color: white; font-size: 2.3rem; font-weight: bold; background-size: cover; background-position: center; overflow: hidden; }
+    .card-thumb::after { content: "👁 Lecture directe"; position: absolute; bottom: 8px; right: 10px; font-size: 0.68rem; font-weight: 700; background: rgba(15, 23, 42, 0.65); color: #fff; padding: 2px 8px; border-radius: 999px; opacity: 0; transform: translateY(4px); transition: all 0.2s; backdrop-filter: blur(4px); }
+    .card.clickable-card:hover .card-thumb::after { opacity: 1; transform: translateY(0); }
+
     .thumb-pdf { background-color: #ef4444; background-image: linear-gradient(135deg, #ef4444, #f97316); }
     .thumb-cours { background-color: #4f46e5; background-image: linear-gradient(135deg, #4f46e5, #06b6d4); }
     .thumb-mental { background-color: #8b5cf6; background-image: linear-gradient(135deg, #8b5cf6, #ec4899); }
@@ -78,12 +211,14 @@
     .thumb-video { background-color: #f59e0b; background-image: linear-gradient(135deg, #f59e0b, #d97706); }
     .thumb-web { background-color: #0284c7; background-image: linear-gradient(135deg, #0284c7, #22d3ee); }
     .thumb-info { background-color: #64748b; background-image: linear-gradient(135deg, #64748b, #475569); }
-    .card-body { padding: 1.25rem; display: flex; flex-direction: column; flex: 1; }
-    .card-category { font-size: 0.75rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.4rem; }
+
+    .card-body { padding: 1.2rem; display: flex; flex-direction: column; flex: 1; }
+    .card-category { font-size: 0.74rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.35rem; }
     .card-title { font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.45rem; line-height: 1.35; }
-    .card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.45; margin-bottom: 1.2rem; flex: 1; white-space: pre-line; }
-    .card-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 0.85rem; gap: 0.5rem; flex-wrap: wrap; }
-    .btn { padding: 0.45rem 0.85rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none; }
+    .card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.45; margin-bottom: 1.1rem; flex: 1; white-space: pre-line; }
+    .card-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 0.8rem; gap: 0.5rem; flex-wrap: wrap; }
+
+    .btn { padding: 0.45rem 0.85rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none; transition: all 0.15s; }
     .btn:hover { background: #f1f5f9; color: #0f172a; }
     .btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
     .btn-primary:hover { background: var(--primary-hover); color: white; }
@@ -92,12 +227,58 @@
     .btn-danger { background: #ef4444; color: white; border-color: #ef4444; }
     .btn-danger:hover { background: #dc2626; color: white; }
     .btn-vis { background: #f59e0b; color: white; border-color: #f59e0b; }
-    .popup-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.68); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 1.5rem; }
+
+    /* VISIONNEUSE DIRECTE (MOBILE & DESKTOP SANS BOUTON INTERMÉDIAIRE "OUVRIR") */
+    .popup-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 1rem; }
     .popup-backdrop.active { display: flex; }
-    .popup-content { background: white; border-radius: var(--radius); width: 100%; max-width: 980px; height: 88vh; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); overflow: hidden; }
-    .popup-header { padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #f8fafc; }
-    .popup-header h3 { font-size: 1.05rem; font-weight: 700; color: #1e1b4b; }
-    .popup-frame { flex: 1; width: 100%; border: none; background: #f8fafc; }
+    .popup-content { background: white; border-radius: var(--radius); width: 100%; max-width: 1040px; height: 92vh; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45); overflow: hidden; }
+    .popup-header { padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #f8fafc; gap: 0.5rem; flex-wrap: wrap; }
+    .popup-header h3 { font-size: 0.98rem; font-weight: 700; color: #1e1b4b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 48vw; }
+    .popup-body { flex: 1; width: 100%; position: relative; overflow: hidden; display: flex; flex-direction: column; background: #334155; }
+    .popup-frame { flex: 1; width: 100%; height: 100%; border: none; background: #ffffff; }
+
+    /* Conteneur de rendu PDF.js direct pour Mobile & Tablette */
+    #pdfDirectContainer {
+      flex: 1; width: 100%; height: 100%; overflow-y: auto; overflow-x: auto;
+      background: #475569; padding: 0.75rem 0.5rem; display: none;
+      flex-direction: column; align-items: center; gap: 0.85rem;
+      -webkit-overflow-scrolling: touch;
+    }
+    .pdf-page-canvas {
+      background: white; box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+      border-radius: 4px; max-width: 100%; height: auto !important; display: block;
+    }
+    .pdf-loading-indicator {
+      color: #f8fafc; font-size: 0.9rem; font-weight: 600;
+      padding: 2.5rem 1rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+    }
+    .spinner {
+      width: 34px; height: 34px; border: 4px solid rgba(255,255,255,0.25);
+      border-top-color: #ffffff; border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 640px) {
+      .popup-backdrop { padding: 0; }
+      .popup-content { height: 100dvh; max-width: 100vw; border-radius: 0; }
+      .popup-header { padding: 0.55rem 0.75rem; }
+      .popup-header h3 { font-size: 0.88rem; max-width: 100%; flex: 1 1 100%; }
+      #pdfDirectContainer { padding: 0.4rem 0.2rem; gap: 0.5rem; }
+    }
+
+    /* FRESQUE VECTORIELLE "LE BUREAU DU MATHÉMATICIEN" (INSPIRÉE DE LA PAILLASSE DU COLLÈGUE) */
+    .math-bench-wrap {
+      width: 100%; margin-top: 2.5rem; position: relative; z-index: 3; pointer-events: none;
+    }
+    .math-bench-svg {
+      display: block; width: min(100%, 1200px); height: auto; margin: 0 auto -2px;
+      padding: 0 1rem;
+    }
+    .math-bench-plank {
+      height: 14px; background: linear-gradient(180deg, #475569, #1e293b);
+      border-top: 3px solid #64748b; box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
     .admin-bar-active { display: none; position: fixed; bottom: 20px; right: 20px; background: #1e1b4b; color: white; padding: 0.75rem 1.25rem; border-radius: 999px; box-shadow: 0 10px 25px rgba(0,0,0,0.35); z-index: 90; align-items: center; gap: 0.45rem; flex-wrap: wrap; max-width: 95vw; }
     body.is-admin .admin-bar-active { display: flex; }
     body.is-admin .admin-item-btn { display: inline-flex !important; }
@@ -108,7 +289,7 @@
     .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.3rem; }
     .form-control { width: 100%; padding: 0.55rem 0.8rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; }
     .struct-item { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.8rem; background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 0.5rem; gap: 0.5rem; }
-    footer { background: var(--surface); border-top: 1px solid var(--border); text-align: center; padding: 1.5rem; font-size: 0.8rem; color: var(--muted); margin-top: auto; display: flex; justify-content: space-between; align-items: center; max-width: 1240px; margin-left: auto; margin-right: auto; width: 100%; }
+    footer { background: var(--surface); border-top: 1px solid var(--border); text-align: center; padding: 1.25rem 1.5rem; font-size: 0.8rem; color: var(--muted); display: flex; justify-content: space-between; align-items: center; max-width: 1240px; margin-left: auto; margin-right: auto; width: 100%; position: relative; z-index: 3; }
     .discrete-lock { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 0.95rem; padding: 4px 8px; border-radius: 4px; }
     .discrete-lock:hover { color: var(--primary); background: #f1f5f9; }
 
@@ -118,18 +299,20 @@
     .admin-table tr:hover { background: rgba(79, 70, 229, 0.03); }
     .dot-online { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; margin-right: 5px; box-shadow: 0 0 6px #22c55e; }
     .dot-offline { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; margin-right: 5px; }
-    .maint-banner { display: none; background: #ef4444; color: white; text-align: center; padding: 0.5rem 1rem; font-size: 0.82rem; font-weight: 700; }
+    .maint-banner { display: none; background: #ef4444; color: white; text-align: center; padding: 0.5rem 1rem; font-size: 0.82rem; font-weight: 700; position: relative; z-index: 60; }
     body.maint-active .maint-banner { display: block; }
 
     .auth-overlay { position: fixed; inset: 0; background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); z-index: 350; display: none; align-items: center; justify-content: center; padding: 1.5rem; }
     .auth-overlay.active { display: flex; }
     .auth-card { background: white; color: #0f172a; border-radius: 16px; width: 100%; max-width: 430px; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-    .sakura-petal { position: fixed; top: -20px; background: #fbcfe8; border-radius: 150% 0 150% 0; opacity: 0.7; pointer-events: none; z-index: 1; animation: fallPetal linear infinite; }
-    @keyframes fallPetal { to { transform: translateY(105vh) rotate(360deg); } }
-    body:has(#loginOverlay.active) header, body:has(#loginOverlay.active) main, body:has(#loginOverlay.active) footer { display: none !important; }
+    body:has(#loginOverlay.active) header, body:has(#loginOverlay.active) .quick-tools-bar, body:has(#loginOverlay.active) main, body:has(#loginOverlay.active) .math-bench-wrap, body:has(#loginOverlay.active) footer { display: none !important; }
   </style>
 </head>
 <body>
+
+  <!-- CANEVAS D'ARRIÈRE-PLAN & CALQUE DES OBJETS ANIMÉS QUI PASSENT -->
+  <canvas id="ambientCanvas"></canvas>
+  <div id="flyersLayer"></div>
 
   <div id="maintBanner" class="maint-banner">
     🛠 MODE MAINTENANCE (DS) ACTIF — Les élèves voient actuellement l'écran « Accès suspendu ».
@@ -172,6 +355,14 @@
   </div>
 
   <header>
+    <!-- Guirlande lumineuse animée visible en thème Noël -->
+    <div class="noel-garland" aria-hidden="true">
+      <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
+      <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
+      <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
+      <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
+      <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
+    </div>
     <div class="top-bar">
       <a href="#" class="brand" onclick="showPage(Object.keys(sections)[0]); return false;">
         <div class="brand-logo-container">
@@ -187,12 +378,15 @@
       </a>
       <div class="top-actions">
         <button id="installAppBtn" class="btn btn-primary" onclick="installPWA()" style="padding:0.3rem 0.65rem; font-size:0.78rem;">📲 Installer l'appli</button>
-        <select id="themeSelector" class="theme-select" onchange="applyTheme(this.value)" title="Personnaliser l'ambiance visuelle">
-          <option value="classic">🎨 Thème : Classique</option>
+        <select id="themeSelector" class="theme-select" onchange="applyTheme(this.value, true)" title="Personnaliser l'ambiance visuelle et les animations">
+          <option value="classic">📐 Thème : Usuel (Maths)</option>
+          <option value="noel">🎄 Thème : Noël & Hiver</option>
+          <option value="ete">☀️ Thème : Été & Soleil</option>
           <option value="sakura">🌸 Thème : Sakura</option>
           <option value="retro">🕹️ Thème : Rétro 80s</option>
-          <option value="dark">🌙 Thème : Sombre</option>
+          <option value="dark">🌙 Thème : Nuit Étoilée</option>
         </select>
+        <button id="toggleAnimBtn" class="btn" onclick="toggleAnimations()" style="padding:0.3rem 0.55rem; font-size:0.76rem;" title="Activer / Mettre en pause les objets animés">✨ Anim : ON</button>
         <div id="userBadge" class="user-chip" style="display:none;">
           <span id="userNameDisplay">Élève</span>
           <button onclick="openChangeMyPassModal()" style="background:none; border:none; cursor:pointer; font-size:0.8rem;" title="Changer mon mot de passe">🔑</button>
@@ -206,6 +400,14 @@
     <nav id="navTabsContainer"></nav>
   </header>
 
+  <!-- BARRE D'OUTILS MATHÉMATIQUES RAPIDES (OUVERTURE DIRECTE SANS QUITTER LA PAGE) -->
+  <div class="quick-tools-bar">
+    <button type="button" class="tool-pill" onclick="openQuickTool('numworks')">🧮 Calculatrice NumWorks</button>
+    <button type="button" class="tool-pill" onclick="openQuickTool('geogebra')">📈 Grapheur GeoGebra</button>
+    <button type="button" class="tool-pill" onclick="openTrigoReferenceModal()">⭕ Cercle Trigo & Formules BAC</button>
+    <button type="button" class="tool-pill" onclick="triggerPassingObject(true)" title="Faire passer une animation maintenant">🚀 Faire passer un objet</button>
+  </div>
+
   <main>
     <div class="hero-banner" id="heroBanner">
       <picture class="hero-banner-bg">
@@ -213,32 +415,94 @@
       </picture>
       <div class="hero-overlay"></div>
       <div class="hero-content">
-        <span class="hero-tag">Espace Numérique de Cours</span>
+        <span class="hero-tag" id="heroSeasonTag">Espace Numérique de Cours</span>
         <h2>Bienvenue sur le portail de Mathématiques</h2>
-        <p>Retrouvez l'ensemble des cours, feuilles d'exercices, cartes mentales et sujets de préparation au baccalauréat et au Grand Oral.</p>
+        <p>Retrouvez l'ensemble des cours, feuilles d'exercices, cartes mentales et sujets de préparation au baccalauréat et au Grand Oral. Touchez n'importe quel document pour l'afficher directement.</p>
       </div>
     </div>
     <div id="mainPagesContainer"></div>
   </main>
 
-  <div class="popup-backdrop" id="docPopup">
+  <!-- VISIONNEUSE UNIVERSELLE À AFFICHAGE DIRECT (PDF.JS MOBILE + IFRAME + IMAGES) -->
+  <div class="popup-backdrop" id="docPopup" onclick="if(event.target===this) closePopup()">
     <div class="popup-content">
       <div class="popup-header">
         <h3 id="popupTitle">Document</h3>
-        <div style="display:flex; gap:0.5rem; align-items:center;">
-          <a id="popupDirectOpenBtn" href="#" target="_blank" class="btn" style="font-size:0.8rem;">↗ Plein écran / Nouvel onglet</a>
-          <button class="btn" onclick="closePopup()">✕ Fermer</button>
+        <div style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap;">
+          <div id="pdfControlsBar" style="display:none; gap:0.3rem; align-items:center;">
+            <button type="button" class="btn" onclick="changePdfZoom(-0.2)" title="Dézoomer" style="padding:0.3rem 0.55rem;">➖</button>
+            <span id="pdfPageCountBadge" style="font-size:0.75rem; font-weight:700; color:var(--muted); padding:0 0.3rem;">PDF</span>
+            <button type="button" class="btn" onclick="changePdfZoom(0.2)" title="Zoomer" style="padding:0.3rem 0.55rem;">➕</button>
+          </div>
+          <a id="popupDownloadBtn" href="#" download class="btn" style="font-size:0.78rem; padding:0.35rem 0.65rem;">⬇️ Télécharger</a>
+          <a id="popupDirectOpenBtn" href="#" target="_blank" rel="noopener" class="btn" style="font-size:0.78rem; padding:0.35rem 0.65rem;">↗ Plein écran</a>
+          <button class="btn btn-danger" onclick="closePopup()" style="font-size:0.78rem; padding:0.35rem 0.7rem;">✕ Fermer</button>
         </div>
       </div>
-      <iframe id="popupIframe" class="popup-frame" src="" allowfullscreen></iframe>
+      <div class="popup-body">
+        <!-- Conteneur direct PDF.js (aucun bouton "Ouvrir" sur téléphone !) -->
+        <div id="pdfDirectContainer"></div>
+        <!-- Conteneur image directe -->
+        <div id="imgDirectContainer" style="display:none; flex:1; overflow:auto; align-items:center; justify-content:center; padding:1rem; background:#0f172a;">
+          <img id="popupDirectImg" src="" alt="Aperçu" style="max-width:100%; height:auto; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+        </div>
+        <!-- Iframe pour vidéos, jeux HTML5 et outils -->
+        <iframe id="popupIframe" class="popup-frame" src="" allowfullscreen></iframe>
+      </div>
     </div>
   </div>
 
+  <!-- MODALE AIDE-MÉMOIRE CERCLE TRIGO & DÉRIVÉES / PRIMITIVES -->
+  <div class="popup-backdrop" id="trigoModal" onclick="if(event.target===this) this.classList.remove('active')">
+    <div class="modal-box wide">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h3 style="font-size:1.15rem; font-weight:800;">⭕ Aide-mémoire Terminale : Trigonométrie, Limites & Dérivées</h3>
+        <button class="btn" onclick="document.getElementById('trigoModal').classList.remove('active')">✕</button>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1rem; font-size:0.84rem;">
+        <div style="background:var(--bg); padding:1rem; border-radius:10px; border:1px solid var(--border);">
+          <h4 style="color:var(--primary); margin-bottom:0.5rem;">📐 Valeurs remarquables</h4>
+          <table class="admin-table" style="margin-top:0;">
+            <thead><tr><th>$x$</th><th>$0$</th><th>$\pi/6$</th><th>$\pi/4$</th><th>$\pi/3$</th><th>$\pi/2$</th></tr></thead>
+            <tbody>
+              <tr><td><strong>$\cos(x)$</strong></td><td>$1$</td><td>$\frac{\sqrt{3}}{2}$</td><td>$\frac{\sqrt{2}}{2}$</td><td>$\frac{1}{2}$</td><td>$0$</td></tr>
+              <tr><td><strong>$\sin(x)$</strong></td><td>$0$</td><td>$\frac{1}{2}$</td><td>$\frac{\sqrt{2}}{2}$</td><td>$\frac{\sqrt{3}}{2}$</td><td>$1$</td></tr>
+            </tbody>
+          </table>
+          <p style="margin-top:0.6rem; font-size:0.78rem; color:var(--muted);">$\cos^2(x) + \sin^2(x) = 1$ • $e^{i\pi} + 1 = 0$</p>
+        </div>
+        <div style="background:var(--bg); padding:1rem; border-radius:10px; border:1px solid var(--border);">
+          <h4 style="color:var(--primary); margin-bottom:0.5rem;">⚡ Dérivées & Primitives clés</h4>
+          <ul style="list-style:none; line-height:1.8;">
+            <li>• $(u^n)' = n \cdot u' \cdot u^{n-1}$</li>
+            <li>• $(e^u)' = u' \cdot e^u$</li>
+            <li>• $(\ln(u))' = \dfrac{u'}{u}$ sur $u(x) > 0$</li>
+            <li>• $(\cos(u))' = -u' \cdot \sin(u)$</li>
+            <li>• $(\sin(u))' = u' \cdot \cos(u)$</li>
+            <li>• Éq. diff. $y' = ay + b \iff y(x) = Ce^{ax} - \frac{b}{a}$</li>
+          </ul>
+        </div>
+        <div style="background:var(--bg); padding:1rem; border-radius:10px; border:1px solid var(--border);">
+          <h4 style="color:var(--primary); margin-bottom:0.5rem;">🚀 Croissances comparées</h4>
+          <ul style="list-style:none; line-height:1.8;">
+            <li>• $\lim_{x \to +\infty} \dfrac{e^x}{x^n} = +\infty$</li>
+            <li>• $\lim_{x \to -\infty} x^n e^x = 0$</li>
+            <li>• $\lim_{x \to +\infty} \dfrac{\ln(x)}{x^n} = 0$</li>
+            <li>• $\lim_{x \to 0^+} x^n \ln(x) = 0$</li>
+            <li>• Somme géométrique : $1+q+\dots+q^n = \dfrac{1-q^{n+1}}{1-q}$</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BARRE D'ADMINISTRATION PROFESSEUR -->
   <div class="admin-bar-active" id="adminBar">
     <span style="font-size:0.85rem; font-weight:700; margin-right:0.3rem;">👨‍🏫 Professeur</span>
     <button class="btn btn-primary" onclick="openAddModal()">+ Document</button>
     <button class="btn" onclick="openVisibilityModal()">👁️ Visibilité</button>
     <button class="btn" onclick="openTrackingModal()">📊 Suivi & Élèves</button>
+    <button class="btn" onclick="setGlobalDefaultTheme()" title="Imposer le thème actuel par défaut pour tous les élèves">🎨 Saison classe</button>
     <button class="btn" onclick="openMaintenanceModal()">🛠 Mode DS</button>
     <button class="btn" onclick="openBackupModal()">💾 Sauvegarde</button>
     <button class="btn" onclick="openStructureModal()">⚙️ Structure</button>
@@ -510,12 +774,101 @@
     </div>
   </div>
 
+  <!-- FRESQUE VECTORIELLE "LE BUREAU DU MATHÉMATICIEN" (CLIN D'ŒIL À LA PAILLASSE DU COLLÈGUE) -->
+  <div class="math-bench-wrap" aria-hidden="true">
+    <svg class="math-bench-svg" viewBox="0 0 1200 185" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Pile de livres de Mathématiques (Euler, Gauss, Analyse) -->
+      <rect x="45" y="152" width="135" height="22" rx="4" fill="#4f46e5" stroke="#312e81" stroke-width="2"/>
+      <rect x="52" y="157" width="120" height="12" rx="2" fill="#eef2ff"/>
+      <text x="112" y="167" text-anchor="middle" font-size="9" font-weight="700" fill="#312e81" font-family="monospace">ANALYSE &amp; SUITES</text>
+      <rect x="55" y="130" width="120" height="22" rx="4" fill="#0284c7" stroke="#0c4a6e" stroke-width="2"/>
+      <text x="115" y="145" text-anchor="middle" font-size="9" font-weight="700" fill="#ffffff" font-family="monospace">GÉOMÉTRIE ESPACE</text>
+      <rect x="64" y="110" width="102" height="20" rx="4" fill="#db2777" stroke="#831843" stroke-width="2"/>
+      <text x="115" y="123" text-anchor="middle" font-size="8.5" font-weight="700" fill="#ffffff" font-family="monospace">PROBABILITÉS</text>
+
+      <!-- Solide platonicien (Icosaèdre / Pyramide filaire) -->
+      <g stroke="#6366f1" stroke-width="2" stroke-linejoin="round" fill="rgba(99,102,241,0.12)">
+        <polygon points="265,95 225,165 305,165"/>
+        <polygon points="265,95 305,165 330,140"/>
+        <line x1="225" y1="165" x2="285" y2="142" stroke-dasharray="3 3"/>
+        <line x1="265" y1="95" x2="285" y2="142" stroke-dasharray="3 3"/>
+        <line x1="330" y1="140" x2="285" y2="142" stroke-dasharray="3 3"/>
+      </g>
+
+      <!-- Écran Traceur de Courbes (f(x) = sin(x) et tangente) -->
+      <rect x="380" y="55" width="230" height="118" rx="10" fill="#1e293b" stroke="#475569" stroke-width="4"/>
+      <rect x="394" y="68" width="165" height="92" rx="5" fill="#0f2922"/>
+      <g stroke="#1e4d3f" stroke-width="1">
+        <line x1="394" y1="114" x2="559" y2="114"/>
+        <line x1="476" y1="68" x2="476" y2="160"/>
+        <line x1="394" y1="91" x2="559" y2="91" stroke-dasharray="2 2"/>
+        <line x1="394" y1="137" x2="559" y2="137" stroke-dasharray="2 2"/>
+      </g>
+      <!-- Courbe sinusoïdale animée -->
+      <path d="M 396 114 Q 416 74, 436 114 T 476 114 T 516 114 T 556 114" fill="none" stroke="#34d399" stroke-width="2.5">
+        <animate attributeName="d" dur="4s" repeatCount="indefinite"
+          values="M 396 114 Q 416 74, 436 114 T 476 114 T 516 114 T 556 114;
+                  M 396 114 Q 416 154, 436 114 T 476 114 T 516 114 T 556 114;
+                  M 396 114 Q 416 74, 436 114 T 476 114 T 516 114 T 556 114"/>
+      </path>
+      <text x="404" y="82" fill="#6ee7b7" font-size="9" font-family="monospace">y = e^(-x/4)·sin(ωx)</text>
+      <circle cx="579" cy="88" r="9" fill="#475569"/><circle cx="579" cy="118" r="9" fill="#475569"/>
+      <rect x="570" y="138" width="18" height="10" rx="2" fill="#f59e0b"/>
+
+      <!-- Cercle Trigonométrique sur socle -->
+      <line x1="705" y1="152" x2="705" y2="174" stroke="#64748b" stroke-width="6"/>
+      <rect x="675" y="170" width="60" height="5" rx="2" fill="#475569"/>
+      <circle cx="705" cy="105" r="46" fill="rgba(255,255,255,0.85)" stroke="#4f46e5" stroke-width="3"/>
+      <line x1="659" y1="105" x2="751" y2="105" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="705" y1="59" x2="705" y2="151" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="705" y1="105" x2="737" y2="73" stroke="#ef4444" stroke-width="2.5"/>
+      <line x1="737" y1="73" x2="737" y2="105" stroke="#0284c7" stroke-width="1.8" stroke-dasharray="3 2"/>
+      <circle cx="737" cy="73" r="4" fill="#ef4444"/>
+      <text x="720" y="66" font-size="9" font-weight="700" fill="#ef4444" font-family="serif">M(e^{iπ/4})</text>
+
+      <!-- Planche de Galton / Loi Binomiale -->
+      <path d="M 835 65 L 800 172 L 890 172 L 855 65 Z" fill="rgba(224,242,254,0.6)" stroke="#0284c7" stroke-width="2.5"/>
+      <g fill="#0369a1">
+        <circle cx="845" cy="88" r="2.2"/>
+        <circle cx="835" cy="102" r="2.2"/><circle cx="855" cy="102" r="2.2"/>
+        <circle cx="825" cy="116" r="2.2"/><circle cx="845" cy="116" r="2.2"/><circle cx="865" cy="116" r="2.2"/>
+        <circle cx="815" cy="130" r="2.2"/><circle cx="835" cy="130" r="2.2"/><circle cx="855" cy="130" r="2.2"/><circle cx="875" cy="130" r="2.2"/>
+      </g>
+      <!-- Histogramme Gaussien -->
+      <rect x="812" y="162" width="10" height="9" fill="#f59e0b"/>
+      <rect x="826" y="153" width="10" height="18" fill="#f59e0b"/>
+      <rect x="840" y="142" width="10" height="29" fill="#ef4444"/>
+      <rect x="854" y="154" width="10" height="17" fill="#f59e0b"/>
+      <rect x="868" y="163" width="10" height="8" fill="#f59e0b"/>
+
+      <!-- Équerre, Compas et Mug "π" fumant -->
+      <polygon points="940,172 1015,172 940,95" fill="rgba(251,191,36,0.35)" stroke="#d97706" stroke-width="2"/>
+      <polygon points="952,160 986,160 952,125" fill="var(--bg)" stroke="#d97706" stroke-width="1.5"/>
+
+      <!-- Tasse du Professeur -->
+      <path d="M 1065 118 Q 1060 102, 1068 90" stroke="#94a3b8" stroke-width="2" fill="none" stroke-linecap="round">
+        <animate attributeName="d" dur="2.5s" repeatCount="indefinite"
+          values="M 1065 118 Q 1060 102, 1068 90; M 1065 118 Q 1072 102, 1063 88; M 1065 118 Q 1060 102, 1068 90"/>
+      </path>
+      <path d="M 1082 118 Q 1088 102, 1079 90" stroke="#94a3b8" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <rect x="1050" y="124" width="46" height="48" rx="6" fill="#ffffff" stroke="#475569" stroke-width="2.5"/>
+      <path d="M 1096 134 C 1112 134, 1112 160, 1096 160" fill="none" stroke="#475569" stroke-width="4"/>
+      <text x="1073" y="156" text-anchor="middle" font-size="22" font-weight="800" fill="#4f46e5" font-family="serif">π</text>
+    </svg>
+    <div class="math-bench-plank"></div>
+  </div>
+
   <footer>
     <p>Portail Mathématiques • Lycée Charlotte Perriand — Genech</p>
     <button class="discrete-lock" onclick="promptAdmin()" title="Accès Enseignant (ou Ctrl+Maj+A)">🔒</button>
   </footer>
 
   <script>
+    // Configuration du worker PDF.js
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+
     const DEFAULT_SUPABASE_URL = "https://xydayuntveuscibupgto.supabase.co"; 
     const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5ZGF5dW50dmV1c2NpYnVwZ3RvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MDMyNTcsImV4cCI6MjEwODA3OTI1N30.ketR5e-MimQuqzk5cHLhlN5ZjdZEH_Fq4fNz6UG-Fzo";
 
@@ -583,6 +936,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
     let portalMeta = {
       requireAuth: true,
       adminPass: "perriand2026",
+      defaultTheme: "classic",
       maintenance: { active: false, message: "DS en cours — L'accès aux ressources est temporairement suspendu." },
       students: {}
     };
@@ -594,6 +948,14 @@ selene.vincent ; Sélène VINCENT (T11)`;
     let pendingRestoreData = null;
     let trackSortCol = "name";
     let trackSortAsc = true;
+
+    // État du moteur d'animations et PDF
+    let activeThemeName = "classic";
+    let animationsEnabled = localStorage.getItem('perriand_anim') !== 'off';
+    let particles = [];
+    let flyerInterval = null;
+    let currentPdfDoc = null;
+    let currentPdfScale = 1.0;
 
     async function fetchFromSupabase() {
       try {
@@ -654,6 +1016,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
         portalMeta = Object.assign({
           requireAuth: true,
           adminPass: "perriand2026",
+          defaultTheme: "classic",
           maintenance: { active: false, message: "DS en cours — L'accès aux ressources est temporairement suspendu." },
           students: {}
         }, rawSections._portal_meta);
@@ -670,9 +1033,8 @@ selene.vincent ; Sélène VINCENT (T11)`;
     }
 
     async function startApplication() {
-      const savedTheme = localStorage.getItem('perriand_theme') || 'classic';
-      document.getElementById('themeSelector').value = savedTheme;
-      applyTheme(savedTheme);
+      initAmbientEngine();
+      updateAnimButtonLabel();
 
       const cloudData = await fetchFromSupabase();
       if (cloudData && cloudData.sections && Object.keys(cloudData.sections).length > 0) {
@@ -684,6 +1046,12 @@ selene.vincent ; Sélène VINCENT (T11)`;
         document.getElementById('syncStatusBadge').innerHTML = '💾 Mode Hors-Ligne';
       }
 
+      // Choix du thème : préférence personnelle de l'utilisateur ou thème saisonnier défini par le professeur
+      const userTheme = localStorage.getItem('perriand_user_theme');
+      const initialTheme = userTheme || portalMeta.defaultTheme || 'classic';
+      document.getElementById('themeSelector').value = initialTheme;
+      applyTheme(initialTheme, false);
+
       currentPage = Object.keys(sections)[0];
       initApp(); 
       showPage(currentPage);
@@ -691,29 +1059,367 @@ selene.vincent ; Sélène VINCENT (T11)`;
       startActivityTracker();
     }
 
-    let sakuraInterval = null;
-    function applyTheme(themeName) {
-      document.body.classList.remove('theme-dark', 'theme-sakura', 'theme-retro');
-      if (themeName !== 'classic') document.body.classList.add('theme-' + themeName);
-      localStorage.setItem('perriand_theme', themeName);
-      document.querySelectorAll('.sakura-petal').forEach(el => el.remove());
-      if (sakuraInterval) { clearInterval(sakuraInterval); sakuraInterval = null; }
-      if (themeName === 'sakura') {
-        sakuraInterval = setInterval(() => {
-          if (document.hidden) return;
-          const petal = document.createElement('div');
-          petal.className = 'sakura-petal';
-          const size = 8 + Math.random() * 8;
-          petal.style.width = size + 'px';
-          petal.style.height = size + 'px';
-          petal.style.left = (Math.random() * 100) + 'vw';
-          petal.style.animationDuration = (6 + Math.random() * 6) + 's';
-          document.body.appendChild(petal);
-          setTimeout(() => petal.remove(), 12000);
-        }, 900);
+    /* =========================================================================
+       MOTEUR D'ANIMATIONS THÉMATIQUES & OBJETS QUI PASSENT (NOËL, ÉTÉ, USUEL...)
+       ========================================================================= */
+    const THEME_CONFIGS = {
+      classic: {
+        tag: "📐 Espace Numérique de Cours • Spécialité Maths",
+        particles: ["π", "∫", "∑", "∞", "√x", "Δ", "e^{iπ}", "cos(x)", "ln(x)", "◇", "△"],
+        color: "rgba(79, 70, 229, 0.22)",
+        flyers: [
+          { html: `<svg width="68" height="36" viewBox="0 0 68 36"><polygon points="2,18 66,2 44,34 32,22" fill="#6366f1" opacity="0.85"/><polygon points="2,18 66,2 32,22" fill="#818cf8" opacity="0.9"/></svg>`, size: "1rem" },
+          { html: `🚀 <span style="font-size:0.75rem; background:rgba(79,70,229,0.12); color:#4f46e5; padding:2px 7px; border-radius:99px;">y = ax² + bx + c</span>`, size: "1.4rem" },
+          { html: `✨ <span style="font-family:serif; font-style:italic; color:#4f46e5;">e<sup>iπ</sup> + 1 = 0</span>`, size: "1.15rem" },
+          { html: `📐 <span style="font-size:0.78rem; color:#0284c7;">lim (1 + 1/n)<sup>n</sup> = e</span>`, size: "1.2rem" }
+        ]
+      },
+      noel: {
+        tag: "🎄 Édition Hiver & Fêtes de Noël • Joyeuses Révisions !",
+        particles: ["❄", "❅", "❆", "✦", "•"],
+        color: "rgba(14, 165, 233, 0.45)",
+        flyers: [
+          { html: `🦌🦌🛷🎅✨`, size: "1.9rem" },
+          { html: `🌠 <span style="font-size:0.8rem; color:#dc2626; background:rgba(255,255,255,0.85); padding:2px 8px; border-radius:99px;">Joyeuses Fêtes !</span>`, size: "1.5rem" },
+          { html: `⛄❄️`, size: "1.7rem" },
+          { html: `🎄🎁✨`, size: "1.6rem" }
+        ]
+      },
+      ete: {
+        tag: "☀️ Ambiance Estivale • Cap sur le Baccalauréat & le Grand Oral !",
+        particles: ["☀️", "🫧", "✦", "◦"],
+        color: "rgba(245, 158, 11, 0.35)",
+        flyers: [
+          { html: `🎈🌤️`, size: "2rem" },
+          { html: `⛵🌊`, size: "1.8rem" },
+          { html: `🕊️🕊️`, size: "1.5rem" },
+          { html: `🏖️🕶️ <span style="font-size:0.75rem; color:#0369a1; background:rgba(255,255,255,0.8); padding:2px 8px; border-radius:99px;">Bel été !</span>`, size: "1.4rem" }
+        ]
+      },
+      sakura: {
+        tag: "🌸 Printemps Japonais • Révisions Sereines",
+        particles: ["🌸", "💮", "✿"],
+        color: "rgba(219, 39, 119, 0.3)",
+        flyers: [
+          { html: `🦋🌸`, size: "1.6rem" },
+          { html: `🕊️✨`, size: "1.6rem" }
+        ]
+      },
+      retro: {
+        tag: "🕹️ Mode Arcade Synthwave 80s • High Score en Maths !",
+        particles: ["★", "✦", "0", "1", "π", "∑"],
+        color: "rgba(0, 240, 255, 0.4)",
+        flyers: [
+          { html: `🛸✨ <span style="font-size:0.75rem; color:#00f0ff; text-shadow:0 0 6px #00f0ff;">SUITES SHOOT</span>`, size: "1.6rem" },
+          { html: `🚀⚡`, size: "1.7rem" },
+          { html: `🌠`, size: "1.8rem" }
+        ]
+      },
+      dark: {
+        tag: "🌙 Mode Nuit Étoilée • Confort Visuel",
+        particles: ["✦", "★", "·", "π", "∞"],
+        color: "rgba(148, 163, 184, 0.35)",
+        flyers: [
+          { html: `☄️✨`, size: "1.6rem" },
+          { html: `🛰️`, size: "1.6rem" }
+        ]
+      }
+    };
+
+    function applyTheme(themeName, saveUserChoice = false) {
+      activeThemeName = THEME_CONFIGS[themeName] ? themeName : 'classic';
+      document.body.classList.remove('theme-dark', 'theme-sakura', 'theme-retro', 'theme-noel', 'theme-ete');
+      if (activeThemeName !== 'classic') document.body.classList.add('theme-' + activeThemeName);
+      if (saveUserChoice) localStorage.setItem('perriand_user_theme', activeThemeName);
+
+      const tagEl = document.getElementById('heroSeasonTag');
+      if (tagEl && THEME_CONFIGS[activeThemeName]) tagEl.textContent = THEME_CONFIGS[activeThemeName].tag;
+
+      resetParticlesForTheme();
+      if (animationsEnabled) {
+        setTimeout(() => triggerPassingObject(false), 600);
       }
     }
 
+    async function setGlobalDefaultTheme() {
+      portalMeta.defaultTheme = activeThemeName;
+      localStorage.removeItem('perriand_user_theme');
+      await pushToSupabase();
+      const labels = { classic: "Usuel (Maths)", noel: "Noël & Hiver", ete: "Été & Soleil", sakura: "Sakura", retro: "Rétro 80s", dark: "Nuit Étoilée" };
+      alert(`🎨 Le thème « ${labels[activeThemeName] || activeThemeName} » est désormais le thème par défaut du portail pour tous vos élèves !`);
+    }
+
+    function toggleAnimations() {
+      animationsEnabled = !animationsEnabled;
+      localStorage.setItem('perriand_anim', animationsEnabled ? 'on' : 'off');
+      updateAnimButtonLabel();
+      const canvas = document.getElementById('ambientCanvas');
+      const flyers = document.getElementById('flyersLayer');
+      if (!animationsEnabled) {
+        if (canvas) { const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); }
+        if (flyers) flyers.innerHTML = '';
+      } else {
+        resetParticlesForTheme();
+        triggerPassingObject(true);
+      }
+    }
+
+    function updateAnimButtonLabel() {
+      const btn = document.getElementById('toggleAnimBtn');
+      if (btn) btn.textContent = animationsEnabled ? "✨ Anim : ON" : "⏸ Anim : OFF";
+    }
+
+    function resetParticlesForTheme() {
+      const canvas = document.getElementById('ambientCanvas');
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const count = window.innerWidth < 640 ? 18 : 32;
+      const cfg = THEME_CONFIGS[activeThemeName] || THEME_CONFIGS.classic;
+      particles = [];
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.45,
+          vy: activeThemeName === 'noel' || activeThemeName === 'sakura'
+              ? (0.55 + Math.random() * 0.9)
+              : (activeThemeName === 'ete' ? -(0.3 + Math.random() * 0.5) : (Math.random() - 0.5) * 0.35),
+          size: 11 + Math.random() * 11,
+          symbol: cfg.particles[Math.floor(Math.random() * cfg.particles.length)],
+          angle: Math.random() * Math.PI * 2,
+          vAngle: (Math.random() - 0.5) * 0.01
+        });
+      }
+    }
+
+    function initAmbientEngine() {
+      const canvas = document.getElementById('ambientCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+      resetParticlesForTheme();
+
+      function animateLoop() {
+        if (animationsEnabled && !document.hidden) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          const cfg = THEME_CONFIGS[activeThemeName] || THEME_CONFIGS.classic;
+          ctx.fillStyle = cfg.color;
+          particles.forEach(p => {
+            p.x += p.vx + Math.sin(p.y * 0.012) * 0.25;
+            p.y += p.vy;
+            p.angle += p.vAngle;
+
+            if (p.y > canvas.height + 30) { p.y = -20; p.x = Math.random() * canvas.width; }
+            if (p.y < -30) { p.y = canvas.height + 20; p.x = Math.random() * canvas.width; }
+            if (p.x > canvas.width + 30) p.x = -20;
+            if (p.x < -30) p.x = canvas.width + 20;
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.angle);
+            ctx.font = `600 ${Math.round(p.size)}px system-ui, serif`;
+            ctx.fillText(p.symbol, 0, 0);
+            ctx.restore();
+          });
+        }
+        requestAnimationFrame(animateLoop);
+      }
+      requestAnimationFrame(animateLoop);
+
+      // Objets thématiques qui traversent périodiquement l'écran
+      if (flyerInterval) clearInterval(flyerInterval);
+      flyerInterval = setInterval(() => {
+        if (animationsEnabled && !document.hidden) triggerPassingObject(false);
+      }, 15000);
+    }
+
+    function triggerPassingObject(forceNow = false) {
+      if (!animationsEnabled && !forceNow) return;
+      const layer = document.getElementById('flyersLayer');
+      if (!layer) return;
+
+      const cfg = THEME_CONFIGS[activeThemeName] || THEME_CONFIGS.classic;
+      const item = cfg.flyers[Math.floor(Math.random() * cfg.flyers.length)];
+      if (!item) return;
+
+      const el = document.createElement('div');
+      el.className = 'flying-object';
+      el.innerHTML = item.html;
+      el.style.fontSize = item.size || '1.5rem';
+
+      const topVh = 10 + Math.random() * 68;
+      const duration = 9 + Math.random() * 6;
+      const leftToRight = Math.random() > 0.35;
+
+      el.style.top = topVh + 'vh';
+      el.style.setProperty('--wave-y', ((Math.random() - 0.5) * 90) + 'px');
+      el.style.setProperty('--end-y', ((Math.random() - 0.5) * 60) + 'px');
+      el.style.animation = `${leftToRight ? 'flyLeftToRight' : 'flyRightToLeft'} ${duration}s linear forwards`;
+
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), duration * 1000 + 200);
+    }
+
+    /* =========================================================================
+       VISIONNEUSE DIRECTE DE DOCUMENTS (PDF.JS MOBILE + OUTILS RAPIDES)
+       ========================================================================= */
+    function isPdfUrl(url, itemType) {
+      if (!url) return false;
+      const clean = url.split('?')[0].toLowerCase();
+      if (clean.endsWith('.pdf')) return true;
+      if (url.includes('/storage/v1/object/public/fichiers/') && !clean.match(/\.(png|jpg|jpeg|webp|gif|html|mp4)$/i)) return true;
+      return false;
+    }
+
+    function isImageUrl(url) {
+      if (!url) return false;
+      const clean = url.split('?')[0].toLowerCase();
+      return /\.(png|jpg|jpeg|webp|gif|svg)$/i.test(clean);
+    }
+
+    async function openDocPopup(id) {
+      const item = docs.find(d => d.id === id);
+      if (!item || !item.url) return;
+
+      if (currentStudent && portalMeta.students[currentStudent]) {
+        const st = portalMeta.students[currentStudent];
+        st.docsOpened = st.docsOpened || {};
+        st.docsOpened[id] = (st.docsOpened[id] || 0) + 1;
+        st.lastSeen = new Date().toISOString();
+        pushToSupabase(true);
+      }
+
+      let url = item.url.trim();
+      if (url && !url.startsWith('http') && !url.startsWith('/')) url = 'https://' + url;
+
+      openUniversalViewer(item.title, url, item.type);
+    }
+
+    async function openUniversalViewer(title, url, type = 'pdf') {
+      document.getElementById('popupTitle').textContent = title;
+      document.getElementById('popupDirectOpenBtn').href = url;
+      document.getElementById('popupDownloadBtn').href = url;
+
+      const pdfContainer = document.getElementById('pdfDirectContainer');
+      const imgContainer = document.getElementById('imgDirectContainer');
+      const iframe = document.getElementById('popupIframe');
+      const pdfControls = document.getElementById('pdfControlsBar');
+
+      pdfContainer.style.display = 'none';
+      pdfContainer.innerHTML = '';
+      imgContainer.style.display = 'none';
+      iframe.style.display = 'none';
+      iframe.src = '';
+      pdfControls.style.display = 'none';
+      currentPdfDoc = null;
+
+      document.getElementById('docPopup').classList.add('active');
+
+      // 1. Vidéo YouTube
+      const ytId = extractYouTubeId(url);
+      if (ytId) {
+        iframe.style.display = 'block';
+        iframe.src = `https://www.youtube.com/embed/${ytId}?rel=0&autoplay=1`;
+        return;
+      }
+
+      // 2. Image directe (Carte mentale .png/.jpg, etc.)
+      if (isImageUrl(url)) {
+        imgContainer.style.display = 'flex';
+        document.getElementById('popupDirectImg').src = url;
+        return;
+      }
+
+      // 3. Document PDF -> Rendu direct par PDF.js (aucun bouton "Ouvrir" sur téléphone !)
+      if (isPdfUrl(url, type) && window.pdfjsLib) {
+        pdfContainer.style.display = 'flex';
+        pdfControls.style.display = 'inline-flex';
+        pdfContainer.innerHTML = `<div class="pdf-loading-indicator"><div class="spinner"></div><span>Affichage direct du document en cours...</span></div>`;
+        try {
+          const loadingTask = pdfjsLib.getDocument({ url: url, withCredentials: false });
+          currentPdfDoc = await loadingTask.promise;
+          currentPdfScale = 1.0;
+          await renderAllPdfPages();
+          return;
+        } catch (err) {
+          // Repli automatique vers Google Viewer sur mobile si serveur externe bloque CORS
+          const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+          pdfContainer.style.display = 'none';
+          pdfControls.style.display = 'none';
+          iframe.style.display = 'block';
+          iframe.src = isMobile
+            ? `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`
+            : url;
+          return;
+        }
+      }
+
+      // 4. Application Web / Jeu HTML5 / Outil
+      iframe.style.display = 'block';
+      iframe.src = url;
+    }
+
+    async function renderAllPdfPages() {
+      if (!currentPdfDoc) return;
+      const container = document.getElementById('pdfDirectContainer');
+      container.innerHTML = '';
+      const total = currentPdfDoc.numPages;
+      document.getElementById('pdfPageCountBadge').textContent = `${total} page${total > 1 ? 's' : ''} (${Math.round(currentPdfScale * 100)}%)`;
+
+      const containerWidth = Math.min(container.clientWidth - 20, 920);
+      const dpr = Math.min(window.devicePixelRatio || 1.5, 2.2);
+
+      for (let pageNum = 1; pageNum <= total; pageNum++) {
+        const page = await currentPdfDoc.getPage(pageNum);
+        const unscaledViewport = page.getViewport({ scale: 1 });
+        const fitScale = (containerWidth / unscaledViewport.width) * currentPdfScale;
+        const viewport = page.getViewport({ scale: fitScale });
+
+        const canvas = document.createElement('canvas');
+        canvas.className = 'pdf-page-canvas';
+        canvas.width = Math.floor(viewport.width * dpr);
+        canvas.height = Math.floor(viewport.height * dpr);
+        canvas.style.width = Math.floor(viewport.width) + 'px';
+
+        container.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+        ctx.scale(dpr, dpr);
+        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+      }
+    }
+
+    function changePdfZoom(delta) {
+      if (!currentPdfDoc) return;
+      currentPdfScale = Math.max(0.6, Math.min(2.4, currentPdfScale + delta));
+      renderAllPdfPages();
+    }
+
+    function closePopup() {
+      document.getElementById('popupIframe').src = '';
+      document.getElementById('pdfDirectContainer').innerHTML = '';
+      currentPdfDoc = null;
+      document.getElementById('docPopup').classList.remove('active');
+    }
+
+    function openQuickTool(tool) {
+      if (tool === 'numworks') {
+        openUniversalViewer('🧮 Calculatrice NumWorks en ligne', 'https://www.numworks.com/fr/simulateur/', 'web');
+      } else if (tool === 'geogebra') {
+        openUniversalViewer('📈 Grapheur & Suite GeoGebra', 'https://www.geogebra.org/classic', 'web');
+      }
+    }
+
+    function openTrigoReferenceModal() {
+      document.getElementById('trigoModal').classList.add('active');
+    }
+
+    /* =========================================================================
+       AUTHENTIFICATION, COMPTES ÉLÈVES & GESTION DU PORTAIL
+       ========================================================================= */
     function checkSessionAndMaintenance() {
       document.body.classList.toggle('maint-active', !!(portalMeta.maintenance && portalMeta.maintenance.active));
       const savedAdmin = sessionStorage.getItem('perriand_admin') === 'true';
@@ -1015,56 +1721,43 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
       const themes = { mental: { i: "🧠", c: "thumb-mental" }, pdf: { i: "📄", c: "thumb-pdf" }, cours: { i: "📐", c: "thumb-cours" }, jeu: { i: "🎲", c: "thumb-jeu" }, video: { i: "▶️", c: "thumb-video" }, web: { i: "🌐", c: "thumb-web" }, info: { i: "📌", c: "thumb-info" } };
       grid.innerHTML = '';
-      filtered.forEach(item => {
+      filtered.forEach((item, idx) => {
         const t = themes[item.type] || themes.pdf;
         let ytId = extractYouTubeId(item.url);
         let cover = item.coverImg ? item.coverImg.trim() : (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : "");
         let style = cover ? `style="background-image: linear-gradient(rgba(15,23,42,0.3), rgba(15,23,42,0.7)), url('${cover}'); background-size: cover; background-position: center;"` : "";
         const isHidden = item.visible === false;
+        const hasUrl = !!(item.url && item.url.trim());
 
         const card = document.createElement('div');
-        card.className = 'card' + (isHidden ? ' is-hidden-doc' : '');
+        card.className = 'card' + (isHidden ? ' is-hidden-doc' : '') + (hasUrl ? ' clickable-card' : '');
+        card.style.animationDelay = `${Math.min(idx * 0.04, 0.4)}s`;
+
+        // Clic direct n'importe où sur la carte pour ouvrir le document immédiatement
+        if (hasUrl) {
+          card.onclick = (e) => {
+            if (e.target.closest('.admin-item-btn')) return;
+            openDocPopup(item.id);
+          };
+        }
+
         card.innerHTML = `
           ${isHidden ? '<span class="hidden-badge">🙈 CACHÉ AUX ÉLÈVES</span>' : ''}
           <div class="card-thumb ${t.c}" ${style}><span style="position:relative; z-index:2;">${t.i}</span></div>
           <div class="card-body">
             <span class="card-category">${item.sub || 'Général'}</span><h3 class="card-title">${item.title}</h3><p class="card-desc">${item.desc || ''}</p>
             <div class="card-actions">
-              ${item.url ? `<button class="btn btn-primary" onclick="openDocPopup('${item.id}')">👁 Consulter</button>` : `<span style="font-size:0.78rem; color:var(--muted); font-weight:600;">📌 Note d'information</span>`}
+              ${hasUrl ? `<button type="button" class="btn btn-primary">👁 Affichage direct</button>` : `<span style="font-size:0.78rem; color:var(--muted); font-weight:600;">📌 Note d'information</span>`}
               <div class="admin-item-btn" style="gap:0.3rem;">
-                <button class="btn btn-vis" onclick="toggleDocVisibility('${item.id}')" title="Afficher / Cacher aux élèves">${isHidden ? '👁️' : '🙈'}</button>
-                <button class="btn btn-edit" onclick="openEditModal('${item.id}')" title="Modifier">✏️</button>
-                <button class="btn btn-danger" onclick="deleteDoc('${item.id}')" title="Supprimer">🗑</button>
+                <button type="button" class="btn btn-vis" onclick="event.stopPropagation(); toggleDocVisibility('${item.id}')" title="Afficher / Cacher aux élèves">${isHidden ? '👁️' : '🙈'}</button>
+                <button type="button" class="btn btn-edit" onclick="event.stopPropagation(); openEditModal('${item.id}')" title="Modifier">✏️</button>
+                <button type="button" class="btn btn-danger" onclick="event.stopPropagation(); deleteDoc('${item.id}')" title="Supprimer">🗑</button>
               </div>
             </div>
           </div>`;
         grid.appendChild(card);
       });
     }
-
-    async function openDocPopup(id) {
-      const item = docs.find(d => d.id === id); if (!item) return;
-
-      if (currentStudent && portalMeta.students[currentStudent]) {
-        const st = portalMeta.students[currentStudent];
-        st.docsOpened = st.docsOpened || {};
-        st.docsOpened[id] = (st.docsOpened[id] || 0) + 1;
-        st.lastSeen = new Date().toISOString();
-        pushToSupabase(true);
-      }
-
-      document.getElementById('popupTitle').textContent = item.title;
-      let url = item.url ? item.url.trim() : "";
-      if (url && !url.startsWith('http') && !url.startsWith('/')) url = 'https://' + url;
-      document.getElementById('popupDirectOpenBtn').href = url;
-
-      const ytId = extractYouTubeId(url);
-      if (ytId) url = `https://www.youtube.com/embed/${ytId}?rel=0&autoplay=1`;
-      document.getElementById('popupIframe').src = url;
-      document.getElementById('docPopup').classList.add('active');
-    }
-    
-    function closePopup() { document.getElementById('popupIframe').src = ''; document.getElementById('docPopup').classList.remove('active'); }
 
     function promptAdmin() {
       if (isAdmin) { logoutAdmin(); return; }
@@ -1092,6 +1785,9 @@ selene.vincent ; Sélène VINCENT (T11)`;
       if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
         e.preventDefault();
         promptAdmin();
+      }
+      if (e.key === 'Escape') {
+        closePopup();
       }
     });
 
