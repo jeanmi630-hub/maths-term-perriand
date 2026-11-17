@@ -1524,6 +1524,14 @@ selene.vincent ; Sélène VINCENT (T11)`;
       docs = (rawDocs || []).map(d => ({ ...d, visible: d.visible !== false }));
     }
 
+    function repairAllStudentsBadges() {
+      if (!portalMeta.students) return;
+      Object.keys(portalMeta.students).forEach(username => {
+        ensureStudentProfileFields(portalMeta.students[username]);
+        evaluateStudentBadges(username, false);
+      });
+    }
+
     async function startApplication() {
       initAmbientEngine();
 
@@ -1536,6 +1544,8 @@ selene.vincent ; Sélène VINCENT (T11)`;
         loadSectionsAndMeta(DEFAULT_SECTIONS, []);
         document.getElementById('syncStatusBadge').innerHTML = '💾 Mode Hors-Ligne';
       }
+
+      repairAllStudentsBadges();
 
       const userTheme = localStorage.getItem('perriand_user_theme');
       const initialTheme = userTheme || portalMeta.defaultTheme || 'classic';
@@ -1636,7 +1646,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       const all12Done = getQcmBank().length >= 12 && getQcmBank().every(q => (st.qcmScores[q.id]?.attempts || 0) > 0);
 
       const checks = {
-        b01: logins >= 1,
+        b01: logins >= 1 || (st.daysWorked && st.daysWorked.length > 0) || !!st.lastSeen || !!st.lastLogin,
         b02: logins >= 10,
         b03: logins >= 25,
         b04: logins >= 50,
