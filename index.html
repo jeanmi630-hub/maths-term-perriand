@@ -76,7 +76,7 @@
     }
     body.theme-retro .brand-title h1, body.theme-retro .page-header h2, body.theme-retro .card-title, body.theme-retro .popup-header h3 { color: #00f0ff; text-shadow: 0 0 8px rgba(0, 240, 255, 0.35); }
     body.theme-retro .card { border-color: #ff2a85; box-shadow: 0 0 15px rgba(255, 42, 133, 0.18); }
-    body.theme-retro .modal-box, body.theme-retro .popup-content, body.theme-retro .popup-header, body.theme-retro .struct-item { background: #1d0b3a; color: #f0e6ff; }
+    body.theme-retro .modal-box, body.theme-retro .popup-content, body.theme-retro .popup-header, body.theme-retro .struct-item { background: #1d0b3b; color: #f0e6ff; }
     body.theme-retro .form-control { background: #120428; color: #f0e6ff; border-color: #591c89; }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -144,7 +144,33 @@
     .top-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
     .sync-badge { font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.7rem; border-radius: 999px; background: #f1f5f9; color: #64748b; display: inline-flex; align-items: center; gap: 0.35rem; }
     .sync-badge.online { background: #dcfce7; color: #15803d; }
-    .user-chip { font-size: 0.78rem; font-weight: 700; padding: 0.32rem 0.75rem; border-radius: 999px; background: var(--primary-light); color: var(--primary); display: inline-flex; align-items: center; gap: 0.4rem; }
+
+    /* PROFIL ÉLÈVE & BADGE D'HONNEUR DYNAMIQUE */
+    .user-chip {
+      font-size: 0.78rem; font-weight: 700; padding: 0.28rem 0.65rem;
+      border-radius: 999px; background: var(--primary-light); color: var(--primary);
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      border: 1px solid rgba(79, 70, 229, 0.2);
+    }
+    .equipped-badge-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 1.05rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.18));
+      animation: badgePulse 2.4s infinite ease-in-out; cursor: pointer;
+    }
+    @keyframes badgePulse {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.18) rotate(6deg); }
+    }
+    .trophy-pill-btn {
+      background: linear-gradient(135deg, #f59e0b, #d97706); color: #ffffff;
+      border: none; border-radius: 999px; padding: 0.2rem 0.55rem;
+      font-size: 0.73rem; font-weight: 800; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.35);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .trophy-pill-btn:hover { transform: translateY(-1px) scale(1.05); box-shadow: 0 4px 10px rgba(245, 158, 11, 0.5); }
+
     .theme-select { padding: 0.32rem 0.6rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 0.78rem; font-weight: 600; cursor: pointer; }
 
     nav { max-width: 1240px; margin: 0 auto; padding: 0 1rem; display: flex; gap: 0.35rem; overflow-x: auto; scrollbar-width: none; }
@@ -154,7 +180,7 @@
     .nav-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 
     main { max-width: 1240px; margin: 1.5rem auto 2rem; padding: 0 1.5rem; flex: 1; width: 100%; position: relative; z-index: 3; }
-    .hero-banner { position: relative; border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; min-height: 210px; display: flex; align-items: center; padding: 2.2rem 2rem; box-shadow: var(--shadow); background-color: #1e1b4b; }
+    .hero-banner { position: relative; border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; min-height: 200px; display: flex; align-items: center; padding: 2.2rem 2rem; box-shadow: var(--shadow); background-color: #1e1b4b; }
     .hero-banner-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 1; }
     .hero-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(15, 23, 42, 0.90) 0%, rgba(30, 27, 75, 0.78) 50%, rgba(15, 23, 42, 0.45) 100%); z-index: 2; transition: background 0.4s; }
     .hero-content { position: relative; z-index: 3; max-width: 650px; color: white; }
@@ -169,8 +195,10 @@
     .page-header h2 { font-size: 1.55rem; font-weight: 800; color: #1e1b4b; }
     .page-header p { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
     .sub-filter-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-    .sub-pill { padding: 0.4rem 0.85rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; background: var(--surface); border: 1px solid var(--border); color: var(--muted); cursor: pointer; transition: all 0.15s; }
+    .sub-pill { padding: 0.4rem 0.85rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; background: var(--surface); border: 1px solid var(--border); color: var(--muted); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 0.3rem; }
     .sub-pill.active, .sub-pill:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+    .sub-pill.fav-pill-filter { border-color: #fde68a; background: #fffbeb; color: #b45309; }
+    .sub-pill.fav-pill-filter.active, .sub-pill.fav-pill-filter:hover { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
 
     .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 1.4rem; }
     .card {
@@ -185,9 +213,74 @@
 
     .card.is-hidden-doc { opacity: 0.62; border: 2px dashed #ef4444; }
     .hidden-badge { position: absolute; top: 10px; left: 10px; background: #ef4444; color: white; font-size: 0.7rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; z-index: 5; letter-spacing: 0.04em; box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
-    .card-thumb { height: 120px; position: relative; display: flex; align-items: center; justify-content: center; color: white; font-size: 2.3rem; font-weight: bold; background-size: cover; background-position: center; overflow: hidden; }
-    .card-thumb::after { content: "👁 Lecture directe"; position: absolute; bottom: 8px; right: 10px; font-size: 0.68rem; font-weight: 700; background: rgba(15, 23, 42, 0.65); color: #fff; padding: 2px 8px; border-radius: 999px; opacity: 0; transform: translateY(4px); transition: all 0.2s; backdrop-filter: blur(4px); }
+    .card-thumb { height: 120px; position: relative; display: flex; align-items: center; justify-content: center; color: white; font-size: 2.5rem; font-weight: bold; background-size: cover; background-position: center; overflow: hidden; }
+    .card-thumb::after { content: "👁 Ouvrir"; position: absolute; bottom: 8px; right: 10px; font-size: 0.68rem; font-weight: 700; background: rgba(15, 23, 42, 0.65); color: #fff; padding: 2px 8px; border-radius: 999px; opacity: 0; transform: translateY(4px); transition: all 0.2s; backdrop-filter: blur(4px); }
     .card.clickable-card:hover .card-thumb::after { opacity: 1; transform: translateY(0); }
+
+    /* =========================================================================
+       ANIMATIONS DYNAMIQUES DES ICÔNES DE TYPE DE DOCUMENT
+       ========================================================================= */
+    .doc-type-icon {
+      position: relative; z-index: 2; display: inline-block;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.28));
+      will-change: transform;
+    }
+    /* PDF : Lévitation de feuille et légère inclinaison 3D */
+    .icon-anim-pdf { animation: animPdfFloat 3s ease-in-out infinite; }
+    @keyframes animPdfFloat {
+      0%, 100% { transform: translateY(0) rotate(-3deg) scale(1); }
+      50% { transform: translateY(-8px) rotate(4deg) scale(1.08); }
+    }
+    /* Carte mentale : Pulsation synaptique lumineuse */
+    .icon-anim-mental { animation: animMentalPulse 2.4s ease-in-out infinite; }
+    @keyframes animMentalPulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(255,255,255,0.3)); }
+      50% { transform: scale(1.18) rotate(3deg); filter: drop-shadow(0 0 16px rgba(255,255,255,0.95)); }
+    }
+    /* Cours : Balancement géométrique d'équerre/compas */
+    .icon-anim-cours { animation: animCoursSwing 2.8s ease-in-out infinite; transform-origin: center bottom; }
+    @keyframes animCoursSwing {
+      0%, 100% { transform: rotate(-10deg) translateY(0); }
+      50% { transform: rotate(10deg) translateY(-5px) scale(1.06); }
+    }
+    /* Jeu / Activité : Rebond rotatif d'arcade */
+    .icon-anim-jeu { animation: animJeuBounce 2.2s cubic-bezier(0.28, 0.84, 0.42, 1) infinite; }
+    @keyframes animJeuBounce {
+      0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+      35% { transform: translateY(-11px) rotate(-14deg) scale(1.14); }
+      70% { transform: translateY(-3px) rotate(12deg) scale(1.05); }
+    }
+    /* Vidéo : Battement & onde radiale */
+    .icon-anim-video { animation: animVideoBeat 2s ease-in-out infinite; }
+    @keyframes animVideoBeat {
+      0%, 100% { transform: scale(1); }
+      40% { transform: scale(1.2); filter: drop-shadow(0 0 14px rgba(255,255,255,0.85)); }
+      60% { transform: scale(1.08); }
+    }
+    /* Lien Web : Orbite fluide */
+    .icon-anim-web { animation: animWebOrbit 3.4s ease-in-out infinite; }
+    @keyframes animWebOrbit {
+      0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+      50% { transform: translateY(-6px) rotate(15deg) scale(1.12); }
+    }
+    /* Note d'information : Oscillation vive d'épingle */
+    .icon-anim-info { animation: animInfoPin 2.2s ease-in-out infinite; transform-origin: bottom center; }
+    @keyframes animInfoPin {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      20% { transform: rotate(-16deg) scale(1.12); }
+      40% { transform: rotate(14deg) scale(1.12); }
+      60% { transform: rotate(-8deg) scale(1.05); }
+      80% { transform: rotate(6deg) scale(1.02); }
+    }
+    /* Amplification au survol de la carte */
+    .card:hover .doc-type-icon {
+      animation-duration: 1.1s !important;
+      filter: drop-shadow(0 6px 16px rgba(255,255,255,0.75));
+    }
+    .inline-pin-anim {
+      display: inline-block; animation: animInfoPin 2.2s ease-in-out infinite;
+      transform-origin: bottom center; margin-right: 3px; font-size: 0.95rem;
+    }
 
     .thumb-pdf { background-color: #ef4444; background-image: linear-gradient(135deg, #ef4444, #f97316); }
     .thumb-cours { background-color: #4f46e5; background-image: linear-gradient(135deg, #4f46e5, #06b6d4); }
@@ -203,6 +296,28 @@
     .card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.45; margin-bottom: 1.1rem; flex: 1; white-space: pre-line; }
     .card-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 0.8rem; gap: 0.5rem; flex-wrap: wrap; }
 
+    /* BOUTON FAVORI & PASTILLE CONSULTÉ */
+    .btn-fav {
+      padding: 0.42rem 0.85rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700;
+      border: 1.5px solid var(--border); background: var(--surface); color: var(--muted);
+      cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;
+      transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .btn-fav:hover { border-color: #f59e0b; color: #b45309; background: #fffbeb; transform: scale(1.03); }
+    .btn-fav.active {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border-color: #f59e0b; color: #92400e;
+      box-shadow: 0 3px 10px rgba(245, 158, 11, 0.25);
+    }
+    .btn-fav .fav-star { display: inline-block; transition: transform 0.25s; font-size: 0.95rem; }
+    .btn-fav.active .fav-star { animation: starPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    @keyframes starPop { 0% { transform: scale(0.5) rotate(-30deg); } 60% { transform: scale(1.35) rotate(15deg); } 100% { transform: scale(1) rotate(0); } }
+
+    .read-pill {
+      font-size: 0.72rem; font-weight: 700; color: #15803d; background: #dcfce7;
+      padding: 0.25rem 0.6rem; border-radius: 999px; display: inline-flex; align-items: center; gap: 0.25rem;
+    }
+
     .btn { padding: 0.45rem 0.85rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none; transition: all 0.15s; }
     .btn:hover { background: #f1f5f9; color: #0f172a; }
     .btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
@@ -212,6 +327,81 @@
     .btn-danger { background: #ef4444; color: white; border-color: #ef4444; }
     .btn-danger:hover { background: #dc2626; color: white; }
     .btn-vis { background: #f59e0b; color: white; border-color: #f59e0b; }
+
+    /* =========================================================================
+       SALLE DES TROPHÉES (40 BADGES MYSTÈRES) & NOTIFICATIONS TOAST
+       ========================================================================= */
+    .badges-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+      gap: 0.9rem; max-height: 58vh; overflow-y: auto; padding: 0.25rem;
+    }
+    .badge-card {
+      border-radius: 12px; padding: 0.95rem; border: 1.5px solid var(--border);
+      background: var(--surface); display: flex; flex-direction: column;
+      align-items: center; text-align: center; gap: 0.4rem; position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .badge-card.unlocked {
+      border-color: #fbbf24;
+      background: linear-gradient(180deg, rgba(254, 243, 199, 0.35) 0%, var(--surface) 100%);
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.12);
+    }
+    .badge-card.unlocked:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(245, 158, 11, 0.22); }
+    .badge-card.equipped-card {
+      border: 2px solid var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    .badge-card.locked-mystery {
+      background: rgba(148, 163, 184, 0.08);
+      border: 1.5px dashed var(--border);
+      opacity: 0.78;
+    }
+    .badge-icon-circle {
+      width: 54px; height: 54px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.75rem; margin-bottom: 0.2rem;
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      box-shadow: inset 0 2px 4px rgba(255,255,255,0.8), 0 4px 10px rgba(245, 158, 11, 0.25);
+    }
+    .badge-card.unlocked .badge-icon-circle { animation: animMentalPulse 3s infinite ease-in-out; }
+    .badge-card.locked-mystery .badge-icon-circle {
+      background: #e2e8f0; color: #64748b; box-shadow: none; font-size: 1.4rem;
+    }
+    body.theme-dark .badge-card.locked-mystery .badge-icon-circle,
+    body.theme-retro .badge-card.locked-mystery .badge-icon-circle {
+      background: #334155; color: #94a3b8;
+    }
+    .badge-num-tag {
+      position: absolute; top: 8px; left: 10px; font-size: 0.68rem;
+      font-weight: 800; color: var(--muted); opacity: 0.7;
+    }
+    .badge-title { font-size: 0.9rem; font-weight: 800; color: var(--text); }
+    .badge-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.35; flex: 1; }
+    .badge-progress-wrap {
+      width: 100%; background: #e2e8f0; height: 10px; border-radius: 999px;
+      overflow: hidden; margin: 0.5rem 0 1rem;
+    }
+    .badge-progress-fill {
+      height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981);
+      width: 0%; transition: width 0.5s ease;
+    }
+
+    /* Toast Notification de déblocage de badge */
+    #badgeToastContainer {
+      position: fixed; top: 20px; right: 20px; z-index: 400;
+      display: flex; flex-direction: column; gap: 0.6rem; pointer-events: none;
+    }
+    .badge-toast {
+      pointer-events: auto; background: linear-gradient(135deg, #1e1b4b, #312e81);
+      color: #ffffff; border: 2px solid #fbbf24; border-radius: 14px;
+      padding: 0.9rem 1.15rem; min-width: 290px; max-width: 360px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 0.85rem;
+      animation: toastSlideIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes toastSlideIn {
+      from { opacity: 0; transform: translateX(60px) scale(0.9); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
 
     /* VISIONNEUSE DIRECTE (MOBILE & DESKTOP SANS BOUTON INTERMÉDIAIRE "OUVRIR") */
     .popup-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 1rem; }
@@ -295,9 +485,10 @@
 </head>
 <body>
 
-  <!-- CANEVAS D'ARRIÈRE-PLAN & CALQUE DES OBJETS ANIMÉS QUI PASSENT -->
+  <!-- CANEVAS D'ARRIÈRE-PLAN, CALQUE DES OBJETS ANIMÉS & NOTIFICATIONS DE BADGES -->
   <canvas id="ambientCanvas"></canvas>
   <div id="flyersLayer"></div>
+  <div id="badgeToastContainer"></div>
 
   <div id="maintBanner" class="maint-banner">
     🛠 MODE MAINTENANCE (DS) ACTIF — Les élèves voient actuellement l'écran « Accès suspendu ».
@@ -372,9 +563,11 @@
           <option value="dark">🌙 Thème : Nuit Étoilée</option>
         </select>
         <div id="userBadge" class="user-chip" style="display:none;">
+          <span id="userEquippedBadgeIcon" class="equipped-badge-icon" onclick="openBadgesModal()" title="Mon badge équipé (cliquer pour ouvrir mes trophées)"></span>
           <span id="userNameDisplay">Élève</span>
+          <button type="button" id="userTrophyBtn" class="trophy-pill-btn" onclick="openBadgesModal()" title="Ouvrir ma Salle des Trophées">🏆 <span id="userBadgeCountText">0/40</span></button>
           <button onclick="openChangeMyPassModal()" style="background:none; border:none; cursor:pointer; font-size:0.8rem;" title="Changer mon mot de passe">🔑</button>
-          <button onclick="logoutUser()" style="background:none; border:none; cursor:pointer; color:inherit; font-weight:800; margin-left:4px;" title="Se déconnecter">✕</button>
+          <button onclick="logoutUser()" style="background:none; border:none; cursor:pointer; color:inherit; font-weight:800; margin-left:2px;" title="Se déconnecter">✕</button>
         </div>
         <div id="syncStatusBadge" class="sync-badge" title="Mode de stockage actif">
           💾 Connexion au Cloud...
@@ -392,11 +585,43 @@
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <h2>Bienvenue sur le portail de Mathématiques</h2>
-        <p>Retrouvez l'ensemble des cours, feuilles d'exercices, cartes mentales et sujets de préparation au baccalauréat et au Grand Oral. Touchez n'importe quel document pour l'afficher directement.</p>
+        <p>Retrouvez l'ensemble des cours, feuilles d'exercices, cartes mentales et sujets de préparation au baccalauréat et au Grand Oral.</p>
       </div>
     </div>
     <div id="mainPagesContainer"></div>
   </main>
+
+  <!-- SALLE DES TROPHÉES (40 BADGES MYSTÈRES) -->
+  <div class="popup-backdrop" id="badgesModal" onclick="if(event.target===this) this.classList.remove('active')">
+    <div class="modal-box wide">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.5rem;">
+        <div>
+          <h3 style="font-size:1.2rem; font-weight:800;">🏆 Salle des Trophées & Badges Mystères</h3>
+          <p style="font-size:0.82rem; color:var(--muted);">Explorez le portail, travaillez régulièrement et relevez des défis secrets pour révéler les 40 badges !</p>
+        </div>
+        <button class="btn" onclick="document.getElementById('badgesModal').classList.remove('active')">✕ Fermer</button>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.82rem; font-weight:700; margin-top:0.5rem;">
+        <span id="badgesModalSummary" style="color:var(--primary);">0 / 40 badges débloqués</span>
+        <span id="badgesModalEquippedInfo" style="color:var(--muted);"></span>
+      </div>
+      <div class="badge-progress-wrap">
+        <div id="badgesProgressBar" class="badge-progress-fill"></div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+          <button type="button" class="sub-pill active" id="bfAll" onclick="filterBadgesView('all')">Tous (40)</button>
+          <button type="button" class="sub-pill" id="bfUnlocked" onclick="filterBadgesView('unlocked')">✨ Débloqués</button>
+          <button type="button" class="sub-pill" id="bfLocked" onclick="filterBadgesView('locked')">🔒 Mystères restants</button>
+        </div>
+        <button type="button" id="adminRevealBadgesBtn" class="btn" style="display:none; font-size:0.76rem;" onclick="toggleAdminRevealBadges()">👁️ Prof : Révéler les 40 défis cachés</button>
+      </div>
+
+      <div id="badgesGridContainer" class="badges-grid"></div>
+    </div>
+  </div>
 
   <!-- VISIONNEUSE UNIVERSELLE À AFFICHAGE DIRECT (PDF.JS MOBILE + IFRAME + IMAGES) -->
   <div class="popup-backdrop" id="docPopup" onclick="if(event.target===this) closePopup()">
@@ -433,6 +658,7 @@
     <button class="btn btn-primary" onclick="openAddModal()">+ Document</button>
     <button class="btn" onclick="openVisibilityModal()">👁️ Visibilité</button>
     <button class="btn" onclick="openTrackingModal()">📊 Suivi & Élèves</button>
+    <button class="btn" onclick="openBadgesModal()">🏆 40 Badges</button>
     <button class="btn" onclick="setGlobalDefaultTheme()" title="Imposer le thème actuel par défaut pour tous les élèves">🎨 Saison classe</button>
     <button class="btn" onclick="openMaintenanceModal()">🛠 Mode DS</button>
     <button class="btn" onclick="openBackupModal()">💾 Sauvegarde</button>
@@ -516,8 +742,8 @@
     <div class="modal-box wide">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
         <div>
-          <h3 style="font-size:1.15rem; font-weight:700;">📊 Suivi d'activité & Comptes Élèves</h3>
-          <p style="font-size:0.8rem; color:var(--muted);">Connexions, jours travaillés, temps actif et gestion des identifiants.</p>
+          <h3 style="font-size:1.15rem; font-weight:700;">📊 Suivi d'activité, Badges & Comptes Élèves</h3>
+          <p style="font-size:0.8rem; color:var(--muted);">Connexions, jours travaillés, temps actif, badges débloqués et gestion des identifiants.</p>
         </div>
         <button class="btn" onclick="document.getElementById('trackingModal').classList.remove('active')">✕</button>
       </div>
@@ -542,12 +768,13 @@
               <tr>
                 <th onclick="sortTrackTable('name')">Élève ↕</th>
                 <th onclick="sortTrackTable('username')">Identifiant ↕</th>
-                <th onclick="sortTrackTable('lastLogin')">Dernière connexion ↕</th>
                 <th onclick="sortTrackTable('lastSeen')">Présence ↕</th>
-                <th onclick="sortTrackTable('daysCount')">Jours travaillés ↕</th>
+                <th onclick="sortTrackTable('daysCount')">Jours ↕</th>
                 <th onclick="sortTrackTable('loginsCount')">Connexions ↕</th>
                 <th onclick="sortTrackTable('activeMinutes')">Temps actif ↕</th>
-                <th onclick="sortTrackTable('docsCount')">Docs ouverts ↕</th>
+                <th onclick="sortTrackTable('docsCount')">Docs lus ↕</th>
+                <th onclick="sortTrackTable('badgesCount')">Badges 🏆 ↕</th>
+                <th>Distinction Prof</th>
               </tr>
             </thead>
             <tbody id="studentsTrackTbody"></tbody>
@@ -637,7 +864,7 @@
       <div style="background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid var(--border); margin-bottom:1.25rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
         <div>
           <h4 style="font-size:0.92rem; margin-bottom:0.2rem;">Exporter toute la base actuelle (.json)</h4>
-          <p style="font-size:0.78rem; color:var(--muted);">Inclut les sections, tous les documents (visibles et cachés), les comptes élèves et le suivi d'activité.</p>
+          <p style="font-size:0.78rem; color:var(--muted);">Inclut les sections, tous les documents (visibles et cachés), les comptes élèves, leurs favoris et leurs badges.</p>
         </div>
         <button class="btn btn-primary" onclick="exportData()">💾 Télécharger la sauvegarde complète</button>
       </div>
@@ -860,6 +1087,52 @@ selene.vincent ; Sélène VINCENT (T11)`;
       "sec_1793357506991": { "desc": "Outils de révision, sites intéressants, fiches méthode", "subs": ["Liens", "Outils"], "title": "Liens et outils" }
     };
 
+    /* =========================================================================
+       DÉFINITION DES 40 BADGES MYSTÈRES (DÉCOUVERTS PETIT À PETIT PAR L'ÉLÈVE)
+       ========================================================================= */
+    const BADGES_CATALOG = [
+      { id: "b01", num: 1,  icon: "🚀", title: "Premier Pas",           desc: "S'être connecté pour la 1ère fois au portail" },
+      { id: "b02", num: 2,  icon: "🔄", title: "Habitué",               desc: "Cumuler 10 connexions sur le portail" },
+      { id: "b03", num: 3,  icon: "⚡", title: "Pilier du Portail",     desc: "Cumuler 25 connexions sur le portail" },
+      { id: "b04", num: 4,  icon: "👑", title: "Légende de Perriand",   desc: "Cumuler 50 connexions sur le portail" },
+      { id: "b05", num: 5,  icon: "📅", title: "Régularité",            desc: "Travailler sur le portail 5 jours différents" },
+      { id: "b06", num: 6,  icon: "🗓️", title: "Marathonien",           desc: "Travailler sur le portail 15 jours différents" },
+      { id: "b07", num: 7,  icon: "🔥", title: "Constance de Gauss",    desc: "Travailler sur le portail 30 jours différents" },
+      { id: "b08", num: 8,  icon: "⏱️", title: "Mise en Route",         desc: "Cumuler 15 minutes de présence active" },
+      { id: "b09", num: 9,  icon: "⏳", title: "Une Heure Chrono",      desc: "Cumuler 1 heure (60 min) de présence active" },
+      { id: "b10", num: 10, icon: "🔋", title: "Endurance Maths",       desc: "Cumuler 2 heures (120 min) de présence active" },
+      { id: "b11", num: 11, icon: "🏋️", title: "Force de Travail",      desc: "Cumuler 5 heures (300 min) de présence active" },
+      { id: "b12", num: 12, icon: "🌌", title: "Maître du Temps",       desc: "Cumuler 10 heures (600 min) de présence active" },
+      { id: "b13", num: 13, icon: "📄", title: "Première Lecture",      desc: "Ouvrir son 1er document sur le portail" },
+      { id: "b14", num: 14, icon: "📚", title: "Curieux",               desc: "Ouvrir 5 documents différents" },
+      { id: "b15", num: 15, icon: "🧐", title: "Érudit",                desc: "Ouvrir 10 documents différents" },
+      { id: "b16", num: 16, icon: "🏛️", title: "Alexandrie",            desc: "Ouvrir 20 documents différents" },
+      { id: "b17", num: 17, icon: "🎓", title: "Encyclopédiste",        desc: "Ouvrir 35 documents différents" },
+      { id: "b18", num: 18, icon: "💯", title: "Complétiste Absolu",    desc: "Avoir ouvert 100 % des documents visibles du site" },
+      { id: "b19", num: 19, icon: "🔁", title: "Mémoire d'Ebbinghaus",  desc: "Rouvrir 5 fois un même document pour le réviser" },
+      { id: "b20", num: 20, icon: "🔍", title: "Perfectionniste",       desc: "Rouvrir 10 fois un même document" },
+      { id: "b21", num: 21, icon: "⭐", title: "Collectionneur",        desc: "Ajouter son 1er document en favori" },
+      { id: "b22", num: 22, icon: "🌟", title: "Coffre à Favoris",      desc: "Avoir 5 documents dans ses favoris" },
+      { id: "b23", num: 23, icon: "💎", title: "Sélection d'Or",        desc: "Avoir 10 documents dans ses favoris" },
+      { id: "b24", num: 24, icon: "🧱", title: "Bases Solides",         desc: "Ouvrir 3 documents dans Rappels de 1ère" },
+      { id: "b25", num: 25, icon: "📈", title: "Maître des Suites",     desc: "Ouvrir 4 documents dans l'onglet Suites" },
+      { id: "b26", num: 26, icon: "📐", title: "Expert des Fonctions",  desc: "Ouvrir 5 documents dans Étude de fonctions" },
+      { id: "b27", num: 27, icon: "🧊", title: "Vision dans l'Espace",  desc: "Ouvrir 4 documents dans Géométrie dans l'espace" },
+      { id: "b28", num: 28, icon: "🎲", title: "Esprit de Bernoulli",   desc: "Ouvrir 4 documents dans Probabilités" },
+      { id: "b29", num: 29, icon: "🎤", title: "Orateur du Grand Oral", desc: "Ouvrir 2 documents dans Grand Oral" },
+      { id: "b30", num: 30, icon: "🌍", title: "Polymathe",             desc: "Explorer des documents dans au moins 6 onglets différents" },
+      { id: "b31", num: 31, icon: "🧠", title: "Synapses en Action",    desc: "Consulter 3 Cartes Mentales" },
+      { id: "b32", num: 32, icon: "🎬", title: "Cinéphile Scientifique",desc: "Regarder 3 Vidéos mathématiques" },
+      { id: "b33", num: 33, icon: "🕹️", title: "Joueur d'Arcade",       desc: "Lancer une Activité ou un Jeu sur le portail" },
+      { id: "b34", num: 34, icon: "🌅", title: "Lève-tôt",              desc: "Se connecter au portail le matin avant 7h45" },
+      { id: "b35", num: 35, icon: "🦉", title: "Hibou des Maths",       desc: "Réviser sur le portail le soir après 21h30" },
+      { id: "b36", num: 36, icon: "☀️", title: "Guerrier du Week-end",  desc: "Travailler sur le portail un samedi ou un dimanche" },
+      { id: "b37", num: 37, icon: "🍽️", title: "Pause Méridienne",      desc: "Réviser entre 12h00 et 13h30" },
+      { id: "b38", num: 38, icon: "🎨", title: "Caméléon",              desc: "Explorer 3 thèmes visuels différents (Noël, Été, Rétro...)" },
+      { id: "b39", num: 39, icon: "♾️", title: "Médaille Fields",       desc: "Débloquer 25 badges sur le portail" },
+      { id: "b40", num: 40, icon: "🏆", title: "Félicitations du Prof", desc: "Distinction spéciale décernée par M. Poppe" }
+    ];
+
     let sections = {}; 
     let docs = [];
     let portalMeta = {
@@ -877,8 +1150,10 @@ selene.vincent ; Sélène VINCENT (T11)`;
     let pendingRestoreData = null;
     let trackSortCol = "name";
     let trackSortAsc = true;
+    let badgesFilterMode = "all";
+    let adminRevealAllSecrets = false;
 
-    // État du moteur d'animations (toujours actif) et PDF
+    // État du moteur d'animations et PDF
     let activeThemeName = "classic";
     let particles = [];
     let flyerInterval = null;
@@ -986,6 +1261,310 @@ selene.vincent ; Sélène VINCENT (T11)`;
     }
 
     /* =========================================================================
+       MOTEUR DES 40 BADGES MYSTÈRES & FAVORIS ÉLÈVES
+       ========================================================================= */
+    function ensureStudentProfileFields(st) {
+      if (!st) return;
+      st.docsOpened = st.docsOpened || {};
+      st.daysWorked = st.daysWorked || [];
+      st.favorites = st.favorites || [];
+      st.themesTried = st.themesTried || [];
+      st.habits = st.habits || {};
+      st.unlockedBadges = st.unlockedBadges || [];
+      if (!st.equippedBadge && st.unlockedBadges.length > 0) {
+        st.equippedBadge = st.unlockedBadges[st.unlockedBadges.length - 1];
+      }
+    }
+
+    function recordTimeHabits(st) {
+      if (!st) return;
+      ensureStudentProfileFields(st);
+      const now = new Date();
+      const h = now.getHours();
+      const m = now.getMinutes();
+      const day = now.getDay();
+
+      if (h >= 5 && (h < 7 || (h === 7 && m < 45))) st.habits.earlyBird = true;
+      if ((h === 21 && m >= 30) || h >= 22 || h < 2) st.habits.nightOwl = true;
+      if (day === 0 || day === 6) st.habits.weekend = true;
+      if (h === 12 || (h === 13 && m <= 30)) st.habits.lunchBreak = true;
+    }
+
+    function evaluateStudentBadges(username, notifyNew = true) {
+      const st = portalMeta.students[username];
+      if (!st) return false;
+      ensureStudentProfileFields(st);
+      recordTimeHabits(st);
+
+      const openedIds = Object.keys(st.docsOpened).filter(id => st.docsOpened[id] > 0);
+      const maxSingleViews = Object.values(st.docsOpened).reduce((max, v) => Math.max(max, v || 0), 0);
+      const favCount = (st.favorites || []).length;
+      const daysCount = (st.daysWorked || []).length;
+      const logins = st.loginsCount || 0;
+      const mins = st.activeMinutes || 0;
+
+      const visibleDocsWithUrl = docs.filter(d => d.visible !== false && d.url && d.url.trim());
+      const allVisibleRead = visibleDocsWithUrl.length >= 5 && visibleDocsWithUrl.every(d => (st.docsOpened[d.id] || 0) > 0);
+
+      const countInSec = (secKey) => openedIds.filter(id => {
+        const d = docs.find(x => x.id === id);
+        return d && d.section === secKey;
+      }).length;
+
+      const countByType = (tName) => openedIds.filter(id => {
+        const d = docs.find(x => x.id === id);
+        return d && d.type === tName;
+      }).length;
+
+      const distinctSections = new Set(openedIds.map(id => docs.find(x => x.id === id)?.section).filter(Boolean)).size;
+
+      const checks = {
+        b01: logins >= 1,
+        b02: logins >= 10,
+        b03: logins >= 25,
+        b04: logins >= 50,
+        b05: daysCount >= 5,
+        b06: daysCount >= 15,
+        b07: daysCount >= 30,
+        b08: mins >= 15,
+        b09: mins >= 60,
+        b10: mins >= 120,
+        b11: mins >= 300,
+        b12: mins >= 600,
+        b13: openedIds.length >= 1,
+        b14: openedIds.length >= 5,
+        b15: openedIds.length >= 10,
+        b16: openedIds.length >= 20,
+        b17: openedIds.length >= 35,
+        b18: allVisibleRead,
+        b19: maxSingleViews >= 5,
+        b20: maxSingleViews >= 10,
+        b21: favCount >= 1,
+        b22: favCount >= 5,
+        b23: favCount >= 10,
+        b24: countInSec('rappels') >= 3,
+        b25: countInSec('suites') >= 4,
+        b26: countInSec('fonctions') >= 5,
+        b27: countInSec('espace') >= 4,
+        b28: countInSec('probas') >= 4,
+        b29: countInSec('grand-oral') >= 2,
+        b30: distinctSections >= 6,
+        b31: countByType('mental') >= 3,
+        b32: countByType('video') >= 3,
+        b33: countByType('jeu') >= 1,
+        b34: !!st.habits.earlyBird,
+        b35: !!st.habits.nightOwl,
+        b36: !!st.habits.weekend,
+        b37: !!st.habits.lunchBreak,
+        b38: (st.themesTried || []).length >= 3,
+        b40: !!st.profAward
+      };
+
+      let newlyUnlocked = [];
+      Object.entries(checks).forEach(([bId, ok]) => {
+        if (ok && !st.unlockedBadges.includes(bId)) {
+          st.unlockedBadges.push(bId);
+          newlyUnlocked.push(bId);
+        }
+      });
+
+      // Badge 39 : Médaille Fields (25 badges débloqués)
+      if (st.unlockedBadges.length >= 25 && !st.unlockedBadges.includes('b39')) {
+        st.unlockedBadges.push('b39');
+        newlyUnlocked.push('b39');
+      }
+
+      if (newlyUnlocked.length > 0) {
+        st.equippedBadge = newlyUnlocked[newlyUnlocked.length - 1];
+        if (notifyNew && username === currentStudent) {
+          newlyUnlocked.forEach((bId, idx) => {
+            const bObj = BADGES_CATALOG.find(x => x.id === bId);
+            if (bObj) setTimeout(() => showBadgeUnlockToast(bObj), idx * 900);
+          });
+        }
+        refreshTopBarBadgeDisplay();
+        return true;
+      }
+
+      refreshTopBarBadgeDisplay();
+      return false;
+    }
+
+    function showBadgeUnlockToast(badge) {
+      const container = document.getElementById('badgeToastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'badge-toast';
+      toast.innerHTML = `
+        <div style="font-size:2.1rem; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.3));">${badge.icon}</div>
+        <div style="flex:1;">
+          <div style="font-size:0.7rem; font-weight:800; color:#fbbf24; text-transform:uppercase; letter-spacing:0.06em;">🎉 Badge Mystère Débloqué !</div>
+          <div style="font-size:0.95rem; font-weight:800; margin:1px 0;">${badge.title}</div>
+          <div style="font-size:0.74rem; color:#e2e8f0;">Défi accompli : ${badge.desc}</div>
+        </div>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(40px)';
+        toast.style.transition = 'all 0.35s ease';
+        setTimeout(() => toast.remove(), 400);
+      }, 5200);
+    }
+
+    function refreshTopBarBadgeDisplay() {
+      const iconEl = document.getElementById('userEquippedBadgeIcon');
+      const countEl = document.getElementById('userBadgeCountText');
+      if (!iconEl || !countEl) return;
+
+      if (currentStudent && portalMeta.students[currentStudent]) {
+        const st = portalMeta.students[currentStudent];
+        ensureStudentProfileFields(st);
+        const count = st.unlockedBadges.length;
+        countEl.textContent = `${count}/40`;
+        const eq = BADGES_CATALOG.find(b => b.id === st.equippedBadge) || BADGES_CATALOG.find(b => b.id === st.unlockedBadges[st.unlockedBadges.length - 1]);
+        iconEl.textContent = eq ? eq.icon : "🎯";
+        iconEl.title = eq ? `Badge équipé : ${eq.title} — ${eq.desc}` : "Cliquer pour voir mes badges";
+      } else if (isAdmin) {
+        countEl.textContent = `40/40`;
+        iconEl.textContent = "👑";
+        iconEl.title = "Voir la Salle des 40 Trophées";
+      }
+    }
+
+    function openBadgesModal() {
+      if (currentStudent) evaluateStudentBadges(currentStudent, false);
+      document.getElementById('adminRevealBadgesBtn').style.display = isAdmin ? 'inline-flex' : 'none';
+      renderBadgesGrid();
+      document.getElementById('badgesModal').classList.add('active');
+    }
+
+    function filterBadgesView(mode) {
+      badgesFilterMode = mode;
+      document.getElementById('bfAll').classList.toggle('active', mode === 'all');
+      document.getElementById('bfUnlocked').classList.toggle('active', mode === 'unlocked');
+      document.getElementById('bfLocked').classList.toggle('active', mode === 'locked');
+      renderBadgesGrid();
+    }
+
+    function toggleAdminRevealBadges() {
+      adminRevealAllSecrets = !adminRevealAllSecrets;
+      const btn = document.getElementById('adminRevealBadgesBtn');
+      if (btn) btn.textContent = adminRevealAllSecrets ? "🙈 Prof : Masquer les secrets (Vue Élève)" : "👁️ Prof : Révéler les 40 défis cachés";
+      renderBadgesGrid();
+    }
+
+    async function equipStudentBadge(badgeId) {
+      if (!currentStudent || !portalMeta.students[currentStudent]) return;
+      const st = portalMeta.students[currentStudent];
+      if (!st.unlockedBadges.includes(badgeId)) return;
+      st.equippedBadge = badgeId;
+      refreshTopBarBadgeDisplay();
+      renderBadgesGrid();
+      await pushToSupabase(true);
+    }
+
+    function renderBadgesGrid() {
+      const grid = document.getElementById('badgesGridContainer');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const st = (currentStudent && portalMeta.students[currentStudent]) ? portalMeta.students[currentStudent] : null;
+      const unlockedList = st ? (st.unlockedBadges || []) : (isAdmin && adminRevealAllSecrets ? BADGES_CATALOG.map(b => b.id) : []);
+      const equippedId = st ? st.equippedBadge : "b04";
+
+      const unlockedCount = st ? unlockedList.length : (isAdmin ? 40 : 0);
+      document.getElementById('badgesModalSummary').textContent = `${unlockedCount} / 40 badges découverts`;
+      document.getElementById('badgesProgressBar').style.width = `${Math.round((unlockedCount / 40) * 100)}%`;
+
+      const eqObj = BADGES_CATALOG.find(b => b.id === equippedId);
+      document.getElementById('badgesModalEquippedInfo').textContent = (eqObj && unlockedList.includes(eqObj.id))
+        ? `Badge équipé : ${eqObj.icon} ${eqObj.title}`
+        : '';
+
+      BADGES_CATALOG.forEach(b => {
+        const isUnlocked = unlockedList.includes(b.id) || (isAdmin && adminRevealAllSecrets);
+        if (badgesFilterMode === 'unlocked' && !isUnlocked) return;
+        if (badgesFilterMode === 'locked' && isUnlocked) return;
+
+        const isEquipped = st && st.equippedBadge === b.id && isUnlocked;
+        const card = document.createElement('div');
+
+        if (isUnlocked) {
+          card.className = 'badge-card unlocked' + (isEquipped ? ' equipped-card' : '');
+          card.innerHTML = `
+            <span class="badge-num-tag">#${b.num}</span>
+            <div class="badge-icon-circle">${b.icon}</div>
+            <div class="badge-title">${b.title}</div>
+            <div class="badge-desc"><strong>Défi accompli :</strong><br>${b.desc}</div>
+            ${st ? `<button type="button" class="btn ${isEquipped ? 'btn-primary' : ''}" style="font-size:0.73rem; padding:0.28rem 0.65rem; margin-top:0.3rem;" onclick="equipStudentBadge('${b.id}')">${isEquipped ? '✨ Équipé sur mon profil' : 'Équiper ce badge'}</button>` : ''}
+          `;
+        } else {
+          // MODE MYSTÈRE STRICT POUR LES ÉLÈVES : Ni le nom, ni l'icône, ni le défi ne sont visibles avant déblocage
+          card.className = 'badge-card locked-mystery';
+          card.innerHTML = `
+            <span class="badge-num-tag">#${b.num}</span>
+            <div class="badge-icon-circle">🔒</div>
+            <div class="badge-title">Badge Mystère #${b.num}</div>
+            <div class="badge-desc">Défi secret — Continuez d'explorer et d'utiliser le portail pour révéler ce badge !</div>
+          `;
+        }
+        grid.appendChild(card);
+      });
+
+      if (grid.children.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:2.5rem; color:var(--muted);">Aucun badge dans cette catégorie pour le moment.</div>`;
+      }
+    }
+
+    /* GESTION DES FAVORIS ÉLÈVE */
+    function getActiveFavoritesList() {
+      if (currentStudent && portalMeta.students[currentStudent]) {
+        ensureStudentProfileFields(portalMeta.students[currentStudent]);
+        return portalMeta.students[currentStudent].favorites;
+      }
+      try {
+        return JSON.parse(localStorage.getItem('perriand_local_favs') || '[]');
+      } catch (e) { return []; }
+    }
+
+    async function toggleFavoriteDoc(docId) {
+      if (currentStudent && portalMeta.students[currentStudent]) {
+        const st = portalMeta.students[currentStudent];
+        ensureStudentProfileFields(st);
+        const idx = st.favorites.indexOf(docId);
+        if (idx === -1) st.favorites.push(docId);
+        else st.favorites.splice(idx, 1);
+        evaluateStudentBadges(currentStudent, true);
+        renderSubFilters();
+        renderPageCards();
+        await pushToSupabase(true);
+      } else {
+        let favs = getActiveFavoritesList();
+        const idx = favs.indexOf(docId);
+        if (idx === -1) favs.push(docId);
+        else favs.splice(idx, 1);
+        localStorage.setItem('perriand_local_favs', JSON.stringify(favs));
+        renderSubFilters();
+        renderPageCards();
+      }
+    }
+
+    async function toggleProfAwardBadge(username) {
+      const st = portalMeta.students[username];
+      if (!st) return;
+      ensureStudentProfileFields(st);
+      st.profAward = !st.profAward;
+      if (!st.profAward) {
+        st.unlockedBadges = st.unlockedBadges.filter(id => id !== 'b40');
+      } else {
+        evaluateStudentBadges(username, false);
+      }
+      await pushToSupabase(true);
+      renderStudentsTrackTable();
+    }
+
+    /* =========================================================================
        MOTEUR D'ANIMATIONS THÉMATIQUES & OBJETS QUI PASSENT (SANS AUCUN TEXTE)
        ========================================================================= */
     const THEME_CONFIGS = {
@@ -1053,7 +1632,17 @@ selene.vincent ; Sélène VINCENT (T11)`;
       activeThemeName = THEME_CONFIGS[themeName] ? themeName : 'classic';
       document.body.classList.remove('theme-dark', 'theme-sakura', 'theme-retro', 'theme-noel', 'theme-ete');
       if (activeThemeName !== 'classic') document.body.classList.add('theme-' + activeThemeName);
-      if (saveUserChoice) localStorage.setItem('perriand_user_theme', activeThemeName);
+      if (saveUserChoice) {
+        localStorage.setItem('perriand_user_theme', activeThemeName);
+        if (currentStudent && portalMeta.students[currentStudent]) {
+          const st = portalMeta.students[currentStudent];
+          ensureStudentProfileFields(st);
+          if (!st.themesTried.includes(activeThemeName)) {
+            st.themesTried.push(activeThemeName);
+            if (evaluateStudentBadges(currentStudent, true)) pushToSupabase(true);
+          }
+        }
+      }
 
       resetParticlesForTheme();
       setTimeout(() => triggerPassingObject(), 600);
@@ -1183,9 +1772,11 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
       if (currentStudent && portalMeta.students[currentStudent]) {
         const st = portalMeta.students[currentStudent];
-        st.docsOpened = st.docsOpened || {};
+        ensureStudentProfileFields(st);
         st.docsOpened[id] = (st.docsOpened[id] || 0) + 1;
         st.lastSeen = new Date().toISOString();
+        evaluateStudentBadges(currentStudent, true);
+        renderPageCards();
         pushToSupabase(true);
       }
 
@@ -1315,6 +1906,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
         document.body.classList.add('is-admin');
         document.getElementById('loginOverlay').classList.remove('active');
         updateUserBadge("👨‍🏫 M. Poppe (Prof)");
+        renderSubFilters();
         renderPageCards();
         return;
       }
@@ -1331,9 +1923,12 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
       if (savedStudent && portalMeta.students[savedStudent]) {
         currentStudent = savedStudent;
+        ensureStudentProfileFields(portalMeta.students[currentStudent]);
         recordStudentLogin(currentStudent, false);
         document.getElementById('loginOverlay').classList.remove('active');
-        updateUserBadge("🎓 " + portalMeta.students[currentStudent].name);
+        updateUserBadge(portalMeta.students[currentStudent].name);
+        renderSubFilters();
+        renderPageCards();
         return;
       }
 
@@ -1354,6 +1949,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
         document.body.classList.add('is-admin');
         document.getElementById('loginOverlay').classList.remove('active');
         updateUserBadge("👨‍🏫 M. Poppe (Prof)");
+        renderSubFilters();
         renderPageCards();
         return;
       }
@@ -1395,14 +1991,17 @@ selene.vincent ; Sélène VINCENT (T11)`;
     async function completeStudentLogin(username) {
       localStorage.setItem('perriand_student', username);
       document.getElementById('loginOverlay').classList.remove('active');
-      updateUserBadge("🎓 " + portalMeta.students[username].name);
       await recordStudentLogin(username, true);
+      updateUserBadge(portalMeta.students[username].name);
+      renderSubFilters();
+      renderPageCards();
     }
 
     function updateUserBadge(label) {
       const b = document.getElementById('userBadge');
       b.style.display = 'inline-flex';
       document.getElementById('userNameDisplay').textContent = label;
+      refreshTopBarBadgeDisplay();
     }
 
     function logoutUser() {
@@ -1447,6 +2046,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
     async function recordStudentLogin(username, incrementLoginCount) {
       const st = portalMeta.students[username];
       if (!st) return;
+      ensureStudentProfileFields(st);
       const nowIso = new Date().toISOString();
       const today = nowIso.split('T')[0];
       if (incrementLoginCount) {
@@ -1454,8 +2054,9 @@ selene.vincent ; Sélène VINCENT (T11)`;
         st.loginsCount = (st.loginsCount || 0) + 1;
       }
       st.lastSeen = nowIso;
-      st.daysWorked = st.daysWorked || [];
       if (!st.daysWorked.includes(today)) st.daysWorked.push(today);
+      if (!st.themesTried.includes(activeThemeName)) st.themesTried.push(activeThemeName);
+      evaluateStudentBadges(username, true);
       await pushToSupabase(true);
     }
 
@@ -1468,12 +2069,13 @@ selene.vincent ; Sélène VINCENT (T11)`;
         }
         if (currentStudent && !document.hidden && portalMeta.students[currentStudent]) {
           const st = portalMeta.students[currentStudent];
+          ensureStudentProfileFields(st);
           const nowIso = new Date().toISOString();
           const today = nowIso.split('T')[0];
           st.lastSeen = nowIso;
           st.activeMinutes = (st.activeMinutes || 0) + 1;
-          st.daysWorked = st.daysWorked || [];
           if (!st.daysWorked.includes(today)) st.daysWorked.push(today);
+          evaluateStudentBadges(currentStudent, true);
           await pushToSupabase(true);
         }
       }, 60000);
@@ -1580,12 +2182,30 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
     function renderSubFilters() {
       const box = document.getElementById('filters-' + currentPage); if (!box) return;
-      box.innerHTML = ''; const subs = sections[currentPage].subs; if (!subs || subs.length === 0) return;
-      const allBtn = document.createElement('button'); allBtn.className = 'sub-pill' + (activeSubFilter === 'all' ? ' active' : '');
-      allBtn.textContent = 'Tous'; allBtn.onclick = () => { activeSubFilter = 'all'; renderSubFilters(); renderPageCards(); }; box.appendChild(allBtn);
+      box.innerHTML = '';
+      const subs = sections[currentPage]?.subs || [];
+      const favList = getActiveFavoritesList();
+      const validFavsCount = docs.filter(d => favList.includes(d.id) && (isAdmin || d.visible !== false)).length;
+
+      const allBtn = document.createElement('button');
+      allBtn.className = 'sub-pill' + (activeSubFilter === 'all' ? ' active' : '');
+      allBtn.textContent = 'Tous';
+      allBtn.onclick = () => { activeSubFilter = 'all'; renderSubFilters(); renderPageCards(); };
+      box.appendChild(allBtn);
+
+      // Bouton d'accès direct aux Favoris de l'élève
+      const favBtn = document.createElement('button');
+      favBtn.className = 'sub-pill fav-pill-filter' + (activeSubFilter === '__favs__' ? ' active' : '');
+      favBtn.innerHTML = `⭐ Mes Favoris (${validFavsCount})`;
+      favBtn.onclick = () => { activeSubFilter = '__favs__'; renderSubFilters(); renderPageCards(); };
+      box.appendChild(favBtn);
+
       subs.forEach(s => {
-        const b = document.createElement('button'); b.className = 'sub-pill' + (activeSubFilter === s ? ' active' : '');
-        b.textContent = s; b.onclick = () => { activeSubFilter = s; renderSubFilters(); renderPageCards(); }; box.appendChild(b);
+        const b = document.createElement('button');
+        b.className = 'sub-pill' + (activeSubFilter === s ? ' active' : '');
+        b.textContent = s;
+        b.onclick = () => { activeSubFilter = s; renderSubFilters(); renderPageCards(); };
+        box.appendChild(b);
       });
     }
 
@@ -1596,15 +2216,35 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
     function renderPageCards() {
       const grid = document.getElementById('grid-' + currentPage); if (!grid) return;
+      const favList = getActiveFavoritesList();
+      const st = (currentStudent && portalMeta.students[currentStudent]) ? portalMeta.students[currentStudent] : null;
+
       const filtered = docs.filter(d => {
+        if (!isAdmin && d.visible === false) return false;
+        if (activeSubFilter === '__favs__') return favList.includes(d.id);
         if (d.section !== currentPage) return false;
         if (activeSubFilter !== 'all' && d.sub !== activeSubFilter) return false;
-        if (!isAdmin && d.visible === false) return false;
         return true;
       });
-      if (filtered.length === 0) { grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: var(--muted);"><p>Aucun document pour le moment.</p></div>`; return; }
 
-      const themes = { mental: { i: "🧠", c: "thumb-mental" }, pdf: { i: "📄", c: "thumb-pdf" }, cours: { i: "📐", c: "thumb-cours" }, jeu: { i: "🎲", c: "thumb-jeu" }, video: { i: "▶️", c: "thumb-video" }, web: { i: "🌐", c: "thumb-web" }, info: { i: "📌", c: "thumb-info" } };
+      if (filtered.length === 0) {
+        const emptyMsg = activeSubFilter === '__favs__'
+          ? "Vous n'avez pas encore ajouté de document en favori. Cliquez sur « ☆ Mettre en favori » sous un document pour le retrouver ici !"
+          : "Aucun document pour le moment.";
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: var(--muted);"><p>${emptyMsg}</p></div>`;
+        return;
+      }
+
+      const themes = {
+        mental: { i: "🧠", c: "thumb-mental", a: "icon-anim-mental" },
+        pdf:    { i: "📄", c: "thumb-pdf",    a: "icon-anim-pdf" },
+        cours:  { i: "📐", c: "thumb-cours",  a: "icon-anim-cours" },
+        jeu:    { i: "🎲", c: "thumb-jeu",    a: "icon-anim-jeu" },
+        video:  { i: "▶️", c: "thumb-video",  a: "icon-anim-video" },
+        web:    { i: "🌐", c: "thumb-web",    a: "icon-anim-web" },
+        info:   { i: "📌", c: "thumb-info",   a: "icon-anim-info" }
+      };
+
       grid.innerHTML = '';
       filtered.forEach((item, idx) => {
         const t = themes[item.type] || themes.pdf;
@@ -1613,6 +2253,9 @@ selene.vincent ; Sélène VINCENT (T11)`;
         let style = cover ? `style="background-image: linear-gradient(rgba(15,23,42,0.3), rgba(15,23,42,0.7)), url('${cover}'); background-size: cover; background-position: center;"` : "";
         const isHidden = item.visible === false;
         const hasUrl = !!(item.url && item.url.trim());
+        const isFav = favList.includes(item.id);
+        const isRead = st && st.docsOpened && st.docsOpened[item.id] > 0;
+        const secLabel = activeSubFilter === '__favs__' && sections[item.section] ? `${sections[item.section].title} • ` : '';
 
         const card = document.createElement('div');
         card.className = 'card' + (isHidden ? ' is-hidden-doc' : '') + (hasUrl ? ' clickable-card' : '');
@@ -1620,18 +2263,30 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
         if (hasUrl) {
           card.onclick = (e) => {
-            if (e.target.closest('.admin-item-btn')) return;
+            if (e.target.closest('.admin-item-btn') || e.target.closest('.btn-fav')) return;
             openDocPopup(item.id);
           };
         }
 
         card.innerHTML = `
           ${isHidden ? '<span class="hidden-badge">🙈 CACHÉ AUX ÉLÈVES</span>' : ''}
-          <div class="card-thumb ${t.c}" ${style}><span style="position:relative; z-index:2;">${t.i}</span></div>
+          <div class="card-thumb ${t.c}" ${style}>
+            <span class="doc-type-icon ${t.a}">${t.i}</span>
+          </div>
           <div class="card-body">
-            <span class="card-category">${item.sub || 'Général'}</span><h3 class="card-title">${item.title}</h3><p class="card-desc">${item.desc || ''}</p>
+            <span class="card-category">${secLabel}${item.sub || 'Général'}</span>
+            <h3 class="card-title">${item.title}</h3>
+            <p class="card-desc">${item.desc || ''}</p>
             <div class="card-actions">
-              ${hasUrl ? `<button type="button" class="btn btn-primary">👁 Affichage direct</button>` : `<span style="font-size:0.78rem; color:var(--muted); font-weight:600;">📌 Note d'information</span>`}
+              <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+                ${hasUrl
+                  ? `<button type="button" class="btn-fav ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavoriteDoc('${item.id}')" title="Ajouter ou retirer de mes favoris">
+                       <span class="fav-star">${isFav ? '⭐' : '☆'}</span> ${isFav ? 'Favori' : 'Mettre en favori'}
+                     </button>`
+                  : `<span style="font-size:0.78rem; color:var(--muted); font-weight:700;"><span class="inline-pin-anim">📌</span> Note d'information</span>`
+                }
+                ${isRead ? `<span class="read-pill" title="Vous avez déjà consulté ce document">✅ Consulté</span>` : ''}
+              </div>
               <div class="admin-item-btn" style="gap:0.3rem;">
                 <button type="button" class="btn btn-vis" onclick="event.stopPropagation(); toggleDocVisibility('${item.id}')" title="Afficher / Cacher aux élèves">${isHidden ? '👁️' : '🙈'}</button>
                 <button type="button" class="btn btn-edit" onclick="event.stopPropagation(); openEditModal('${item.id}')" title="Modifier">✏️</button>
@@ -1653,6 +2308,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
         document.body.classList.add('is-admin');
         document.getElementById('loginOverlay').classList.remove('active');
         updateUserBadge("👨‍🏫 M. Poppe (Prof)");
+        renderSubFilters();
         renderPageCards();
       }
     }
@@ -1661,6 +2317,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       isAdmin = false;
       sessionStorage.removeItem('perriand_admin');
       document.body.classList.remove('is-admin');
+      renderSubFilters();
       renderPageCards();
       checkSessionAndMaintenance();
     }
@@ -1672,6 +2329,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       }
       if (e.key === 'Escape') {
         closePopup();
+        document.getElementById('badgesModal').classList.remove('active');
       }
     });
 
@@ -1794,10 +2452,12 @@ selene.vincent ; Sélène VINCENT (T11)`;
       const tbody = document.getElementById('studentsTrackTbody');
       tbody.innerHTML = '';
       const arr = Object.values(portalMeta.students || {}).map(s => {
+        ensureStudentProfileFields(s);
         const docsCount = Object.values(s.docsOpened || {}).reduce((a, b) => a + b, 0);
         const daysCount = (s.daysWorked || []).length;
+        const badgesCount = (s.unlockedBadges || []).length;
         const isOnline = s.lastSeen && (Date.now() - new Date(s.lastSeen).getTime() < 5 * 60 * 1000);
-        return { ...s, docsCount, daysCount, isOnline };
+        return { ...s, docsCount, daysCount, badgesCount, isOnline };
       });
 
       document.getElementById('trackSummaryText').textContent = `${arr.length} élève(s) inscrit(s) • ${arr.filter(x => x.daysCount > 0).length} actif(s)`;
@@ -1810,21 +2470,27 @@ selene.vincent ; Sélène VINCENT (T11)`;
       });
 
       if (arr.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--muted);">Aucun compte élève créé. Cliquez sur l'onglet « 🔑 Gérer les Comptes & Mots de passe » puis sur « ⚡ Pré-remplir mes 45 élèves ».</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:2rem; color:var(--muted);">Aucun compte élève créé. Cliquez sur l'onglet « 🔑 Gérer les Comptes & Mots de passe » puis sur « ⚡ Pré-remplir mes 45 élèves ».</td></tr>`;
         return;
       }
 
       arr.forEach(s => {
+        const eq = BADGES_CATALOG.find(b => b.id === s.equippedBadge);
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td><strong>${s.name}</strong></td>
+          <td><strong>${eq ? eq.icon + ' ' : ''}${s.name}</strong></td>
           <td><code>${s.username}</code></td>
-          <td>${formatDateShort(s.lastLogin)}</td>
           <td><span class="${s.isOnline ? 'dot-online' : 'dot-offline'}"></span>${s.isOnline ? 'En ligne' : formatDateShort(s.lastSeen)}</td>
           <td><strong>${s.daysCount} j</strong></td>
           <td>${s.loginsCount || 0}</td>
           <td>${s.activeMinutes || 0} min</td>
           <td>${s.docsCount}</td>
+          <td><span style="font-weight:800; color:#d97706;">🏆 ${s.badgesCount}/40</span></td>
+          <td>
+            <button type="button" class="btn ${s.profAward ? 'btn-primary' : ''}" style="font-size:0.72rem; padding:0.25rem 0.55rem;" onclick="toggleProfAwardBadge('${s.username}')">
+              ${s.profAward ? '🏆 Félicité' : '+ 🏆 Féliciter'}
+            </button>
+          </td>
         `;
         tbody.appendChild(tr);
       });
@@ -1856,7 +2522,8 @@ selene.vincent ; Sélène VINCENT (T11)`;
         if (username && !portalMeta.students[username]) {
           portalMeta.students[username] = {
             username, name: displayName, password: pass, forceChange: force,
-            lastLogin: null, lastSeen: null, loginsCount: 0, activeMinutes: 0, daysWorked: [], docsOpened: {}
+            lastLogin: null, lastSeen: null, loginsCount: 0, activeMinutes: 0,
+            daysWorked: [], docsOpened: {}, favorites: [], unlockedBadges: [], equippedBadge: "", themesTried: [], habits: {}
           };
           added++;
         }
