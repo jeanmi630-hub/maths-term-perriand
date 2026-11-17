@@ -135,13 +135,92 @@
     .sync-badge { font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.7rem; border-radius: 999px; background: #f1f5f9; color: #64748b; display: inline-flex; align-items: center; gap: 0.35rem; }
     .sync-badge.online { background: #dcfce7; color: #15803d; }
 
-    /* PROFIL ÉLÈVE & BADGE D'HONNEUR DYNAMIQUE */
+    /* =========================================================================
+       PROFIL ÉLÈVE, PALIERS D'HONNEUR & FLAMMES ÉVOLUTIVES (10 -> 57 TROPHÉES)
+       ========================================================================= */
     .user-chip {
-      font-size: 0.78rem; font-weight: 700; padding: 0.28rem 0.65rem;
+      font-size: 0.78rem; font-weight: 700; padding: 0.3rem 0.72rem;
       border-radius: 999px; background: var(--primary-light); color: var(--primary);
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      border: 1px solid rgba(79, 70, 229, 0.2);
+      display: inline-flex; align-items: center; gap: 0.42rem;
+      border: 1.5px solid rgba(79, 70, 229, 0.25); position: relative;
+      transition: all 0.35s ease;
     }
+    .user-rank-tag {
+      font-size: 0.67rem; font-weight: 800; padding: 0.14rem 0.5rem;
+      border-radius: 999px; background: rgba(79, 70, 229, 0.12);
+      color: inherit; letter-spacing: 0.02em; white-space: nowrap;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+    /* Palier 1 (10 à 19 trophées) : Flamme Bleue Naissante */
+    .flame-tier-1 {
+      background: linear-gradient(135deg, #e0f2fe, #bae6fd) !important;
+      color: #0369a1 !important; border-color: #38bdf8 !important;
+      animation: flamePulse1 2.4s infinite alternate ease-in-out;
+    }
+    @keyframes flamePulse1 {
+      0% { box-shadow: 0 0 6px rgba(56, 189, 248, 0.45), 0 -2px 8px rgba(14, 165, 233, 0.25); }
+      100% { box-shadow: 0 0 14px rgba(56, 189, 248, 0.85), 0 -4px 14px rgba(2, 132, 199, 0.55); }
+    }
+    /* Palier 2 (20 à 29 trophées) : Flamme Émeraude Vive */
+    .flame-tier-2 {
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0) !important;
+      color: #065f46 !important; border-color: #10b981 !important;
+      animation: flamePulse2 2s infinite alternate ease-in-out;
+    }
+    @keyframes flamePulse2 {
+      0% { box-shadow: 0 0 8px rgba(16, 185, 129, 0.5), 0 -3px 12px rgba(5, 150, 105, 0.4); }
+      100% { box-shadow: 0 0 18px rgba(16, 185, 129, 0.9), 0 -6px 18px rgba(52, 211, 153, 0.7); }
+    }
+    /* Palier 3 (30 à 39 trophées) : Flamme Dorée Ardente */
+    .flame-tier-3 {
+      background: linear-gradient(135deg, #fef3c7, #fde68a) !important;
+      color: #92400e !important; border-color: #f59e0b !important;
+      animation: flamePulse3 1.6s infinite alternate ease-in-out;
+    }
+    @keyframes flamePulse3 {
+      0% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.6), 0 -4px 14px rgba(251, 191, 36, 0.5); }
+      100% { box-shadow: 0 0 22px rgba(245, 158, 11, 0.95), 0 -8px 22px rgba(217, 119, 6, 0.8); }
+    }
+    /* Palier 4 (40 à 49 trophées) : Brasier Écarlate & Or */
+    .flame-tier-4 {
+      background: linear-gradient(135deg, #ffedd5, #fed7aa, #fecaca) !important;
+      color: #9a3412 !important; border-color: #f97316 !important;
+      animation: flamePulse4 1.25s infinite alternate ease-in-out;
+    }
+    @keyframes flamePulse4 {
+      0% { box-shadow: 0 0 12px #f97316, 0 -5px 18px rgba(239, 68, 68, 0.65), inset 0 0 6px rgba(251, 191, 36, 0.5); }
+      100% { box-shadow: 0 0 24px #ef4444, 0 -10px 28px rgba(245, 158, 11, 0.95), inset 0 0 10px rgba(254, 215, 170, 0.8); transform: translateY(-1px); }
+    }
+    /* Palier 5 (50 à 56 trophées) : Nova Solaire & Feu Sacré */
+    .flame-tier-5 {
+      background: linear-gradient(135deg, #fef08a, #fca5a5, #f0abfc) !important;
+      color: #7c2d12 !important; border-color: #dc2626 !important;
+      animation: flamePulse5 0.95s infinite alternate ease-in-out;
+    }
+    @keyframes flamePulse5 {
+      0% { box-shadow: 0 0 14px #f59e0b, 0 -6px 22px #ef4444, 0 -12px 30px rgba(168, 85, 247, 0.6); }
+      100% { box-shadow: 0 0 28px #eab308, 0 -12px 34px #dc2626, 0 -18px 42px rgba(217, 70, 239, 0.9); transform: translateY(-1.5px) scale(1.01); }
+    }
+    /* Palier 6 (57/57 Trophée Ultime) : Flamme Cosmique Suprême */
+    .flame-tier-6 {
+      background: linear-gradient(135deg, #fde047, #f97316, #ec4899, #8b5cf6) !important;
+      background-size: 250% 250% !important;
+      color: #ffffff !important; border-color: #fde047 !important;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+      animation: flameCosmic6 2.2s infinite ease-in-out;
+    }
+    @keyframes flameCosmic6 {
+      0%, 100% { background-position: 0% 50%; box-shadow: 0 0 18px #fde047, 0 -8px 28px #f97316, 0 -14px 40px #ec4899; transform: scale(1); }
+      50% { background-position: 100% 50%; box-shadow: 0 0 28px #38bdf8, 0 -12px 36px #a855f7, 0 -20px 48px #fde047; transform: scale(1.03); }
+    }
+
+    /* Pastille de nom enflammée dans le tableau de suivi Professeur */
+    .student-flame-pill {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.2rem 0.6rem; border-radius: 999px; font-weight: 800;
+      border: 1px solid transparent; transition: all 0.25s;
+    }
+
     .equipped-badge-icon {
       display: inline-flex; align-items: center; justify-content: center;
       font-size: 1.05rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.18));
@@ -217,62 +296,27 @@
     .card-thumb::after { content: "👁 Ouvrir"; position: absolute; bottom: 8px; right: 10px; font-size: 0.68rem; font-weight: 700; background: rgba(15, 23, 42, 0.65); color: #fff; padding: 2px 8px; border-radius: 999px; opacity: 0; transform: translateY(4px); transition: all 0.2s; backdrop-filter: blur(4px); }
     .card.clickable-card:hover .card-thumb::after { opacity: 1; transform: translateY(0); }
 
-    /* =========================================================================
-       STYLES DU MOTEUR DE QCM BAC APMEP (CARTES, QUESTIONS LATEX, CORRIGÉS)
-       ========================================================================= */
+    /* STYLES DU MOTEUR DE QCM BAC APMEP */
     .thumb-qcm { background: linear-gradient(135deg, #312e81 0%, #4f46e5 55%, #06b6d4 100%); }
-    .qcm-score-pill {
-      font-size: 0.75rem; font-weight: 800; padding: 0.26rem 0.65rem; border-radius: 999px;
-      display: inline-flex; align-items: center; gap: 0.3rem;
-    }
+    .qcm-score-pill { font-size: 0.75rem; font-weight: 800; padding: 0.26rem 0.65rem; border-radius: 999px; display: inline-flex; align-items: center; gap: 0.3rem; }
     .qcm-score-pill.perfect { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
     .qcm-score-pill.good { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
     .qcm-score-pill.todo { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
 
-    .qcm-question-box {
-      background: #f8fafc; border: 1.5px solid var(--border); border-radius: 12px;
-      padding: 1.15rem; margin-bottom: 1.15rem; transition: border-color 0.2s;
-    }
-    .qcm-question-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 0.65rem; gap: 0.5rem; flex-wrap: wrap;
-    }
-    .qcm-source-tag {
-      font-size: 0.7rem; font-weight: 800; padding: 0.2rem 0.55rem; border-radius: 999px;
-      background: var(--primary-light); color: var(--primary); letter-spacing: 0.03em;
-    }
-    .qcm-prompt-text {
-      font-size: 0.92rem; line-height: 1.55; margin-bottom: 0.85rem; color: var(--text);
-    }
-    .qcm-figure-wrap {
-      display: flex; justify-content: center; margin: 0.75rem 0 1rem;
-      background: #ffffff; padding: 0.65rem; border-radius: 10px; border: 1px solid var(--border);
-    }
-    .qcm-options-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.55rem;
-    }
-    .qcm-option-label {
-      display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 0.85rem;
-      background: #ffffff; border: 1.5px solid var(--border); border-radius: 9px;
-      cursor: pointer; font-size: 0.88rem; transition: all 0.15s; user-select: none;
-    }
+    .qcm-question-box { background: #f8fafc; border: 1.5px solid var(--border); border-radius: 12px; padding: 1.15rem; margin-bottom: 1.15rem; transition: border-color 0.2s; }
+    .qcm-question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem; gap: 0.5rem; flex-wrap: wrap; }
+    .qcm-source-tag { font-size: 0.7rem; font-weight: 800; padding: 0.2rem 0.55rem; border-radius: 999px; background: var(--primary-light); color: var(--primary); letter-spacing: 0.03em; }
+    .qcm-prompt-text { font-size: 0.92rem; line-height: 1.55; margin-bottom: 0.85rem; color: var(--text); }
+    .qcm-figure-wrap { display: flex; justify-content: center; margin: 0.75rem 0 1rem; background: #ffffff; padding: 0.65rem; border-radius: 10px; border: 1px solid var(--border); }
+    .qcm-options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.55rem; }
+    .qcm-option-label { display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 0.85rem; background: #ffffff; border: 1.5px solid var(--border); border-radius: 9px; cursor: pointer; font-size: 0.88rem; transition: all 0.15s; user-select: none; }
     .qcm-option-label:hover { border-color: var(--primary); background: rgba(79, 70, 229, 0.04); }
     .qcm-option-label input[type="radio"] { accent-color: var(--primary); width: 16px; height: 16px; flex-shrink: 0; }
-    .qcm-option-label.correct-choice {
-      border-color: #16a34a !important; background: rgba(220, 252, 231, 0.65) !important; color: #14532d !important; font-weight: 700;
-    }
-    .qcm-option-label.wrong-choice {
-      border-color: #dc2626 !important; background: rgba(254, 226, 226, 0.65) !important; color: #7f1d1d !important;
-    }
-    .qcm-explanation-box {
-      display: none; margin-top: 0.85rem; padding: 0.8rem 1rem; border-radius: 8px;
-      background: #eef2ff; border-left: 4px solid #4f46e5; font-size: 0.84rem;
-      line-height: 1.5; color: #1e1b4b;
-    }
+    .qcm-option-label.correct-choice { border-color: #16a34a !important; background: rgba(220, 252, 231, 0.65) !important; color: #14532d !important; font-weight: 700; }
+    .qcm-option-label.wrong-choice { border-color: #dc2626 !important; background: rgba(254, 226, 226, 0.65) !important; color: #7f1d1d !important; }
+    .qcm-explanation-box { display: none; margin-top: 0.85rem; padding: 0.8rem 1rem; border-radius: 8px; background: #eef2ff; border-left: 4px solid #4f46e5; font-size: 0.84rem; line-height: 1.5; color: #1e1b4b; }
 
-    /* =========================================================================
-       ANIMATIONS DYNAMIQUES DES ICÔNES DE TYPE DE DOCUMENT
-       ========================================================================= */
+    /* ANIMATIONS DYNAMIQUES DES ICÔNES DE TYPE DE DOCUMENT */
     .doc-type-icon { position: relative; z-index: 2; display: inline-block; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.28)); will-change: transform; }
     .icon-anim-pdf { animation: animPdfFloat 3s ease-in-out infinite; }
     @keyframes animPdfFloat { 0%, 100% { transform: translateY(0) rotate(-3deg) scale(1); } 50% { transform: translateY(-8px) rotate(4deg) scale(1.08); } }
@@ -330,9 +374,7 @@
     .btn-danger:hover { background: #dc2626; color: white; }
     .btn-vis { background: #f59e0b; color: white; border-color: #f59e0b; }
 
-    /* =========================================================================
-       SALLE DES TROPHÉES (55 BADGES : 39 DÉFIS + 8 DISTINCTIONS + 8 QCM BAC)
-       ========================================================================= */
+    /* SALLE DES TROPHÉES (57 BADGES : 41 DÉFIS & PALIERS + 8 DISTINCTIONS + 8 QCM BAC) */
     .badges-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.9rem; max-height: 58vh; overflow-y: auto; padding: 0.25rem; }
     .badge-card { border-radius: 12px; padding: 0.95rem; border: 1.5px solid var(--border); background: var(--surface); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.4rem; position: relative; transition: transform 0.2s, box-shadow 0.2s; }
     .badge-card.unlocked { border-color: #fbbf24; background: linear-gradient(180deg, rgba(254, 243, 199, 0.35) 0%, var(--surface) 100%); box-shadow: 0 4px 14px rgba(245, 158, 11, 0.12); }
@@ -519,7 +561,8 @@
         <div id="userBadge" class="user-chip" style="display:none;">
           <span id="userEquippedBadgeIcon" class="equipped-badge-icon" onclick="openBadgesModal()" title="Mon badge équipé (cliquer pour ouvrir mes trophées)"></span>
           <span id="userNameDisplay">Élève</span>
-          <button type="button" id="userTrophyBtn" class="trophy-pill-btn" onclick="openBadgesModal()" title="Ouvrir ma Salle des Trophées">🏆 <span id="userBadgeCountText">0/55</span></button>
+          <span id="userRankLabel" class="user-rank-tag" onclick="openBadgesModal()" style="cursor:pointer;" title="Mon rang mathématique (augmente tous les 10 trophées)">Novice</span>
+          <button type="button" id="userTrophyBtn" class="trophy-pill-btn" onclick="openBadgesModal()" title="Ouvrir ma Salle des Trophées">🏆 <span id="userBadgeCountText">0/57</span></button>
           <button onclick="openChangeMyPassModal()" style="background:none; border:none; cursor:pointer; font-size:0.8rem;" title="Changer mon mot de passe">🔑</button>
           <button onclick="logoutUser()" style="background:none; border:none; cursor:pointer; color:inherit; font-weight:800; margin-left:2px;" title="Se déconnecter">✕</button>
         </div>
@@ -570,19 +613,22 @@
     </div>
   </div>
 
-  <!-- SALLE DES TROPHÉES (55 BADGES : 39 DÉFIS + 8 DISTINCTIONS + 8 QCM BAC) -->
+  <!-- SALLE DES TROPHÉES (57 BADGES : 41 DÉFIS & PALIERS + 8 DISTINCTIONS + 8 QCM BAC) -->
   <div class="popup-backdrop" id="badgesModal" onclick="if(event.target===this) this.classList.remove('active')">
     <div class="modal-box wide">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.5rem;">
         <div>
-          <h3 style="font-size:1.2rem; font-weight:800;">🏆 Salle des Trophées, Distinctions & QCM Bac</h3>
-          <p style="font-size:0.82rem; color:var(--muted);">Explorez le portail, réussissez les 12 QCM d'annales APMEP et obtenez les distinctions décernées en classe par M. Poppe !</p>
+          <h3 style="font-size:1.2rem; font-weight:800;">🏆 Salle des 57 Trophées, Distinctions & QCM Bac</h3>
+          <p style="font-size:0.82rem; color:var(--muted);">Débloquez des trophées pour faire évoluer votre rang et embraser votre nom tous les 10 badges jusqu'au Trophée Ultime #57 !</p>
         </div>
-        <button class="btn" onclick="document.getElementById('badgesModal').classList.remove('active')">✕ Fermer</button>
+        <div style="display:flex; gap:0.4rem; align-items:center;">
+          <button type="button" class="btn" onclick="playTrophySound('distinction')" title="Tester la fanfare sonore">🔊 Tester le son</button>
+          <button class="btn" onclick="document.getElementById('badgesModal').classList.remove('active')">✕ Fermer</button>
+        </div>
       </div>
 
       <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.82rem; font-weight:700; margin-top:0.5rem; flex-wrap:wrap; gap:0.4rem;">
-        <span id="badgesModalSummary" style="color:var(--primary);">0 / 55 badges débloqués</span>
+        <span id="badgesModalSummary" style="color:var(--primary);">0 / 57 badges débloqués</span>
         <span id="badgesModalEquippedInfo" style="color:var(--muted);"></span>
       </div>
       <div class="badge-progress-wrap">
@@ -591,7 +637,7 @@
 
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
         <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
-          <button type="button" class="sub-pill active" id="bfAll" onclick="filterBadgesView('all')">Tous (55)</button>
+          <button type="button" class="sub-pill active" id="bfAll" onclick="filterBadgesView('all')">Tous (57)</button>
           <button type="button" class="sub-pill" id="bfUnlocked" onclick="filterBadgesView('unlocked')">✨ Débloqués</button>
           <button type="button" class="sub-pill" id="bfProf" onclick="filterBadgesView('prof')">👨‍🏫 Distinctions du Prof (8)</button>
           <button type="button" class="sub-pill" id="bfQcm" onclick="filterBadgesView('qcm')">🎯 Badges QCM Bac (8)</button>
@@ -636,7 +682,7 @@
     <button class="btn btn-primary" onclick="openAddModal()">+ Document</button>
     <button class="btn" onclick="openVisibilityModal()">👁️ Visibilité</button>
     <button class="btn" onclick="openTrackingModal()">📊 Suivi & Distinctions</button>
-    <button class="btn" onclick="openBadgesModal()">🏆 55 Badges</button>
+    <button class="btn" onclick="openBadgesModal()">🏆 57 Badges</button>
     <button class="btn" onclick="setGlobalDefaultTheme()" title="Imposer le thème actuel par défaut pour tous les élèves">🎨 Saison classe</button>
     <button class="btn" onclick="openMaintenanceModal()">🛠 Mode DS</button>
     <button class="btn" onclick="openBackupModal()">💾 Sauvegarde</button>
@@ -720,8 +766,8 @@
     <div class="modal-box wide">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
         <div>
-          <h3 style="font-size:1.15rem; font-weight:700;">📊 Suivi d'activité, Notes QCM, Distinctions & Comptes Élèves</h3>
-          <p style="font-size:0.8rem; color:var(--muted);">Connexions, temps actif, résultats aux 12 QCM APMEP, attribution des 8 distinctions en 1 clic et gestion des identifiants.</p>
+          <h3 style="font-size:1.15rem; font-weight:700;">📊 Suivi d'activité, Rangs Enflammés, Notes QCM & Distinctions</h3>
+          <p style="font-size:0.8rem; color:var(--muted);">Connexions, paliers de flammes, résultats aux 12 QCM APMEP, attribution des 8 distinctions en 1 clic et gestion des identifiants.</p>
         </div>
         <button class="btn" onclick="document.getElementById('trackingModal').classList.remove('active')">✕</button>
       </div>
@@ -749,7 +795,7 @@
           <table class="admin-table" id="studentsTrackTable">
             <thead>
               <tr>
-                <th onclick="sortTrackTable('name')">Élève ↕</th>
+                <th onclick="sortTrackTable('name')">Élève &amp; Rang 🔥 ↕</th>
                 <th onclick="sortTrackTable('username')">Identifiant ↕</th>
                 <th onclick="sortTrackTable('lastSeen')">Présence ↕</th>
                 <th onclick="sortTrackTable('daysCount')">Jours ↕</th>
@@ -994,8 +1040,7 @@
     <p>Portail Mathématiques • Lycée Charlotte Perriand — Genech</p>
     <button class="discrete-lock" onclick="promptAdmin()" title="Accès Enseignant (ou Ctrl+Maj+A)">🔒</button>
   </footer>
-
-  <!-- CHARGEMENT DE LA BANQUE EXTERNE DES 12 QCM BAC APMEP (2021-2026) -->
+<!-- CHARGEMENT DE LA BANQUE EXTERNE DES 12 QCM BAC APMEP (2021-2026) -->
   <script src="qcm-app.js"></script>
 
   <script>
@@ -1095,7 +1140,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
     ];
 
     /* =========================================================================
-       CATALOGUE COMPLET DES 55 BADGES (39 DÉFIS + 8 DISTINCTIONS + 8 QCM BAC)
+       CATALOGUE COMPLET DES 57 BADGES (AVEC PALIER 50 & TROPHÉE ULTIME #57)
        ========================================================================= */
     const BADGES_CATALOG = [
       { id: "b01", num: 1,  icon: "🚀", title: "Premier Pas",            desc: "S'être connecté pour la 1ère fois au portail" },
@@ -1138,10 +1183,96 @@ selene.vincent ; Sélène VINCENT (T11)`;
       { id: "b38", num: 38, icon: "🎨", title: "Caméléon",               desc: "Explorer 3 thèmes visuels différents (Noël, Été, Rétro...)" },
       { id: "b39", num: 39, icon: "♾️", title: "Médaille Fields",        desc: "Débloquer 25 badges sur le portail" },
       ...TEACHER_DISTINCTIONS,
-      ...QCM_BADGES
+      ...QCM_BADGES,
+      { id: "b56", num: 56, icon: "🔥", title: "Seigneur des Cinquante", desc: "Franchir le cap prestigieux des 50 trophées débloqués sur le portail" },
+      { id: "b57", num: 57, icon: "🌌", title: "Grand Maître de Perriand", desc: "Trophée Ultime : avoir réuni l'intégralité des 56 autres trophées, QCM et distinctions du portail !" }
     ];
 
-    const TOTAL_BADGES_COUNT = BADGES_CATALOG.length; // 55
+    const TOTAL_BADGES_COUNT = BADGES_CATALOG.length; // 57
+
+    /* =========================================================================
+       PALIERS D'HONNEUR TOUS LES 10 TROPHÉES & AURA DE FLAMMES ÉVOLUTIVE
+       ========================================================================= */
+    function getStudentRankInfo(badgeCount) {
+      if (badgeCount >= 57) {
+        return { tier: 6, title: "🌌🔥 Légende de Perriand", shortTitle: "🌌 Légende", flameClass: "flame-tier-6", prefixFlames: "🌌🔥" };
+      }
+      if (badgeCount >= 50) {
+        return { tier: 5, title: "🔥🔥🔥 Maître Solaire", shortTitle: "🔥🔥🔥 Maître Solaire", flameClass: "flame-tier-5", prefixFlames: "🔥🔥🔥" };
+      }
+      if (badgeCount >= 40) {
+        return { tier: 4, title: "🔥🔥 Virtuose de Riemann", shortTitle: "🔥🔥 Virtuose", flameClass: "flame-tier-4", prefixFlames: "🔥🔥" };
+      }
+      if (badgeCount >= 30) {
+        return { tier: 3, title: "🔥🔥 Architecte de Gauss", shortTitle: "🔥🔥 Architecte", flameClass: "flame-tier-3", prefixFlames: "🔥🔥" };
+      }
+      if (badgeCount >= 20) {
+        return { tier: 2, title: "🔥 Explorateur d'Euler", shortTitle: "🔥 Explorateur", flameClass: "flame-tier-2", prefixFlames: "🔥" };
+      }
+      if (badgeCount >= 10) {
+        return { tier: 1, title: "🔥 Apprenti Mathématicien", shortTitle: "🔥 Apprenti", flameClass: "flame-tier-1", prefixFlames: "🔥" };
+      }
+      return { tier: 0, title: "Novice des Maths", shortTitle: "Novice", flameClass: "", prefixFlames: "" };
+    }
+
+    /* =========================================================================
+       SYNTHÉTISEUR AUDIO INTÉGRÉ (WEB AUDIO API — SON TROPHÉE & FANFARE PROF)
+       ========================================================================= */
+    let sharedAudioCtx = null;
+
+    function playTrophySound(type = 'trophy') {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        if (!sharedAudioCtx) sharedAudioCtx = new AudioCtx();
+        if (sharedAudioCtx.state === 'suspended') sharedAudioCtx.resume();
+
+        const now = sharedAudioCtx.currentTime;
+
+        if (type === 'distinction' || type === 'tier') {
+          const notes = [
+            { f: 523.25, t: 0.00, d: 0.14 },
+            { f: 659.25, t: 0.12, d: 0.14 },
+            { f: 783.99, t: 0.24, d: 0.16 },
+            { f: 1046.50, t: 0.38, d: 0.45 },
+            { f: 1318.51, t: 0.52, d: 0.55 }
+          ];
+          notes.forEach(n => {
+            const osc = sharedAudioCtx.createOscillator();
+            const gain = sharedAudioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(n.f, now + n.t);
+            gain.gain.setValueAtTime(0.001, now + n.t);
+            gain.gain.exponentialRampToValueAtTime(0.22, now + n.t + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + n.t + n.d);
+            osc.connect(gain);
+            gain.connect(sharedAudioCtx.destination);
+            osc.start(now + n.t);
+            osc.stop(now + n.t + n.d + 0.02);
+          });
+        } else {
+          const notes = [
+            { f: 587.33, t: 0.00, d: 0.12 },
+            { f: 739.99, t: 0.09, d: 0.12 },
+            { f: 880.00, t: 0.18, d: 0.14 },
+            { f: 1174.66, t: 0.28, d: 0.38 }
+          ];
+          notes.forEach(n => {
+            const osc = sharedAudioCtx.createOscillator();
+            const gain = sharedAudioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(n.f, now + n.t);
+            gain.gain.setValueAtTime(0.001, now + n.t);
+            gain.gain.exponentialRampToValueAtTime(0.18, now + n.t + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + n.t + n.d);
+            osc.connect(gain);
+            gain.connect(sharedAudioCtx.destination);
+            osc.start(now + n.t);
+            osc.stop(now + n.t + n.d + 0.02);
+          });
+        }
+      } catch (e) {}
+    }
 
     let sections = {}; 
     let docs = [];
@@ -1164,6 +1295,8 @@ selene.vincent ; Sélène VINCENT (T11)`;
     let badgesFilterMode = "all";
     let adminRevealAllSecrets = false;
     let activeQcmObject = null;
+    const explicitlyDeletedStudents = new Set();
+    const explicitlyDeletedDocs = new Set();
 
     let activeThemeName = "classic";
     let particles = [];
@@ -1200,8 +1333,135 @@ selene.vincent ; Sélène VINCENT (T11)`;
       } catch (e) { return null; }
     }
 
+    /* =========================================================================
+       PROTECTION ANTI-ÉCRASEMENT : FUSION INTELLIGENTE DES DOCUMENTS ET ÉLÈVES
+       ========================================================================= */
+    function mergeDocsLists(localDocs, cloudDocs, isAdminAction) {
+      if (!isAdminAction) {
+        return (cloudDocs || localDocs || []).map(d => ({ ...d, visible: d.visible !== false }));
+      }
+      const map = new Map();
+      (cloudDocs || []).forEach(d => {
+        if (!explicitlyDeletedDocs.has(d.id)) {
+          map.set(d.id, { ...d, visible: d.visible !== false });
+        }
+      });
+      (localDocs || []).forEach(d => {
+        if (explicitlyDeletedDocs.has(d.id)) return;
+        const existing = map.get(d.id);
+        if (!existing || !existing.updatedAt || (d.updatedAt && d.updatedAt >= existing.updatedAt)) {
+          map.set(d.id, { ...d, visible: d.visible !== false });
+        }
+      });
+      return Array.from(map.values());
+    }
+
+    function mergeStudentRecords(localSt, cloudSt, isAdminAction = false) {
+      if (!cloudSt) return localSt;
+      if (!localSt) return cloudSt;
+
+      const merged = Object.assign({}, cloudSt, localSt);
+
+      if (cloudSt.passUpdatedAt && (!localSt.passUpdatedAt || cloudSt.passUpdatedAt > localSt.passUpdatedAt)) {
+        merged.password = cloudSt.password;
+        merged.forceChange = cloudSt.forceChange;
+        merged.passUpdatedAt = cloudSt.passUpdatedAt;
+      } else if (cloudSt.forceChange === false && localSt.forceChange === true && !localSt.passUpdatedAt) {
+        merged.password = cloudSt.password;
+        merged.forceChange = false;
+      }
+
+      merged.loginsCount = Math.max(localSt.loginsCount || 0, cloudSt.loginsCount || 0);
+      merged.activeMinutes = Math.max(localSt.activeMinutes || 0, cloudSt.activeMinutes || 0);
+      merged.lastSeen = (!cloudSt.lastSeen || (localSt.lastSeen && localSt.lastSeen > cloudSt.lastSeen)) ? localSt.lastSeen : cloudSt.lastSeen;
+      merged.lastLogin = (!cloudSt.lastLogin || (localSt.lastLogin && localSt.lastLogin > cloudSt.lastLogin)) ? localSt.lastLogin : cloudSt.lastLogin;
+
+      merged.daysWorked = Array.from(new Set([...(cloudSt.daysWorked || []), ...(localSt.daysWorked || [])]));
+      merged.themesTried = Array.from(new Set([...(cloudSt.themesTried || []), ...(localSt.themesTried || [])]));
+      merged.habits = Object.assign({}, cloudSt.habits || {}, localSt.habits || {});
+
+      if (currentStudent === merged.username) {
+        merged.favorites = localSt.favorites || [];
+      } else {
+        merged.favorites = Array.from(new Set([...(cloudSt.favorites || []), ...(localSt.favorites || [])]));
+      }
+
+      merged.docsOpened = Object.assign({}, cloudSt.docsOpened || {});
+      Object.entries(localSt.docsOpened || {}).forEach(([docId, count]) => {
+        merged.docsOpened[docId] = Math.max(merged.docsOpened[docId] || 0, count || 0);
+      });
+
+      merged.qcmScores = Object.assign({}, cloudSt.qcmScores || {});
+      Object.entries(localSt.qcmScores || {}).forEach(([qcmId, sc]) => {
+        const cSc = merged.qcmScores[qcmId];
+        if (!cSc) {
+          merged.qcmScores[qcmId] = sc;
+        } else {
+          merged.qcmScores[qcmId] = {
+            best: Math.max(cSc.best || 0, sc.best || 0),
+            last: (sc.attempts || 0) >= (cSc.attempts || 0) ? sc.last : cSc.last,
+            first: cSc.first !== undefined ? cSc.first : sc.first,
+            attempts: Math.max(cSc.attempts || 0, sc.attempts || 0),
+            updatedAt: sc.updatedAt || cSc.updatedAt
+          };
+        }
+      });
+
+      const teacherIds = TEACHER_DISTINCTIONS.map(d => d.id);
+      if (isAdminAction) {
+        merged.profAwards = Array.isArray(localSt.profAwards) ? localSt.profAwards : [];
+        merged.pendingProfToasts = Array.isArray(localSt.pendingProfToasts) ? localSt.pendingProfToasts : [];
+      } else {
+        merged.profAwards = Array.isArray(cloudSt.profAwards) ? cloudSt.profAwards : (localSt.profAwards || []);
+        merged.pendingProfToasts = currentStudent === merged.username
+          ? (localSt.pendingProfToasts || [])
+          : (cloudSt.pendingProfToasts || []);
+      }
+      merged.profAward = merged.profAwards.includes('b47');
+
+      const unionBadges = Array.from(new Set([...(cloudSt.unlockedBadges || []), ...(localSt.unlockedBadges || [])]));
+      merged.unlockedBadges = unionBadges.filter(bId => !teacherIds.includes(bId) || merged.profAwards.includes(bId));
+
+      merged.equippedBadge = (currentStudent === merged.username && localSt.equippedBadge)
+        ? localSt.equippedBadge
+        : (cloudSt.equippedBadge || localSt.equippedBadge || merged.unlockedBadges[merged.unlockedBadges.length - 1] || "");
+
+      return merged;
+    }
+
     async function pushToSupabase(silent = false) {
       try {
+        const latestCloud = await fetchFromSupabase();
+        if (latestCloud && latestCloud.sections) {
+          const cloudMeta = latestCloud.sections._portal_meta || {};
+          const cloudStudents = cloudMeta.students || {};
+
+          docs = mergeDocsLists(docs, latestCloud.docs, isAdmin);
+
+          if (!isAdmin) {
+            portalMeta.maintenance = cloudMeta.maintenance || portalMeta.maintenance;
+            portalMeta.defaultTheme = cloudMeta.defaultTheme || portalMeta.defaultTheme;
+            portalMeta.adminPass = cloudMeta.adminPass || portalMeta.adminPass;
+          } else {
+            Object.keys(latestCloud.sections).forEach(k => {
+              if (k !== '_portal_meta' && !sections[k]) sections[k] = latestCloud.sections[k];
+            });
+          }
+
+          const mergedStudents = {};
+          const allUsernames = new Set([
+            ...Object.keys(cloudStudents),
+            ...Object.keys(portalMeta.students || {})
+          ]);
+
+          allUsernames.forEach(u => {
+            if (explicitlyDeletedStudents.has(u)) return;
+            mergedStudents[u] = mergeStudentRecords(portalMeta.students[u], cloudStudents[u], isAdmin);
+          });
+
+          portalMeta.students = mergedStudents;
+        }
+
         const sectionsToSave = Object.assign({}, sections, { _portal_meta: portalMeta });
         const payload = { id: 'main', sections: sectionsToSave, docs: docs, updated_at: new Date().toISOString() };
         const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state`, {
@@ -1290,7 +1550,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
     }
 
     /* =========================================================================
-       MOTEUR DES 55 BADGES (39 DÉFIS + 8 DISTINCTIONS + 8 QCM BAC)
+       MOTEUR DES 57 BADGES, SONNERIES & PALIERS DE FLAMMES
        ========================================================================= */
     function ensureStudentProfileFields(st) {
       if (!st) return;
@@ -1301,6 +1561,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       st.habits = st.habits || {};
       st.unlockedBadges = st.unlockedBadges || [];
       st.profAwards = Array.isArray(st.profAwards) ? st.profAwards : [];
+      st.pendingProfToasts = Array.isArray(st.pendingProfToasts) ? st.pendingProfToasts : [];
       st.qcmScores = st.qcmScores || {};
 
       if (st.profAward && !st.profAwards.includes('b47')) {
@@ -1337,6 +1598,9 @@ selene.vincent ; Sélène VINCENT (T11)`;
       ensureStudentProfileFields(st);
       recordTimeHabits(st);
 
+      const prevCount = st.unlockedBadges.length;
+      const prevTier = getStudentRankInfo(prevCount).tier;
+
       const openedIds = Object.keys(st.docsOpened).filter(id => st.docsOpened[id] > 0);
       const maxSingleViews = Object.values(st.docsOpened).reduce((max, v) => Math.max(max, v || 0), 0);
       const favCount = (st.favorites || []).length;
@@ -1359,7 +1623,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
       const distinctSections = new Set(openedIds.map(id => docs.find(x => x.id === id)?.section).filter(Boolean)).size;
 
-      // Statistiques QCM Bac APMEP
       const qcmEntries = Object.entries(st.qcmScores || {});
       const qcmCompletedCount = qcmEntries.filter(([_, v]) => v && v.attempts > 0).length;
       const hasFirstTryPerfect = qcmEntries.some(([_, v]) => v && v.first === 5);
@@ -1411,15 +1674,14 @@ selene.vincent ; Sélène VINCENT (T11)`;
         b36: !!st.habits.weekend,
         b37: !!st.habits.lunchBreak,
         b38: (st.themesTried || []).length >= 3,
-        // Badges QCM APMEP (b48 -> b55)
         b48: qcmCompletedCount >= 1,
         b49: hasFirstTryPerfect,
         b50: isPerfectChapter('suites'),
         b51: isPerfectChapter('fonctions'),
         b52: isPerfectChapter('espace'),
         b53: isPerfectChapter('probas'),
-        b54: all12Done && totalBestQcmPoints >= 48, // 48/60 = 16/20 de moyenne
-        b55: all12Done && totalBestQcmPoints >= 60  // 60/60 = 100 %
+        b54: all12Done && totalBestQcmPoints >= 48,
+        b55: all12Done && totalBestQcmPoints >= 60
       };
 
       TEACHER_DISTINCTIONS.forEach(td => {
@@ -1444,14 +1706,47 @@ selene.vincent ; Sélène VINCENT (T11)`;
         st.unlockedBadges.push('b39');
         newlyUnlocked.push('b39');
       }
+      if (st.unlockedBadges.length >= 50 && !st.unlockedBadges.includes('b56')) {
+        st.unlockedBadges.push('b56');
+        newlyUnlocked.push('b56');
+      }
+      const nonUltimateCount = st.unlockedBadges.filter(id => id !== 'b57').length;
+      if (nonUltimateCount >= 56 && !st.unlockedBadges.includes('b57')) {
+        st.unlockedBadges.push('b57');
+        newlyUnlocked.push('b57');
+      }
+
+      if (notifyNew && username === currentStudent && st.pendingProfToasts && st.pendingProfToasts.length > 0) {
+        st.pendingProfToasts.forEach(bId => {
+          if (st.unlockedBadges.includes(bId) && !newlyUnlocked.includes(bId)) {
+            newlyUnlocked.push(bId);
+          }
+        });
+        st.pendingProfToasts = [];
+      }
+
+      const newCount = st.unlockedBadges.length;
+      const newRank = getStudentRankInfo(newCount);
 
       if (newlyUnlocked.length > 0) {
         st.equippedBadge = newlyUnlocked[newlyUnlocked.length - 1];
         if (notifyNew && username === currentStudent) {
+          const hasProfOrUltimate = newlyUnlocked.some(id => {
+            const b = BADGES_CATALOG.find(x => x.id === id);
+            return b && (b.isTeacherAward || id === 'b56' || id === 'b57');
+          });
+          playTrophySound(hasProfOrUltimate || newRank.tier > prevTier ? 'distinction' : 'trophy');
+
           newlyUnlocked.forEach((bId, idx) => {
             const bObj = BADGES_CATALOG.find(x => x.id === bId);
             if (bObj) setTimeout(() => showBadgeUnlockToast(bObj), idx * 950);
           });
+
+          if (newRank.tier > prevTier) {
+            setTimeout(() => {
+              showTierPromotionToast(newRank, newCount);
+            }, newlyUnlocked.length * 950 + 300);
+          }
         }
         refreshTopBarBadgeDisplay();
         return true;
@@ -1459,6 +1754,33 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
       refreshTopBarBadgeDisplay();
       return false;
+    }
+
+    function showTierPromotionToast(rankInfo, totalTrophies) {
+      const container = document.getElementById('badgeToastContainer');
+      if (!container) return;
+      playTrophySound('tier');
+      const toast = document.createElement('div');
+      toast.className = 'badge-toast';
+      toast.style.borderColor = '#f97316';
+      toast.style.background = 'linear-gradient(135deg, #7c2d12, #b91c1c, #4338ca)';
+      toast.innerHTML = `
+        <div style="font-size:2.2rem;">${rankInfo.prefixFlames || '🔥'}</div>
+        <div style="flex:1;">
+          <div style="font-size:0.7rem; font-weight:800; color:#fde047; text-transform:uppercase; letter-spacing:0.06em;">
+            🔥 Nouveau Palier de Flammes (${totalTrophies} Trophées) !
+          </div>
+          <div style="font-size:0.98rem; font-weight:800; margin:2px 0;">Rang : ${rankInfo.title}</div>
+          <div style="font-size:0.74rem; color:#ffedd5;">Les flammes autour de votre nom gagnent en intensité !</div>
+        </div>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(40px)';
+        toast.style.transition = 'all 0.35s ease';
+        setTimeout(() => toast.remove(), 400);
+      }, 6000);
     }
 
     function showBadgeUnlockToast(badge) {
@@ -1473,7 +1795,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
         <div style="font-size:2.2rem; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.35));">${badge.icon}</div>
         <div style="flex:1;">
           <div style="font-size:0.7rem; font-weight:800; color:${isProf ? '#fde047' : (isQcm ? '#38bdf8' : '#fbbf24')}; text-transform:uppercase; letter-spacing:0.06em;">
-            ${isProf ? '🎖️ Distinction du Professeur !' : (isQcm ? '🎯 Trophée QCM Bac Débloqué !' : '🎉 Badge Mystère Débloqué !')}
+            ${isProf ? '🎖️ Distinction du Professeur !' : (isQcm ? '🎯 Trophée QCM Bac Débloqué !' : '🎉 Trophée Débloqué !')}
           </div>
           <div style="font-size:0.96rem; font-weight:800; margin:2px 0;">${badge.title}</div>
           <div style="font-size:0.74rem; color:#e2e8f0;">${badge.desc}</div>
@@ -1489,20 +1811,34 @@ selene.vincent ; Sélène VINCENT (T11)`;
     }
 
     function refreshTopBarBadgeDisplay() {
+      const chipEl = document.getElementById('userBadge');
       const iconEl = document.getElementById('userEquippedBadgeIcon');
       const countEl = document.getElementById('userBadgeCountText');
-      if (!iconEl || !countEl) return;
+      const rankEl = document.getElementById('userRankLabel');
+      if (!iconEl || !countEl || !chipEl) return;
+
+      chipEl.classList.remove('flame-tier-1', 'flame-tier-2', 'flame-tier-3', 'flame-tier-4', 'flame-tier-5', 'flame-tier-6');
 
       if (currentStudent && portalMeta.students[currentStudent]) {
         const st = portalMeta.students[currentStudent];
         ensureStudentProfileFields(st);
         const count = st.unlockedBadges.length;
+        const rankInfo = getStudentRankInfo(count);
+
         countEl.textContent = `${count}/${TOTAL_BADGES_COUNT}`;
+        if (rankInfo.flameClass) chipEl.classList.add(rankInfo.flameClass);
+        if (rankEl) {
+          rankEl.textContent = rankInfo.shortTitle;
+          rankEl.title = `Rang actuel : ${rankInfo.title} (${count}/${TOTAL_BADGES_COUNT} trophées)`;
+        }
+
         const eq = BADGES_CATALOG.find(b => b.id === st.equippedBadge) || BADGES_CATALOG.find(b => b.id === st.unlockedBadges[st.unlockedBadges.length - 1]);
         iconEl.textContent = eq ? eq.icon : "🎯";
         iconEl.title = eq ? `Badge équipé : ${eq.title} — ${eq.desc}` : "Cliquer pour voir mes badges";
       } else if (isAdmin) {
         countEl.textContent = `${TOTAL_BADGES_COUNT}/${TOTAL_BADGES_COUNT}`;
+        chipEl.classList.add('flame-tier-6');
+        if (rankEl) rankEl.textContent = "🌌 Maître du Portail";
         iconEl.textContent = "👑";
         iconEl.title = `Voir la Salle des ${TOTAL_BADGES_COUNT} Trophées, Distinctions & QCM`;
       }
@@ -1537,6 +1873,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       const st = portalMeta.students[currentStudent];
       if (!st.unlockedBadges.includes(badgeId)) return;
       st.equippedBadge = badgeId;
+      playTrophySound('trophy');
       refreshTopBarBadgeDisplay();
       renderBadgesGrid();
       await pushToSupabase(true);
@@ -1553,7 +1890,9 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
       const unlockedCount = st ? unlockedList.length : (isAdmin ? TOTAL_BADGES_COUNT : 0);
       const profCount = st ? (st.profAwards || []).length : (isAdmin ? TEACHER_DISTINCTIONS.length : 0);
-      document.getElementById('badgesModalSummary').textContent = `${unlockedCount} / ${TOTAL_BADGES_COUNT} badges débloqués (dont ${profCount} / 8 distinction${profCount > 1 ? 's' : ''} du Professeur)`;
+      const rankInfo = getStudentRankInfo(unlockedCount);
+
+      document.getElementById('badgesModalSummary').textContent = `${unlockedCount} / ${TOTAL_BADGES_COUNT} trophées • Rang : ${rankInfo.title} (dont ${profCount}/8 distinction${profCount > 1 ? 's' : ''} Prof)`;
       document.getElementById('badgesProgressBar').style.width = `${Math.round((unlockedCount / TOTAL_BADGES_COUNT) * 100)}%`;
 
       const eqObj = BADGES_CATALOG.find(b => b.id === equippedId);
@@ -1709,6 +2048,8 @@ selene.vincent ; Sélène VINCENT (T11)`;
         if (expBox) expBox.style.display = 'block';
       });
 
+      if (score >= 4) playTrophySound('trophy');
+
       const note20 = Math.round((score / total) * 20);
       const banner = document.getElementById('qcmLiveScoreBanner');
       banner.style.display = 'inline-flex';
@@ -1796,8 +2137,13 @@ selene.vincent ; Sélène VINCENT (T11)`;
       if (idx === -1) {
         st.profAwards.push(badgeId);
         st.equippedBadge = badgeId;
+        if (!st.pendingProfToasts.includes(badgeId)) {
+          st.pendingProfToasts.push(badgeId);
+        }
+        playTrophySound('distinction');
       } else {
         st.profAwards.splice(idx, 1);
+        st.pendingProfToasts = st.pendingProfToasts.filter(id => id !== badgeId);
       }
 
       st.profAward = st.profAwards.includes('b47');
@@ -2175,10 +2521,10 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
       if (savedStudent && portalMeta.students[savedStudent]) {
         currentStudent = savedStudent;
-        ensureStudentProfileFields(portalMeta.students[currentStudent]);
+        ensureStudentProfileFields(portalMeta.students[savedStudent]);
         recordStudentLogin(currentStudent, false);
         document.getElementById('loginOverlay').classList.remove('active');
-        updateUserBadge(portalMeta.students[currentStudent].name);
+        updateUserBadge(portalMeta.students[savedStudent].name);
         renderSubFilters();
         renderPageCards();
         return;
@@ -2235,6 +2581,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       if (!currentStudent || !portalMeta.students[currentStudent]) return;
       portalMeta.students[currentStudent].password = newP;
       portalMeta.students[currentStudent].forceChange = false;
+      portalMeta.students[currentStudent].passUpdatedAt = new Date().toISOString();
       document.getElementById('changePassForm').style.display = 'none';
       document.getElementById('loginForm').style.display = 'block';
       await completeStudentLogin(currentStudent);
@@ -2290,6 +2637,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       if (!currentStudent || !portalMeta.students[currentStudent]) return;
       portalMeta.students[currentStudent].password = newPass;
       portalMeta.students[currentStudent].forceChange = false;
+      portalMeta.students[currentStudent].passUpdatedAt = new Date().toISOString();
       await pushToSupabase(true);
       document.getElementById('selfPassModal').classList.remove('active');
       alert("✅ Votre nouveau mot de passe est enregistré.");
@@ -2319,16 +2667,11 @@ selene.vincent ; Sélène VINCENT (T11)`;
           portalMeta.maintenance = cloud.sections._portal_meta.maintenance || portalMeta.maintenance;
           if (!isAdmin && portalMeta.maintenance.active) checkSessionAndMaintenance();
 
-          if (currentStudent && cloud.sections._portal_meta.students && cloud.sections._portal_meta.students[currentStudent]) {
-            const cloudSt = cloud.sections._portal_meta.students[currentStudent];
-            const localSt = portalMeta.students[currentStudent];
-            if (localSt) {
-              ensureStudentProfileFields(localSt);
-              ensureStudentProfileFields(cloudSt);
-              localSt.profAwards = cloudSt.profAwards;
-              localSt.profAward = cloudSt.profAward;
-            }
-          }
+          const cloudStudents = cloud.sections._portal_meta.students || {};
+          Object.keys(cloudStudents).forEach(u => {
+            if (explicitlyDeletedStudents.has(u)) return;
+            portalMeta.students[u] = mergeStudentRecords(portalMeta.students[u], cloudStudents[u], false);
+          });
         }
         if (currentStudent && !document.hidden && portalMeta.students[currentStudent]) {
           const st = portalMeta.students[currentStudent];
@@ -2340,6 +2683,8 @@ selene.vincent ; Sélène VINCENT (T11)`;
           if (!st.daysWorked.includes(today)) st.daysWorked.push(today);
           evaluateStudentBadges(currentStudent, true);
           await pushToSupabase(true);
+        } else if (isAdmin && document.getElementById('trackingModal').classList.contains('active')) {
+          renderStudentsTrackTable();
         }
       }, 60000);
     }
@@ -2372,8 +2717,11 @@ selene.vincent ; Sélène VINCENT (T11)`;
           visible: document.getElementById('newVisible').value === 'true',
           coverImg: finalCover,
           desc: document.getElementById('newDesc').value, 
-          url: finalUrl
+          url: finalUrl,
+          updatedAt: new Date().toISOString()
         };
+
+        explicitlyDeletedDocs.delete(docData.id);
 
         if (editId) { 
           const idx = docs.findIndex(d => d.id === editId); 
@@ -2398,6 +2746,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       const d = docs.find(item => item.id === id);
       if (!d) return;
       d.visible = (d.visible === false) ? true : false;
+      d.updatedAt = new Date().toISOString();
       await pushToSupabase(true);
       renderSubFilters();
       renderPageCards();
@@ -2406,6 +2755,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
     async function deleteDoc(id) {
       if (confirm("Supprimer définitivement ce document du Cloud ?")) { 
+        explicitlyDeletedDocs.add(id);
         docs = docs.filter(d => d.id !== id); 
         await pushToSupabase(); 
         renderSubFilters();
@@ -2460,7 +2810,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
       allBtn.onclick = () => { activeSubFilter = 'all'; renderSubFilters(); renderPageCards(); };
       box.appendChild(allBtn);
 
-      // Pastille dédiée aux 3 QCM Bac APMEP sur les 4 chapitres clés (Suites, Fonctions, Espace, Probas)
       if (QCM_ELIGIBLE_SECTIONS.includes(currentPage)) {
         const chapterQcms = getQcmBank().filter(q => q.section === currentPage);
         const qcmBtn = document.createElement('button');
@@ -2505,7 +2854,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
     function renderPageCards() {
       const grid = document.getElementById('grid-' + currentPage); if (!grid) return;
 
-      // Affichage spécifique des 3 QCM Bac APMEP du chapitre
       if (activeSubFilter === '__qcm__') {
         grid.innerHTML = '';
         const chapterQcms = getQcmBank().filter(q => q.section === currentPage);
@@ -2760,7 +3108,14 @@ selene.vincent ; Sélène VINCENT (T11)`;
       renderPageCards();
     }
 
-    function openTrackingModal() {
+    async function openTrackingModal() {
+      const cloud = await fetchFromSupabase();
+      if (cloud && cloud.sections && cloud.sections._portal_meta && cloud.sections._portal_meta.students) {
+        Object.entries(cloud.sections._portal_meta.students).forEach(([u, cSt]) => {
+          if (explicitlyDeletedStudents.has(u)) return;
+          portalMeta.students[u] = mergeStudentRecords(portalMeta.students[u], cSt, false);
+        });
+      }
       document.getElementById('requireAuthToggle').checked = !!portalMeta.requireAuth;
       renderTeacherDistinctionsLegend();
       renderStudentsTrackTable();
@@ -2840,6 +3195,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
       filteredArr.forEach(s => {
         const eq = BADGES_CATALOG.find(b => b.id === s.equippedBadge);
+        const rankInfo = getStudentRankInfo(s.badgesCount);
         const tr = document.createElement('tr');
 
         const distinctionsBtnsHtml = TEACHER_DISTINCTIONS.map(td => {
@@ -2854,8 +3210,12 @@ selene.vincent ; Sélène VINCENT (T11)`;
           ? `<span style="font-weight:700; color:#4338ca;">${s.qcmAvg}/20</span> <span style="font-size:0.72rem; color:var(--muted);">(${s.qcmDoneCount}/12)</span>`
           : `<span style="color:var(--muted); font-size:0.75rem;">—</span>`;
 
+        const studentNameHtml = rankInfo.flameClass
+          ? `<span class="student-flame-pill ${rankInfo.flameClass}" title="Rang : ${rankInfo.title}">${eq ? eq.icon + ' ' : ''}${s.name} <small style="opacity:0.85;">(${rankInfo.shortTitle})</small></span>`
+          : `<strong>${eq ? eq.icon + ' ' : ''}${s.name}</strong> <span style="font-size:0.7rem; color:var(--muted);">(${rankInfo.shortTitle})</span>`;
+
         tr.innerHTML = `
-          <td><strong>${eq ? eq.icon + ' ' : ''}${s.name}</strong></td>
+          <td>${studentNameHtml}</td>
           <td><code>${s.username}</code></td>
           <td><span class="${s.isOnline ? 'dot-online' : 'dot-offline'}"></span>${s.isOnline ? 'En ligne' : formatDateShort(s.lastSeen)}</td>
           <td><strong>${s.daysCount} j</strong></td>
@@ -2897,10 +3257,11 @@ selene.vincent ; Sélène VINCENT (T11)`;
           username = normalizeUsername(clean);
         }
         if (username && !portalMeta.students[username]) {
+          explicitlyDeletedStudents.delete(username);
           portalMeta.students[username] = {
             username, name: displayName, password: pass, forceChange: force,
             lastLogin: null, lastSeen: null, loginsCount: 0, activeMinutes: 0,
-            daysWorked: [], docsOpened: {}, favorites: [], unlockedBadges: [], profAwards: [], qcmScores: {}, equippedBadge: "", themesTried: [], habits: {}
+            daysWorked: [], docsOpened: {}, favorites: [], unlockedBadges: [], profAwards: [], pendingProfToasts: [], qcmScores: {}, equippedBadge: "", themesTried: [], habits: {}
           };
           added++;
         }
@@ -2945,6 +3306,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       if (!u || !portalMeta.students[u] || !p) return;
       portalMeta.students[u].password = p;
       portalMeta.students[u].forceChange = f;
+      portalMeta.students[u].passUpdatedAt = new Date().toISOString();
       await pushToSupabase();
       renderAccountsManagement();
       alert(`✅ Mot de passe de ${portalMeta.students[u].name} réinitialisé à : ${p}`);
@@ -2952,6 +3314,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
     async function deleteStudentAccount(username) {
       if (!confirm(`Supprimer le compte élève ${username} ?`)) return;
+      explicitlyDeletedStudents.add(username);
       delete portalMeta.students[username];
       await pushToSupabase();
       renderStudentsTrackTable();
@@ -3072,7 +3435,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
         });
         if (pendingRestoreData.sections._portal_meta?.students) {
           Object.entries(pendingRestoreData.sections._portal_meta.students).forEach(([u, st]) => {
-            if (!portalMeta.students[u]) portalMeta.students[u] = st;
+            portalMeta.students[u] = mergeStudentRecords(portalMeta.students[u], st, false);
           });
         }
         const existingMap = new Map(docs.map(d => [d.id, d]));
