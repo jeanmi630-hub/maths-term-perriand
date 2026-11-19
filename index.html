@@ -1293,6 +1293,39 @@ selene.vincent ; Sélène VINCENT (T11)`;
       } catch (e) { return null; }
     }
 
+    function readEmergencyMetaBackup() {
+      try {
+        const raw = localStorage.getItem('perriand_emergency_backup_meta');
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        return (parsed && parsed.students && typeof parsed.students === 'object') ? parsed : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function readEmergencyDocsBackup() {
+      try {
+        const raw = localStorage.getItem('perriand_emergency_backup_docs');
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function writeEmergencyBackups() {
+      try {
+        if (portalMeta && portalMeta.students && Object.keys(portalMeta.students).length > 0) {
+          localStorage.setItem('perriand_emergency_backup_meta', JSON.stringify(portalMeta));
+        }
+        if (Array.isArray(docs) && docs.length > 0) {
+          localStorage.setItem('perriand_emergency_backup_docs', JSON.stringify(docs));
+        }
+      } catch (e) {}
+    }
+
     function mergeDocsLists(localDocs, cloudDocs, isAdminAction) {
       if (!isAdminAction) {
         return (cloudDocs || localDocs || []).map(d => ({ ...d, visible: d.visible !== false }));
@@ -1388,13 +1421,21 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
     async function pushToSupabase(silent = false) {
       try {
-        const latestCloud = await fetchFromSupabase();
-        if (!latestCloud || !latestCloud.sections) {
-          if (!cloudLoadedSuccessfully) return false;
-        } else {
-          const cloudMeta = latestCloud.sections._portal_meta || {};
-          const cloudStudents = cloudMeta.students || {};
+        writeEmergencyBackups();
 
+        const latestCloud = await fetchFromSupabase();
+        const cloudMeta = (latestCloud && latestCloud.sections && latestCloud.sections._portal_meta)
+          ? latestCloud.sections._portal_meta
+          : null;
+        const cloudStudents = (cloudMeta && cloudMeta.students && typeof cloudMeta.students === 'object')
+          ? cloudMeta.students
+          : {};
+
+        if (!latestCloud || !latestCloud.sections) {
+          if (!cloudLoadedSuccessfully) {
+            return false;
+          }
+        } else {
           docs = mergeDocsLists(docs, latestCloud.docs, isAdmin);
 
           if (!isAdmin) {
@@ -1406,20 +1447,33 @@ selene.vincent ; Sélène VINCENT (T11)`;
               if (k !== '_portal_meta' && !sections[k]) sections[k] = latestCloud.sections[k];
             });
           }
-
-          const mergedStudents = {};
-          const allUsernames = new Set([
-            ...Object.keys(cloudStudents),
-            ...Object.keys(portalMeta.students || {})
-          ]);
-
-          allUsernames.forEach(u => {
-            if (explicitlyDeletedStudents.has(u)) return;
-            mergedStudents[u] = mergeStudentRecords(portalMeta.students[u], cloudStudents[u], isAdmin);
-          });
-
-          portalMeta.students = mergedStudents;
         }
+
+        const emergencyMeta = readEmergencyMetaBackup();
+        const emergencyStudents = (emergencyMeta && emergencyMeta.students) ? emergencyMeta.students : {};
+        const localStudents = (portalMeta && portalMeta.students) ? portalMeta.students : {};
+
+        const mergedStudents = {};
+        const allUsernames = new Set([
+          ...Object.keys(cloudStudents),
+          ...Object.keys(localStudents),
+          ...Object.keys(emergencyStudents)
+        ]);
+
+        allUsernames.forEach(u => {
+          if (explicitlyDeletedStudents.has(u)) return;
+          const candidateLocal = localStudents[u] || emergencyStudents[u];
+          const candidateCloud = cloudStudents[u];
+          mergedStudents[u] = mergeStudentRecords(candidateLocal, candidateCloud, isAdmin);
+        });
+
+        const hadKnownStudents = Object.keys(cloudStudents).length > 0 || Object.keys(emergencyStudents).length > 0;
+        if (Object.keys(mergedStudents).length === 0 && hadKnownStudents && explicitlyDeletedStudents.size === 0) {
+          return false;
+        }
+
+        portalMeta.students = mergedStudents;
+        writeEmergencyBackups();
 
         const sectionsToSave = Object.assign({}, sections, { _portal_meta: portalMeta });
         const payload = { id: 'main', sections: sectionsToSave, docs: docs, updated_at: new Date().toISOString() };
@@ -1464,24 +1518,83 @@ selene.vincent ; Sélène VINCENT (T11)`;
     }
 
     function loadSectionsAndMeta(rawSections, rawDocs) {
+      const previousStudents = (portalMeta && portalMeta.students && typeof portalMeta.students === 'object')
+        ? Object.assign({}, portalMeta.students)
+        : {};
+      const emergencyMeta = readEmergencyMetaBackup();
+      const emergencyStudents = (emergencyMeta && emergencyMeta.students) ? emergencyMeta.students : {};
+
       if (rawSections && rawSections._portal_meta) {
+        const incomingMeta = rawSections._portal_meta;
+        const incomingStudents = (incomingMeta.students && typeof incomingMeta.students === 'object')
+          ? incomingMeta.students
+          : {};
+
         portalMeta = Object.assign({
           requireAuth: true,
           adminPass: "perriand2026",
           defaultTheme: "classic",
           maintenance: { active: false, message: "DS en cours — L'accès aux ressources est temporairement suspendu." },
           students: {}
-        }, rawSections._portal_meta);
+        }, incomingMeta);
+
+        const mergedStudents = {};
+        const allKeys = new Set([
+          ...Object.keys(emergencyStudents),
+          ...Object.keys(previousStudents),
+          ...Object.keys(incomingStudents)
+        ]);
+
+        allKeys.forEach(u => {
+          if (explicitlyDeletedStudents.has(u)) return;
+          const baseSt = incomingStudents[u] || previousStudents[u] || emergencyStudents[u];
+          const extraSt = incomingStudents[u] ? (previousStudents[u] || emergencyStudents[u]) : (previousStudents[u] || emergencyStudents[u]);
+          mergedStudents[u] = (baseSt && extraSt && baseSt !== extraSt)
+            ? mergeStudentRecords(baseSt, extraSt, false)
+            : baseSt;
+        });
+
+        portalMeta.students = mergedStudents;
+      } else {
+        const fallbackStudents = {};
+        const allKeys = new Set([
+          ...Object.keys(emergencyStudents),
+          ...Object.keys(previousStudents),
+          ...Object.keys((portalMeta && portalMeta.students) || {})
+        ]);
+        allKeys.forEach(u => {
+          if (explicitlyDeletedStudents.has(u)) return;
+          fallbackStudents[u] = (portalMeta && portalMeta.students && portalMeta.students[u]) || previousStudents[u] || emergencyStudents[u];
+        });
+        portalMeta.students = fallbackStudents;
       }
+
       let sortedSections = {};
-      PREFERRED_ORDER.forEach(key => {
-        if (rawSections[key] && key !== '_portal_meta') sortedSections[key] = rawSections[key];
-      });
-      Object.keys(rawSections).forEach(key => {
-        if (!sortedSections[key] && key !== '_portal_meta') sortedSections[key] = rawSections[key];
-      });
+      if (rawSections && typeof rawSections === 'object') {
+        PREFERRED_ORDER.forEach(key => {
+          if (rawSections[key] && key !== '_portal_meta') sortedSections[key] = rawSections[key];
+        });
+        Object.keys(rawSections).forEach(key => {
+          if (!sortedSections[key] && key !== '_portal_meta') sortedSections[key] = rawSections[key];
+        });
+      }
+      if (Object.keys(sortedSections).length === 0) {
+        sortedSections = Object.assign({}, DEFAULT_SECTIONS);
+      }
       sections = sortedSections;
-      docs = (rawDocs || []).map(d => ({ ...d, visible: d.visible !== false }));
+
+      const emergencyDocs = readEmergencyDocsBackup();
+      if (Array.isArray(rawDocs) && rawDocs.length > 0) {
+        docs = rawDocs.map(d => ({ ...d, visible: d.visible !== false }));
+      } else if (Array.isArray(docs) && docs.length > 0) {
+        docs = docs.map(d => ({ ...d, visible: d.visible !== false }));
+      } else if (Array.isArray(emergencyDocs) && emergencyDocs.length > 0) {
+        docs = emergencyDocs.map(d => ({ ...d, visible: d.visible !== false }));
+      } else {
+        docs = [];
+      }
+
+      writeEmergencyBackups();
     }
 
     function repairAllStudentsBadges() {
