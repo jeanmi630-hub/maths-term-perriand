@@ -1048,7 +1048,7 @@
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     }
 
-    const DEFAULT_SUPABASE_URL = "https://xydayuntveuscibupgto.supabase.co"; 
+    const DEFAULT_SUPABASE_URL = "https://xydayuntveuscibupgto.supabase.co";
     const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5ZGF5dW50dmV1c2NpYnVwZ3RvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MDMyNTcsImV4cCI6MjEwODA3OTI1N30.ketR5e-MimQuqzk5cHLhlN5ZjdZEH_Fq4fNz6UG-Fzo";
 
     const PREFERRED_ORDER = ["communication", "rappels", "grand-oral", "suites", "fonctions", "espace", "probas", "sec_1793357506991"];
@@ -1232,7 +1232,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       } catch (e) {}
     }
 
-    let sections = {}; 
+    let sections = {};
     let docs = [];
     let cloudLoadedSuccessfully = false;
     let portalMeta = {
@@ -1243,8 +1243,8 @@ selene.vincent ; Sélène VINCENT (T11)`;
       students: {}
     };
 
-    let currentPage = ""; 
-    let activeSubFilter = "all"; 
+    let currentPage = "";
+    let activeSubFilter = "all";
     let pageSearchQuery = "";
     let isAdmin = false;
     let currentStudent = null;
@@ -1283,14 +1283,20 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
     async function fetchFromSupabase() {
       try {
-        const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state?id=eq.main&select=*&t=${Date.now()}`, {
+        const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state?id=eq.main&select=*`, {
           cache: 'no-store',
           headers: { 'apikey': DEFAULT_SUPABASE_ANON_KEY, 'Authorization': `Bearer ${DEFAULT_SUPABASE_ANON_KEY}` }
         });
-        if (!res.ok) return null;
+        if (!res.ok) {
+          console.error("Erreur lecture Supabase :", res.status, await res.text());
+          return null;
+        }
         const data = await res.json();
         return (data && data.length > 0) ? data[0] : null;
-      } catch (e) { return null; }
+      } catch (e) {
+        console.error("Erreur réseau Supabase :", e);
+        return null;
+      }
     }
 
     function readEmergencyMetaBackup() {
@@ -1489,7 +1495,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
         });
         if (res.ok) {
           cloudLoadedSuccessfully = true;
-          document.getElementById('syncStatusBadge').className = 'sync-badge online'; 
+          document.getElementById('syncStatusBadge').className = 'sync-badge online';
           document.getElementById('syncStatusBadge').innerHTML = '☁️ Cloud Synchronisé';
           return true;
         } else {
@@ -1497,7 +1503,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
           if (isAdmin && !silent) alert("Erreur lors de la sauvegarde : \n" + errorMsg);
           return false;
         }
-      } catch (e) { 
+      } catch (e) {
         if (isAdmin && !silent) alert("Problème de connexion internet.");
         return false;
       }
@@ -1513,7 +1519,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
           body: file
         });
         if (res.ok) return `${DEFAULT_SUPABASE_URL}/storage/v1/object/public/fichiers/${fileName}`;
-      } catch(err) { }
+      } catch (err) {}
       return null;
     }
 
@@ -1547,11 +1553,9 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
         allKeys.forEach(u => {
           if (explicitlyDeletedStudents.has(u)) return;
-          const baseSt = incomingStudents[u] || previousStudents[u] || emergencyStudents[u];
-          const extraSt = incomingStudents[u] ? (previousStudents[u] || emergencyStudents[u]) : (previousStudents[u] || emergencyStudents[u]);
-          mergedStudents[u] = (baseSt && extraSt && baseSt !== extraSt)
-            ? mergeStudentRecords(baseSt, extraSt, false)
-            : baseSt;
+          const localCandidate = previousStudents[u] || emergencyStudents[u];
+          const cloudCandidate = incomingStudents[u];
+          mergedStudents[u] = mergeStudentRecords(localCandidate, cloudCandidate, false);
         });
 
         portalMeta.students = mergedStudents;
@@ -1612,7 +1616,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       if (cloudData && cloudData.sections && Object.keys(cloudData.sections).length > 0) {
         cloudLoadedSuccessfully = true;
         loadSectionsAndMeta(cloudData.sections, cloudData.docs);
-        document.getElementById('syncStatusBadge').className = 'sync-badge online'; 
+        document.getElementById('syncStatusBadge').className = 'sync-badge online';
         document.getElementById('syncStatusBadge').innerHTML = '☁️ Cloud Synchronisé';
       } else {
         loadSectionsAndMeta(DEFAULT_SECTIONS, []);
@@ -1627,7 +1631,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       applyTheme(initialTheme, false);
 
       currentPage = Object.keys(sections)[0];
-      initApp(); 
+      initApp();
       showPage(currentPage);
       checkSessionAndMaintenance();
       startActivityTracker();
@@ -1927,7 +1931,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       }
     }
 
-    function openBadgesModal() {
+   function openBadgesModal() {
       if (currentStudent) evaluateStudentBadges(currentStudent, false);
       document.getElementById('adminRevealBadgesBtn').style.display = isAdmin ? 'inline-flex' : 'none';
       renderBadgesGrid();
@@ -2741,6 +2745,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
             if (explicitlyDeletedStudents.has(u)) return;
             portalMeta.students[u] = mergeStudentRecords(portalMeta.students[u], cloudStudents[u], false);
           });
+          writeEmergencyBackups();
         }
         if (currentStudent && !document.hidden && portalMeta.students[currentStudent]) {
           const st = portalMeta.students[currentStudent];
@@ -2761,7 +2766,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
     async function saveDocForm(e) {
       e.preventDefault();
       const submitBtn = document.getElementById('docModalSubmitBtn');
-      submitBtn.textContent = "⏳ Enregistrement en cours..."; 
+      submitBtn.textContent = "⏳ Enregistrement en cours...";
       submitBtn.disabled = true;
 
       try {
@@ -2770,44 +2775,44 @@ selene.vincent ; Sélène VINCENT (T11)`;
         let finalCover = document.getElementById('newCoverImg').value.trim();
 
         const pdfFile = document.getElementById('pdfFileInput').files[0];
-        if (pdfFile) { const u = await uploadToSupabaseStorage(pdfFile); if(u) finalUrl = u; }
+        if (pdfFile) { const u = await uploadToSupabaseStorage(pdfFile); if (u) finalUrl = u; }
         else if (finalUrl.includes("(Fichier prêt")) finalUrl = editId ? docs.find(d => d.id === editId).url : "";
 
         const coverFile = document.getElementById('coverFileInput').files[0];
-        if (coverFile) { const c = await uploadToSupabaseStorage(coverFile); if(c) finalCover = c; }
+        if (coverFile) { const c = await uploadToSupabaseStorage(coverFile); if (c) finalCover = c; }
         else if (finalCover.includes("(Fichier prêt")) finalCover = editId ? docs.find(d => d.id === editId).coverImg : "";
 
         const docData = {
-          id: editId || "doc_" + Date.now(), 
+          id: editId || "doc_" + Date.now(),
           section: document.getElementById('newSection').value,
-          sub: document.getElementById('newSub').value, 
+          sub: document.getElementById('newSub').value,
           title: document.getElementById('newTitle').value,
-          type: document.getElementById('newType').value, 
+          type: document.getElementById('newType').value,
           visible: document.getElementById('newVisible').value === 'true',
           coverImg: finalCover,
-          desc: document.getElementById('newDesc').value, 
+          desc: document.getElementById('newDesc').value,
           url: finalUrl,
           updatedAt: new Date().toISOString()
         };
 
         explicitlyDeletedDocs.delete(docData.id);
 
-        if (editId) { 
-          const idx = docs.findIndex(d => d.id === editId); 
-          if (idx !== -1) docs[idx] = docData; 
-        } else { 
-          docs.unshift(docData); 
+        if (editId) {
+          const idx = docs.findIndex(d => d.id === editId);
+          if (idx !== -1) docs[idx] = docData;
+        } else {
+          docs.unshift(docData);
         }
 
         const success = await pushToSupabase();
         if (success) {
-          closeAddModal(); 
+          closeAddModal();
           renderSubFilters();
           renderPageCards();
         }
-      } finally { 
-        submitBtn.textContent = "Publier"; 
-        submitBtn.disabled = false; 
+      } finally {
+        submitBtn.textContent = "Publier";
+        submitBtn.disabled = false;
       }
     }
 
@@ -2823,31 +2828,31 @@ selene.vincent ; Sélène VINCENT (T11)`;
     }
 
     async function deleteDoc(id) {
-      if (confirm("Supprimer définitivement ce document du Cloud ?")) { 
+      if (confirm("Supprimer définitivement ce document du Cloud ?")) {
         explicitlyDeletedDocs.add(id);
-        docs = docs.filter(d => d.id !== id); 
-        await pushToSupabase(); 
+        docs = docs.filter(d => d.id !== id);
+        await pushToSupabase();
         renderSubFilters();
-        renderPageCards(); 
+        renderPageCards();
       }
     }
 
     function initApp() {
-      const nav = document.getElementById('navTabsContainer'); 
+      const nav = document.getElementById('navTabsContainer');
       const pages = document.getElementById('mainPagesContainer');
       nav.innerHTML = ''; pages.innerHTML = '';
-      
+
       Object.keys(sections).forEach(secKey => {
         if (secKey === '_portal_meta') return;
         const sec = sections[secKey];
         const btn = document.createElement('button');
-        btn.className = 'nav-btn' + (secKey === currentPage ? ' active' : ''); 
+        btn.className = 'nav-btn' + (secKey === currentPage ? ' active' : '');
         btn.textContent = sec.title;
-        btn.onclick = () => showPage(secKey); 
+        btn.onclick = () => showPage(secKey);
         nav.appendChild(btn);
 
         const pageDiv = document.createElement('div');
-        pageDiv.id = 'page-' + secKey; 
+        pageDiv.id = 'page-' + secKey;
         pageDiv.className = 'page-view' + (secKey === currentPage ? ' active' : '');
         pageDiv.innerHTML = `<div class="page-header"><div><h2>${sec.title}</h2><p>${sec.desc || ''}</p></div></div><div class="sub-filter-bar" id="filters-${secKey}"></div><div class="cards-grid" id="grid-${secKey}"></div>`;
         pages.appendChild(pageDiv);
@@ -3074,7 +3079,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
         renderPageCards();
       }
     }
-    
+
     function logoutAdmin() {
       isAdmin = false;
       sessionStorage.removeItem('perriand_admin');
@@ -3100,12 +3105,12 @@ selene.vincent ; Sélène VINCENT (T11)`;
       document.getElementById('addDocForm').reset(); document.getElementById('editDocId').value = "";
       document.getElementById('docModalTitle').textContent = "Ajouter un document";
       const sel = document.getElementById('newSection'); sel.innerHTML = '';
-      Object.keys(sections).forEach(k => { if(k === '_portal_meta') return; const opt = document.createElement('option'); opt.value = k; opt.textContent = sections[k].title; sel.appendChild(opt); });
+      Object.keys(sections).forEach(k => { if (k === '_portal_meta') return; const opt = document.createElement('option'); opt.value = k; opt.textContent = sections[k].title; sel.appendChild(opt); });
       sel.value = currentPage; syncSubCategories();
       document.getElementById('newVisible').value = "true";
       document.getElementById('addModal').classList.add('active');
     }
-    
+
     function openEditModal(id) {
       const item = docs.find(d => d.id === id); if (!item) return;
       openAddModal(); document.getElementById('editDocId').value = item.id;
@@ -3117,9 +3122,9 @@ selene.vincent ; Sélène VINCENT (T11)`;
       document.getElementById('newCoverImg').value = item.coverImg || "";
       document.getElementById('newUrl').value = item.url || ""; document.getElementById('newDesc').value = item.desc || "";
     }
-    
+
     function closeAddModal() { document.getElementById('addModal').classList.remove('active'); }
-    
+
     function syncSubCategories() {
       const s = document.getElementById('newSub'); s.innerHTML = '';
       (sections[document.getElementById('newSection').value]?.subs || []).forEach(sub => { const o = document.createElement('option'); o.value = sub; o.textContent = sub; s.appendChild(o); });
@@ -3526,28 +3531,28 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
     function openCategoryModal() { document.getElementById('categoryModal').classList.add('active'); }
     function closeCategoryModal() { document.getElementById('categoryModal').classList.remove('active'); }
-    
+
     async function saveNewCategory(e) {
       e.preventDefault(); const key = "sec_" + Date.now();
-      sections[key] = { title: document.getElementById('catTitle').value.trim(), desc: document.getElementById('catDesc').value.trim(), subs: document.getElementById('catSubs').value.split(',').map(s=>s.trim()).filter(s=>s.length>0) };
+      sections[key] = { title: document.getElementById('catTitle').value.trim(), desc: document.getElementById('catDesc').value.trim(), subs: document.getElementById('catSubs').value.split(',').map(s => s.trim()).filter(s => s.length > 0) };
       await pushToSupabase(); closeCategoryModal(); initApp(); showPage(key);
     }
 
     function openStructureModal() {
       renderTabsOrderList();
       const sel = document.getElementById('structSecSelect'); sel.innerHTML = '';
-      Object.keys(sections).forEach(k => { if(k === '_portal_meta') return; const o = document.createElement('option'); o.value = k; o.textContent = sections[k].title; sel.appendChild(o); });
+      Object.keys(sections).forEach(k => { if (k === '_portal_meta') return; const o = document.createElement('option'); o.value = k; o.textContent = sections[k].title; sel.appendChild(o); });
       sel.value = currentPage; renderSubEditor(); document.getElementById('structureModal').classList.add('active');
     }
-    
+
     function closeStructureModal() { document.getElementById('structureModal').classList.remove('active'); }
-    
+
     function renderSubEditor() { document.getElementById('structSubsInput').value = (sections[document.getElementById('structSecSelect').value]?.subs || []).join(', '); }
-    
+
     async function saveSubsEdit() {
-      sections[document.getElementById('structSecSelect').value].subs = document.getElementById('structSubsInput').value.split(',').map(s=>s.trim()).filter(s=>s.length>0);
+      sections[document.getElementById('structSecSelect').value].subs = document.getElementById('structSubsInput').value.split(',').map(s => s.trim()).filter(s => s.length > 0);
       const success = await pushToSupabase();
-      if(success) { initApp(); showPage(document.getElementById('structSecSelect').value); }
+      if (success) { initApp(); showPage(document.getElementById('structSecSelect').value); }
     }
 
     function renderTabsOrderList() {
@@ -3571,7 +3576,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       const newIndex = index + direction;
       const targetKey = keys[newIndex];
       keys[newIndex] = key; keys[index] = targetKey;
-      
+
       const newSections = {};
       keys.forEach(k => { newSections[k] = sections[k]; });
       sections = newSections;
