@@ -1111,9 +1111,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
       "sec_1793357506991": { "desc": "Outils de révision, sites intéressants, fiches méthode", "subs": ["Liens", "Outils"], "title": "Liens et outils" }
     };
 
-    /* =========================================================================
-       LES 8 DISTINCTIONS DU PROFESSEUR (ATTRIBUABLES EN 1 CLIC PAR L'ENSEIGNANT)
-       ========================================================================= */
     const TEACHER_DISTINCTIONS = [
       { id: "b40", num: 40, icon: "🙋", title: "Participation Active", desc: "Valorise un élève qui pose des questions pertinentes ou fait avancer le cours à l'oral.", color: "#3b82f6", bg: "#dbeafe", glow: "rgba(59, 130, 246, 0.35)", isTeacherAward: true },
       { id: "b41", num: 41, icon: "🖍️", title: "Maître du Tableau", desc: "Décerné lorsqu'un élève passe volontairement au tableau pour corriger un exercice devant la classe.", color: "#10b981", bg: "#d1fae5", glow: "rgba(16, 185, 129, 0.35)", isTeacherAward: true },
@@ -1125,9 +1122,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
       { id: "b47", num: 47, icon: "🏆", title: "Félicitations du Prof", desc: "La grande distinction d'excellence et d'investissement global sur la période.", color: "#eab308", bg: "#fef08a", glow: "rgba(234, 179, 8, 0.45)", isTeacherAward: true }
     ];
 
-    /* =========================================================================
-       LES 8 BADGES DÉDIÉS AUX 12 QCM D'ANNALES APMEP (2021-2026)
-       ========================================================================= */
     const QCM_BADGES = [
       { id: "b48", num: 48, icon: "🎯", title: "Baptême du Bac",           desc: "Terminer son 1er QCM d'annales APMEP sur le portail", isQcmBadge: true },
       { id: "b49", num: 49, icon: "⚡", title: "Sans-Faute Express",       desc: "Obtenir 5/5 dès son 1er essai sur un QCM de Bac", isQcmBadge: true },
@@ -1139,9 +1133,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
       { id: "b55", num: 55, icon: "👑", title: "Grand Maître APMEP",       desc: "Obtenir 100 % de réussite (60/60) sur l'ensemble des 12 QCM du portail", isQcmBadge: true }
     ];
 
-    /* =========================================================================
-       CATALOGUE COMPLET DES 57 BADGES (AVEC PALIER 50 & TROPHÉE ULTIME #57)
-       ========================================================================= */
     const BADGES_CATALOG = [
       { id: "b01", num: 1,  icon: "🚀", title: "Premier Pas",            desc: "S'être connecté pour la 1ère fois au portail" },
       { id: "b02", num: 2,  icon: "🔄", title: "Habitué",                desc: "Cumuler 10 connexions sur le portail" },
@@ -1188,36 +1179,18 @@ selene.vincent ; Sélène VINCENT (T11)`;
       { id: "b57", num: 57, icon: "🌌", title: "Grand Maître de Perriand", desc: "Trophée Ultime : avoir réuni l'intégralité des 56 autres trophées, QCM et distinctions du portail !" }
     ];
 
-    const TOTAL_BADGES_COUNT = BADGES_CATALOG.length; // 57
+    const TOTAL_BADGES_COUNT = BADGES_CATALOG.length;
 
-    /* =========================================================================
-       PALIERS D'HONNEUR TOUS LES 10 TROPHÉES & AURA DE FLAMMES ÉVOLUTIVE
-       ========================================================================= */
     function getStudentRankInfo(badgeCount) {
-      if (badgeCount >= 57) {
-        return { tier: 6, title: "🌌🔥 Légende de Perriand", shortTitle: "🌌 Légende", flameClass: "flame-tier-6", prefixFlames: "🌌🔥" };
-      }
-      if (badgeCount >= 50) {
-        return { tier: 5, title: "🔥🔥🔥 Maître Solaire", shortTitle: "🔥🔥🔥 Maître Solaire", flameClass: "flame-tier-5", prefixFlames: "🔥🔥🔥" };
-      }
-      if (badgeCount >= 40) {
-        return { tier: 4, title: "🔥🔥 Virtuose de Riemann", shortTitle: "🔥🔥 Virtuose", flameClass: "flame-tier-4", prefixFlames: "🔥🔥" };
-      }
-      if (badgeCount >= 30) {
-        return { tier: 3, title: "🔥🔥 Architecte de Gauss", shortTitle: "🔥🔥 Architecte", flameClass: "flame-tier-3", prefixFlames: "🔥🔥" };
-      }
-      if (badgeCount >= 20) {
-        return { tier: 2, title: "🔥 Explorateur d'Euler", shortTitle: "🔥 Explorateur", flameClass: "flame-tier-2", prefixFlames: "🔥" };
-      }
-      if (badgeCount >= 10) {
-        return { tier: 1, title: "🔥 Apprenti Mathématicien", shortTitle: "🔥 Apprenti", flameClass: "flame-tier-1", prefixFlames: "🔥" };
-      }
+      if (badgeCount >= 57) return { tier: 6, title: "🌌🔥 Légende de Perriand", shortTitle: "🌌 Légende", flameClass: "flame-tier-6", prefixFlames: "🌌🔥" };
+      if (badgeCount >= 50) return { tier: 5, title: "🔥🔥🔥 Maître Solaire", shortTitle: "🔥🔥🔥 Maître Solaire", flameClass: "flame-tier-5", prefixFlames: "🔥🔥🔥" };
+      if (badgeCount >= 40) return { tier: 4, title: "🔥🔥 Virtuose de Riemann", shortTitle: "🔥🔥 Virtuose", flameClass: "flame-tier-4", prefixFlames: "🔥🔥" };
+      if (badgeCount >= 30) return { tier: 3, title: "🔥🔥 Architecte de Gauss", shortTitle: "🔥🔥 Architecte", flameClass: "flame-tier-3", prefixFlames: "🔥🔥" };
+      if (badgeCount >= 20) return { tier: 2, title: "🔥 Explorateur d'Euler", shortTitle: "🔥 Explorateur", flameClass: "flame-tier-2", prefixFlames: "🔥" };
+      if (badgeCount >= 10) return { tier: 1, title: "🔥 Apprenti Mathématicien", shortTitle: "🔥 Apprenti", flameClass: "flame-tier-1", prefixFlames: "🔥" };
       return { tier: 0, title: "Novice des Maths", shortTitle: "Novice", flameClass: "", prefixFlames: "" };
     }
 
-    /* =========================================================================
-       SYNTHÉTISEUR AUDIO INTÉGRÉ (WEB AUDIO API — SON TROPHÉE & FANFARE PROF)
-       ========================================================================= */
     let sharedAudioCtx = null;
 
     function playTrophySound(type = 'trophy') {
@@ -1228,54 +1201,40 @@ selene.vincent ; Sélène VINCENT (T11)`;
         if (sharedAudioCtx.state === 'suspended') sharedAudioCtx.resume();
 
         const now = sharedAudioCtx.currentTime;
+        const notes = (type === 'distinction' || type === 'tier')
+          ? [
+              { f: 523.25, t: 0.00, d: 0.14 },
+              { f: 659.25, t: 0.12, d: 0.14 },
+              { f: 783.99, t: 0.24, d: 0.16 },
+              { f: 1046.50, t: 0.38, d: 0.45 },
+              { f: 1318.51, t: 0.52, d: 0.55 }
+            ]
+          : [
+              { f: 587.33, t: 0.00, d: 0.12 },
+              { f: 739.99, t: 0.09, d: 0.12 },
+              { f: 880.00, t: 0.18, d: 0.14 },
+              { f: 1174.66, t: 0.28, d: 0.38 }
+            ];
 
-        if (type === 'distinction' || type === 'tier') {
-          const notes = [
-            { f: 523.25, t: 0.00, d: 0.14 },
-            { f: 659.25, t: 0.12, d: 0.14 },
-            { f: 783.99, t: 0.24, d: 0.16 },
-            { f: 1046.50, t: 0.38, d: 0.45 },
-            { f: 1318.51, t: 0.52, d: 0.55 }
-          ];
-          notes.forEach(n => {
-            const osc = sharedAudioCtx.createOscillator();
-            const gain = sharedAudioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(n.f, now + n.t);
-            gain.gain.setValueAtTime(0.001, now + n.t);
-            gain.gain.exponentialRampToValueAtTime(0.22, now + n.t + 0.03);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + n.t + n.d);
-            osc.connect(gain);
-            gain.connect(sharedAudioCtx.destination);
-            osc.start(now + n.t);
-            osc.stop(now + n.t + n.d + 0.02);
-          });
-        } else {
-          const notes = [
-            { f: 587.33, t: 0.00, d: 0.12 },
-            { f: 739.99, t: 0.09, d: 0.12 },
-            { f: 880.00, t: 0.18, d: 0.14 },
-            { f: 1174.66, t: 0.28, d: 0.38 }
-          ];
-          notes.forEach(n => {
-            const osc = sharedAudioCtx.createOscillator();
-            const gain = sharedAudioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(n.f, now + n.t);
-            gain.gain.setValueAtTime(0.001, now + n.t);
-            gain.gain.exponentialRampToValueAtTime(0.18, now + n.t + 0.02);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + n.t + n.d);
-            osc.connect(gain);
-            gain.connect(sharedAudioCtx.destination);
-            osc.start(now + n.t);
-            osc.stop(now + n.t + n.d + 0.02);
-          });
-        }
+        notes.forEach(n => {
+          const osc = sharedAudioCtx.createOscillator();
+          const gain = sharedAudioCtx.createGain();
+          osc.type = (type === 'distinction' || type === 'tier') ? 'triangle' : 'sine';
+          osc.frequency.setValueAtTime(n.f, now + n.t);
+          gain.gain.setValueAtTime(0.001, now + n.t);
+          gain.gain.exponentialRampToValueAtTime(0.2, now + n.t + 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + n.t + n.d);
+          osc.connect(gain);
+          gain.connect(sharedAudioCtx.destination);
+          osc.start(now + n.t);
+          osc.stop(now + n.t + n.d + 0.02);
+        });
       } catch (e) {}
     }
 
     let sections = {}; 
     let docs = [];
+    let cloudLoadedSuccessfully = false;
     let portalMeta = {
       requireAuth: true,
       adminPass: "perriand2026",
@@ -1324,7 +1283,8 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
     async function fetchFromSupabase() {
       try {
-        const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state?id=eq.main&select=*`, {
+        const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state?id=eq.main&select=*&t=${Date.now()}`, {
+          cache: 'no-store',
           headers: { 'apikey': DEFAULT_SUPABASE_ANON_KEY, 'Authorization': `Bearer ${DEFAULT_SUPABASE_ANON_KEY}` }
         });
         if (!res.ok) return null;
@@ -1333,9 +1293,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
       } catch (e) { return null; }
     }
 
-    /* =========================================================================
-       PROTECTION ANTI-ÉCRASEMENT : FUSION INTELLIGENTE DES DOCUMENTS ET ÉLÈVES
-       ========================================================================= */
     function mergeDocsLists(localDocs, cloudDocs, isAdminAction) {
       if (!isAdminAction) {
         return (cloudDocs || localDocs || []).map(d => ({ ...d, visible: d.visible !== false }));
@@ -1432,7 +1389,9 @@ selene.vincent ; Sélène VINCENT (T11)`;
     async function pushToSupabase(silent = false) {
       try {
         const latestCloud = await fetchFromSupabase();
-        if (latestCloud && latestCloud.sections) {
+        if (!latestCloud || !latestCloud.sections) {
+          if (!cloudLoadedSuccessfully) return false;
+        } else {
           const cloudMeta = latestCloud.sections._portal_meta || {};
           const cloudStudents = cloudMeta.students || {};
 
@@ -1475,6 +1434,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
           body: JSON.stringify(payload)
         });
         if (res.ok) {
+          cloudLoadedSuccessfully = true;
           document.getElementById('syncStatusBadge').className = 'sync-badge online'; 
           document.getElementById('syncStatusBadge').innerHTML = '☁️ Cloud Synchronisé';
           return true;
@@ -1537,6 +1497,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
       const cloudData = await fetchFromSupabase();
       if (cloudData && cloudData.sections && Object.keys(cloudData.sections).length > 0) {
+        cloudLoadedSuccessfully = true;
         loadSectionsAndMeta(cloudData.sections, cloudData.docs);
         document.getElementById('syncStatusBadge').className = 'sync-badge online'; 
         document.getElementById('syncStatusBadge').innerHTML = '☁️ Cloud Synchronisé';
@@ -1559,9 +1520,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
       startActivityTracker();
     }
 
-    /* =========================================================================
-       MOTEUR DES 57 BADGES, SONNERIES & PALIERS DE FLAMMES
-       ========================================================================= */
     function ensureStudentProfileFields(st) {
       if (!st) return;
       st.docsOpened = st.docsOpened || {};
@@ -1646,7 +1604,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       const all12Done = getQcmBank().length >= 12 && getQcmBank().every(q => (st.qcmScores[q.id]?.attempts || 0) > 0);
 
       const checks = {
-        b01: logins >= 1 || (st.daysWorked && st.daysWorked.length > 0) || !!st.lastSeen || !!st.lastLogin,
+        b01: logins >= 1 || daysCount > 0 || !!st.lastSeen || !!st.lastLogin,
         b02: logins >= 10,
         b03: logins >= 25,
         b04: logins >= 50,
@@ -1698,33 +1656,35 @@ selene.vincent ; Sélène VINCENT (T11)`;
         checks[td.id] = st.profAwards.includes(td.id);
       });
 
+      const preservedSet = new Set(st.unlockedBadges);
+      const teacherIds = TEACHER_DISTINCTIONS.map(d => d.id);
+      teacherIds.forEach(tId => {
+        if (!st.profAwards.includes(tId)) preservedSet.delete(tId);
+      });
+
       let newlyUnlocked = [];
       Object.entries(checks).forEach(([bId, ok]) => {
-        if (ok && !st.unlockedBadges.includes(bId)) {
-          st.unlockedBadges.push(bId);
+        if (ok && !preservedSet.has(bId)) {
+          preservedSet.add(bId);
           newlyUnlocked.push(bId);
         }
       });
 
-      TEACHER_DISTINCTIONS.forEach(td => {
-        if (!st.profAwards.includes(td.id) && st.unlockedBadges.includes(td.id)) {
-          st.unlockedBadges = st.unlockedBadges.filter(id => id !== td.id);
-        }
-      });
-
-      if (st.unlockedBadges.length >= 25 && !st.unlockedBadges.includes('b39')) {
-        st.unlockedBadges.push('b39');
+      if (preservedSet.size >= 25 && !preservedSet.has('b39')) {
+        preservedSet.add('b39');
         newlyUnlocked.push('b39');
       }
-      if (st.unlockedBadges.length >= 50 && !st.unlockedBadges.includes('b56')) {
-        st.unlockedBadges.push('b56');
+      if (preservedSet.size >= 50 && !preservedSet.has('b56')) {
+        preservedSet.add('b56');
         newlyUnlocked.push('b56');
       }
-      const nonUltimateCount = st.unlockedBadges.filter(id => id !== 'b57').length;
-      if (nonUltimateCount >= 56 && !st.unlockedBadges.includes('b57')) {
-        st.unlockedBadges.push('b57');
+      const nonUltimateCount = Array.from(preservedSet).filter(id => id !== 'b57').length;
+      if (nonUltimateCount >= 56 && !preservedSet.has('b57')) {
+        preservedSet.add('b57');
         newlyUnlocked.push('b57');
       }
+
+      st.unlockedBadges = Array.from(preservedSet);
 
       if (notifyNew && username === currentStudent && st.pendingProfToasts && st.pendingProfToasts.length > 0) {
         st.pendingProfToasts.forEach(bId => {
@@ -1958,9 +1918,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
       }
     }
 
-    /* =========================================================================
-       MOTEUR D'OUVERTURE, DE CORRECTION ET DE NOTATION DES QCM BAC APMEP
-       ========================================================================= */
     function getLocalOrStudentQcmScore(qcmId) {
       if (currentStudent && portalMeta.students[currentStudent]) {
         ensureStudentProfileFields(portalMeta.students[currentStudent]);
@@ -2104,7 +2061,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
       }
     }
 
-    /* GESTION DES FAVORIS ÉLÈVE */
     function getActiveFavoritesList() {
       if (currentStudent && portalMeta.students[currentStudent]) {
         ensureStudentProfileFields(portalMeta.students[currentStudent]);
@@ -2137,7 +2093,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
       }
     }
 
-    /* ATTRIBUTION / RETRAIT D'UNE DES 8 DISTINCTIONS DU PROFESSEUR */
     async function toggleTeacherDistinction(username, badgeId) {
       const st = portalMeta.students[username];
       if (!st) return;
@@ -2176,9 +2131,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
       `).join('');
     }
 
-    /* =========================================================================
-       MOTEUR D'ANIMATIONS THÉMATIQUES & OBJETS QUI PASSENT
-       ========================================================================= */
     const THEME_CONFIGS = {
       classic: {
         particles: ["π", "∫", "∑", "∞", "√x", "Δ", "◇", "△"],
@@ -2361,9 +2313,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
       setTimeout(() => el.remove(), duration * 1000 + 200);
     }
 
-    /* =========================================================================
-       VISIONNEUSE DIRECTE DE DOCUMENTS (PDF.JS MOBILE + IMAGES + VIDÉOS)
-       ========================================================================= */
     function isPdfUrl(url, itemType) {
       if (!url) return false;
       const clean = url.split('?')[0].toLowerCase();
@@ -2501,9 +2450,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
       document.getElementById('docPopup').classList.remove('active');
     }
 
-    /* =========================================================================
-       AUTHENTIFICATION, COMPTES ÉLÈVES & GESTION DU PORTAIL
-       ========================================================================= */
     function checkSessionAndMaintenance() {
       document.body.classList.toggle('maint-active', !!(portalMeta.maintenance && portalMeta.maintenance.active));
       const savedAdmin = sessionStorage.getItem('perriand_admin') === 'true';
@@ -2531,10 +2477,10 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
       if (savedStudent && portalMeta.students[savedStudent]) {
         currentStudent = savedStudent;
-        ensureStudentProfileFields(portalMeta.students[savedStudent]);
+        ensureStudentProfileFields(portalMeta.students[currentStudent]);
         recordStudentLogin(currentStudent, false);
         document.getElementById('loginOverlay').classList.remove('active');
-        updateUserBadge(portalMeta.students[savedStudent].name);
+        updateUserBadge(portalMeta.students[currentStudent].name);
         renderSubFilters();
         renderPageCards();
         return;
@@ -3126,6 +3072,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
           portalMeta.students[u] = mergeStudentRecords(portalMeta.students[u], cSt, false);
         });
       }
+      repairAllStudentsBadges();
       document.getElementById('requireAuthToggle').checked = !!portalMeta.requireAuth;
       renderTeacherDistinctionsLegend();
       renderStudentsTrackTable();
@@ -3456,6 +3403,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
         loadSectionsAndMeta(pendingRestoreData.sections, pendingRestoreData.docs);
       }
 
+      repairAllStudentsBadges();
       await pushToSupabase();
       initApp();
       showPage(Object.keys(sections)[0]);
