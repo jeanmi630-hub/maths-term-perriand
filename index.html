@@ -1238,6 +1238,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
     let portalMeta = {
       requireAuth: true,
       adminPass: "perriand2026",
+      adminPassUpdatedAt: "",
       defaultTheme: "classic",
       maintenance: { active: false, message: "DS en cours — L'accès aux ressources est temporairement suspendu." },
       students: {}
@@ -1304,7 +1305,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
         const raw = localStorage.getItem('perriand_emergency_backup_meta');
         if (!raw) return null;
         const parsed = JSON.parse(raw);
-        return (parsed && parsed.students && typeof parsed.students === 'object') ? parsed : null;
+        return (parsed && typeof parsed === 'object') ? parsed : null;
       } catch (e) {
         return null;
       }
@@ -1323,8 +1324,17 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
     function writeEmergencyBackups() {
       try {
-        if (portalMeta && portalMeta.students && Object.keys(portalMeta.students).length > 0) {
-          localStorage.setItem('perriand_emergency_backup_meta', JSON.stringify(portalMeta));
+        if (portalMeta && typeof portalMeta === 'object') {
+          const existing = readEmergencyMetaBackup();
+          const hasStudents = portalMeta.students && Object.keys(portalMeta.students).length > 0;
+          if (hasStudents || !existing) {
+            localStorage.setItem('perriand_emergency_backup_meta', JSON.stringify(portalMeta));
+          } else if (portalMeta.adminPassUpdatedAt) {
+            const best = pickNewestAdminPass(existing, portalMeta);
+            existing.adminPass = best.adminPass;
+            existing.adminPassUpdatedAt = best.adminPassUpdatedAt;
+            localStorage.setItem('perriand_emergency_backup_meta', JSON.stringify(existing));
+          }
         }
         if (Array.isArray(docs) && docs.length > 0) {
           localStorage.setItem('perriand_emergency_backup_docs', JSON.stringify(docs));
@@ -1332,20 +1342,46 @@ selene.vincent ; Sélène VINCENT (T11)`;
       } catch (e) {}
     }
 
+    function pickNewestAdminPass(metaA, metaB) {
+      const aPass = (metaA && typeof metaA.adminPass === 'string') ? metaA.adminPass.trim() : "";
+      const bPass = (metaB && typeof metaB.adminPass === 'string') ? metaB.adminPass.trim() : "";
+      const aTime = (metaA && typeof metaA.adminPassUpdatedAt === 'string') ? metaA.adminPassUpdatedAt : "";
+      const bTime = (metaB && typeof metaB.adminPassUpdatedAt === 'string') ? metaB.adminPassUpdatedAt : "";
+
+      if (aTime && bTime) {
+        return (aTime >= bTime)
+          ? { adminPass: aPass || "perriand2026", adminPassUpdatedAt: aTime }
+          : { adminPass: bPass || "perriand2026", adminPassUpdatedAt: bTime };
+      }
+      if (aTime && !bTime) return { adminPass: aPass || "perriand2026", adminPassUpdatedAt: aTime };
+      if (bTime && !aTime) return { adminPass: bPass || "perriand2026", adminPassUpdatedAt: bTime };
+
+      if (aPass && aPass !== "perriand2026" && (!bPass || bPass === "perriand2026")) {
+        return { adminPass: aPass, adminPassUpdatedAt: "" };
+      }
+      if (bPass && bPass !== "perriand2026" && (!aPass || aPass === "perriand2026")) {
+        return { adminPass: bPass, adminPassUpdatedAt: "" };
+      }
+      return { adminPass: bPass || aPass || "perriand2026", adminPassUpdatedAt: "" };
+    }
+
     function mergeDocsLists(localDocs, cloudDocs, isAdminAction) {
       if (!isAdminAction) {
-        return (cloudDocs || localDocs || []).map(d => ({ ...d, visible: d.visible !== false }));
+        return (Array.isArray(cloudDocs) ? cloudDocs : (Array.isArray(localDocs) ? localDocs : []))
+          .map(d => ({ ...d, visible: d.visible !== false }));
       }
       const map = new Map();
-      (cloudDocs || []).forEach(d => {
-        if (!explicitlyDeletedDocs.has(d.id)) {
+      (Array.isArray(cloudDocs) ? cloudDocs : []).forEach(d => {
+        if (d && d.id && !explicitlyDeletedDocs.has(d.id)) {
           map.set(d.id, { ...d, visible: d.visible !== false });
         }
       });
-      (localDocs || []).forEach(d => {
-        if (explicitlyDeletedDocs.has(d.id)) return;
+      (Array.isArray(localDocs) ? localDocs : []).forEach(d => {
+        if (!d || !d.id || explicitlyDeletedDocs.has(d.id)) return;
         const existing = map.get(d.id);
-        if (!existing || !existing.updatedAt || (d.updatedAt && d.updatedAt >= existing.updatedAt)) {
+        if (!existing) {
+          map.set(d.id, { ...d, visible: d.visible !== false });
+        } else if (d.updatedAt && (!existing.updatedAt || d.updatedAt >= existing.updatedAt)) {
           map.set(d.id, { ...d, visible: d.visible !== false });
         }
       });
@@ -1426,87 +1462,153 @@ selene.vincent ; Sélène VINCENT (T11)`;
     }
 
     async function pushToSupabase(silent = false) {
-      try {
-        writeEmergencyBackups();
+      const MAX_ATTEMPTS = 3;
 
-        const latestCloud = await fetchFromSupabase();
-        const cloudMeta = (latestCloud && latestCloud.sections && latestCloud.sections._portal_meta)
-          ? latestCloud.sections._portal_meta
-          : null;
-        const cloudStudents = (cloudMeta && cloudMeta.students && typeof cloudMeta.students === 'object')
-          ? cloudMeta.students
-          : {};
+      for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+        try {
+          writeEmergencyBackups();
 
-        if (!latestCloud || !latestCloud.sections) {
-          if (!cloudLoadedSuccessfully) {
+          const latestCloud = await fetchFromSupabase();
+          if (!latestCloud || !latestCloud.sections) {
+            if (isAdmin && !silent && attempt === MAX_ATTEMPTS) {
+              alert("Impossible de synchroniser avec le Cloud pour le moment (vérification préalable interrompue). Réessayez dans quelques secondes.");
+            }
             return false;
           }
-        } else {
-          docs = mergeDocsLists(docs, latestCloud.docs, isAdmin);
+
+          const cloudMeta = latestCloud.sections._portal_meta || {};
+          const cloudStudents = (cloudMeta.students && typeof cloudMeta.students === 'object') ? cloudMeta.students : {};
+          const cloudDocs = Array.isArray(latestCloud.docs) ? latestCloud.docs : [];
+          let payload = null;
 
           if (!isAdmin) {
+            // SÉCURITÉ ÉLÈVE : ne touche JAMAIS aux documents, aux onglets, au mot de passe prof ni aux autres élèves
+            if (!currentStudent || !portalMeta.students[currentStudent]) return false;
+
+            const safeCloudSections = JSON.parse(JSON.stringify(latestCloud.sections));
+            safeCloudSections._portal_meta = safeCloudSections._portal_meta || {};
+            safeCloudSections._portal_meta.students = safeCloudSections._portal_meta.students || {};
+
+            const mergedMe = mergeStudentRecords(
+              portalMeta.students[currentStudent],
+              safeCloudSections._portal_meta.students[currentStudent],
+              false
+            );
+            safeCloudSections._portal_meta.students[currentStudent] = mergedMe;
+
+            portalMeta.students[currentStudent] = mergedMe;
+            const bestPass = pickNewestAdminPass(portalMeta, cloudMeta);
+            portalMeta.adminPass = bestPass.adminPass;
+            portalMeta.adminPassUpdatedAt = bestPass.adminPassUpdatedAt;
             portalMeta.maintenance = cloudMeta.maintenance || portalMeta.maintenance;
             portalMeta.defaultTheme = cloudMeta.defaultTheme || portalMeta.defaultTheme;
-            portalMeta.adminPass = cloudMeta.adminPass || portalMeta.adminPass;
+            if (cloudMeta.requireAuth !== undefined) portalMeta.requireAuth = cloudMeta.requireAuth;
+            if (cloudDocs.length > 0) {
+              docs = cloudDocs.map(d => ({ ...d, visible: d.visible !== false }));
+            }
+
+            writeEmergencyBackups();
+            // On n'inclut PAS "docs" dans le PATCH élève : impossible d'effacer un document !
+            payload = { sections: safeCloudSections, updated_at: new Date().toISOString() };
           } else {
+            // SÉCURITÉ PROF : fusion stricte des documents, du mot de passe le plus récent et des élèves
+            const mergedDocs = mergeDocsLists(docs, cloudDocs, true);
+            if (mergedDocs.length === 0 && cloudDocs.length > 0 && explicitlyDeletedDocs.size === 0) {
+              if (!silent) alert("Protection anti-effacement activée : sauvegarde bloquée pour protéger vos documents.");
+              return false;
+            }
+            docs = mergedDocs;
+
             Object.keys(latestCloud.sections).forEach(k => {
               if (k !== '_portal_meta' && !sections[k]) sections[k] = latestCloud.sections[k];
             });
+
+            const emergencyMeta = readEmergencyMetaBackup();
+            const bestLocalPass = pickNewestAdminPass(portalMeta, emergencyMeta);
+            const bestPass = pickNewestAdminPass(bestLocalPass, cloudMeta);
+            portalMeta.adminPass = bestPass.adminPass;
+            portalMeta.adminPassUpdatedAt = bestPass.adminPassUpdatedAt;
+
+            const emergencyStudents = (emergencyMeta && emergencyMeta.students) ? emergencyMeta.students : {};
+            const localStudents = (portalMeta && portalMeta.students) ? portalMeta.students : {};
+
+            const mergedStudents = {};
+            const allUsernames = new Set([
+              ...Object.keys(cloudStudents),
+              ...Object.keys(localStudents),
+              ...Object.keys(emergencyStudents)
+            ]);
+
+            allUsernames.forEach(u => {
+              if (explicitlyDeletedStudents.has(u)) return;
+              const candidateLocal = localStudents[u] || emergencyStudents[u];
+              const candidateCloud = cloudStudents[u];
+              mergedStudents[u] = mergeStudentRecords(candidateLocal, candidateCloud, true);
+            });
+
+            const hadKnownStudents = Object.keys(cloudStudents).length > 0 || Object.keys(emergencyStudents).length > 0;
+            if (Object.keys(mergedStudents).length === 0 && hadKnownStudents && explicitlyDeletedStudents.size === 0) {
+              return false;
+            }
+
+            portalMeta.students = mergedStudents;
+            writeEmergencyBackups();
+
+            const sectionsToSave = Object.assign({}, sections, { _portal_meta: portalMeta });
+            payload = { sections: sectionsToSave, docs: docs, updated_at: new Date().toISOString() };
           }
-        }
 
-        const emergencyMeta = readEmergencyMetaBackup();
-        const emergencyStudents = (emergencyMeta && emergencyMeta.students) ? emergencyMeta.students : {};
-        const localStudents = (portalMeta && portalMeta.students) ? portalMeta.students : {};
+          let patchUrl = `${DEFAULT_SUPABASE_URL}/rest/v1/portal_state?id=eq.main`;
+          if (latestCloud.updated_at) {
+            patchUrl += `&updated_at=eq.${encodeURIComponent(latestCloud.updated_at)}`;
+          }
 
-        const mergedStudents = {};
-        const allUsernames = new Set([
-          ...Object.keys(cloudStudents),
-          ...Object.keys(localStudents),
-          ...Object.keys(emergencyStudents)
-        ]);
+          let res = await fetch(patchUrl, {
+            method: 'PATCH',
+            headers: {
+              'apikey': DEFAULT_SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${DEFAULT_SUPABASE_ANON_KEY}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=representation'
+            },
+            body: JSON.stringify(payload)
+          });
 
-        allUsernames.forEach(u => {
-          if (explicitlyDeletedStudents.has(u)) return;
-          const candidateLocal = localStudents[u] || emergencyStudents[u];
-          const candidateCloud = cloudStudents[u];
-          mergedStudents[u] = mergeStudentRecords(candidateLocal, candidateCloud, isAdmin);
-        });
+          if (res.status === 400 && latestCloud.updated_at) {
+            res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state?id=eq.main`, {
+              method: 'PATCH',
+              headers: {
+                'apikey': DEFAULT_SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${DEFAULT_SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=representation'
+              },
+              body: JSON.stringify(payload)
+            });
+          }
 
-        const hadKnownStudents = Object.keys(cloudStudents).length > 0 || Object.keys(emergencyStudents).length > 0;
-        if (Object.keys(mergedStudents).length === 0 && hadKnownStudents && explicitlyDeletedStudents.size === 0) {
+          if (res.ok) {
+            const updatedRows = await res.json();
+            if (Array.isArray(updatedRows) && updatedRows.length > 0) {
+              cloudLoadedSuccessfully = true;
+              document.getElementById('syncStatusBadge').className = 'sync-badge online';
+              document.getElementById('syncStatusBadge').innerHTML = '☁️ Cloud Synchronisé';
+              return true;
+            }
+            // Conflit d'écriture simultanée détecté : on attend 250 ms puis on relit et refusionne
+            await new Promise(r => setTimeout(r, 250 * attempt));
+            continue;
+          } else {
+            const errorMsg = await res.text();
+            if (isAdmin && !silent && attempt === MAX_ATTEMPTS) alert("Erreur lors de la sauvegarde : \n" + errorMsg);
+            return false;
+          }
+        } catch (e) {
+          if (isAdmin && !silent && attempt === MAX_ATTEMPTS) alert("Problème de connexion internet.");
           return false;
         }
-
-        portalMeta.students = mergedStudents;
-        writeEmergencyBackups();
-
-        const sectionsToSave = Object.assign({}, sections, { _portal_meta: portalMeta });
-        const payload = { id: 'main', sections: sectionsToSave, docs: docs, updated_at: new Date().toISOString() };
-        const res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state`, {
-          method: 'POST',
-          headers: {
-            'apikey': DEFAULT_SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${DEFAULT_SUPABASE_ANON_KEY}`,
-            'Content-Type': 'application/json',
-            'Prefer': 'resolution=merge-duplicates'
-          },
-          body: JSON.stringify(payload)
-        });
-        if (res.ok) {
-          cloudLoadedSuccessfully = true;
-          document.getElementById('syncStatusBadge').className = 'sync-badge online';
-          document.getElementById('syncStatusBadge').innerHTML = '☁️ Cloud Synchronisé';
-          return true;
-        } else {
-          const errorMsg = await res.text();
-          if (isAdmin && !silent) alert("Erreur lors de la sauvegarde : \n" + errorMsg);
-          return false;
-        }
-      } catch (e) {
-        if (isAdmin && !silent) alert("Problème de connexion internet.");
-        return false;
       }
+      return false;
     }
 
     async function uploadToSupabaseStorage(file) {
@@ -1524,8 +1626,9 @@ selene.vincent ; Sélène VINCENT (T11)`;
     }
 
     function loadSectionsAndMeta(rawSections, rawDocs) {
-      const previousStudents = (portalMeta && portalMeta.students && typeof portalMeta.students === 'object')
-        ? Object.assign({}, portalMeta.students)
+      const previousMeta = portalMeta ? Object.assign({}, portalMeta) : {};
+      const previousStudents = (previousMeta.students && typeof previousMeta.students === 'object')
+        ? Object.assign({}, previousMeta.students)
         : {};
       const emergencyMeta = readEmergencyMetaBackup();
       const emergencyStudents = (emergencyMeta && emergencyMeta.students) ? emergencyMeta.students : {};
@@ -1539,10 +1642,16 @@ selene.vincent ; Sélène VINCENT (T11)`;
         portalMeta = Object.assign({
           requireAuth: true,
           adminPass: "perriand2026",
+          adminPassUpdatedAt: "",
           defaultTheme: "classic",
           maintenance: { active: false, message: "DS en cours — L'accès aux ressources est temporairement suspendu." },
           students: {}
         }, incomingMeta);
+
+        const bestLocalPass = pickNewestAdminPass(previousMeta, emergencyMeta);
+        const bestPass = pickNewestAdminPass(bestLocalPass, incomingMeta);
+        portalMeta.adminPass = bestPass.adminPass;
+        portalMeta.adminPassUpdatedAt = bestPass.adminPassUpdatedAt;
 
         const mergedStudents = {};
         const allKeys = new Set([
@@ -1560,6 +1669,10 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
         portalMeta.students = mergedStudents;
       } else {
+        const bestPass = pickNewestAdminPass(previousMeta, emergencyMeta);
+        portalMeta.adminPass = bestPass.adminPass;
+        portalMeta.adminPassUpdatedAt = bestPass.adminPassUpdatedAt;
+
         const fallbackStudents = {};
         const allKeys = new Set([
           ...Object.keys(emergencyStudents),
@@ -1601,7 +1714,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       writeEmergencyBackups();
     }
 
-    function repairAllStudentsBadges() {
+function repairAllStudentsBadges() {
       if (!portalMeta.students) return;
       Object.keys(portalMeta.students).forEach(username => {
         ensureStudentProfileFields(portalMeta.students[username]);
@@ -1931,7 +2044,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       }
     }
 
-   function openBadgesModal() {
+    function openBadgesModal() {
       if (currentStudent) evaluateStudentBadges(currentStudent, false);
       document.getElementById('adminRevealBadgesBtn').style.display = isAdmin ? 'inline-flex' : 'none';
       renderBadgesGrid();
@@ -2383,8 +2496,8 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
             if (p.y > canvas.height + 30) { p.y = -20; p.x = Math.random() * canvas.width; }
             if (p.y < -30) { p.y = canvas.height + 20; p.x = Math.random() * canvas.width; }
-            if (p.x > canvas.width + 30) p.x = -20;
-            if (p.x < -30) p.x = canvas.width + 20;
+            if (p.x > canvas.width + 30) { p.x = -20; p.x = Math.random() * canvas.width; }
+            if (p.x < -30) { p.x = canvas.width + 20; }
 
             ctx.save();
             ctx.translate(p.x, p.y);
@@ -2700,10 +2813,20 @@ selene.vincent ; Sélène VINCENT (T11)`;
       if (!newPass) return;
 
       if (isAdmin) {
+        const previousPass = portalMeta.adminPass;
+        const previousUpdatedAt = portalMeta.adminPassUpdatedAt;
         portalMeta.adminPass = newPass;
-        await pushToSupabase();
-        document.getElementById('selfPassModal').classList.remove('active');
-        alert("✅ Votre nouveau mot de passe Professeur est enregistré sur le Cloud !");
+        portalMeta.adminPassUpdatedAt = new Date().toISOString();
+        const saved = await pushToSupabase(false);
+        if (saved) {
+          writeEmergencyBackups();
+          document.getElementById('selfPassModal').classList.remove('active');
+          alert("✅ Votre nouveau mot de passe Professeur est définitivement enregistré et verrouillé sur le Cloud !");
+        } else {
+          portalMeta.adminPass = previousPass;
+          portalMeta.adminPassUpdatedAt = previousUpdatedAt;
+          alert("⚠️ La synchronisation Cloud a échoué : le mot de passe n'a pas pu être modifié. Vérifiez votre connexion et réessayez.");
+        }
         return;
       }
 
@@ -2711,9 +2834,13 @@ selene.vincent ; Sélène VINCENT (T11)`;
       portalMeta.students[currentStudent].password = newPass;
       portalMeta.students[currentStudent].forceChange = false;
       portalMeta.students[currentStudent].passUpdatedAt = new Date().toISOString();
-      await pushToSupabase(true);
-      document.getElementById('selfPassModal').classList.remove('active');
-      alert("✅ Votre nouveau mot de passe est enregistré.");
+      const saved = await pushToSupabase(true);
+      if (saved) {
+        document.getElementById('selfPassModal').classList.remove('active');
+        alert("✅ Votre nouveau mot de passe est enregistré.");
+      } else {
+        alert("⚠️ Impossible d'enregistrer le mot de passe sur le Cloud pour le moment. Réessayez dans quelques secondes.");
+      }
     }
 
     async function recordStudentLogin(username, incrementLoginCount) {
@@ -2737,10 +2864,22 @@ selene.vincent ; Sélène VINCENT (T11)`;
       setInterval(async () => {
         const cloud = await fetchFromSupabase();
         if (cloud && cloud.sections && cloud.sections._portal_meta) {
-          portalMeta.maintenance = cloud.sections._portal_meta.maintenance || portalMeta.maintenance;
+          const cloudMeta = cloud.sections._portal_meta;
+          portalMeta.maintenance = cloudMeta.maintenance || portalMeta.maintenance;
+          portalMeta.defaultTheme = cloudMeta.defaultTheme || portalMeta.defaultTheme;
+          if (cloudMeta.requireAuth !== undefined) portalMeta.requireAuth = cloudMeta.requireAuth;
+
+          const bestPass = pickNewestAdminPass(portalMeta, cloudMeta);
+          portalMeta.adminPass = bestPass.adminPass;
+          portalMeta.adminPassUpdatedAt = bestPass.adminPassUpdatedAt;
+
           if (!isAdmin && portalMeta.maintenance.active) checkSessionAndMaintenance();
 
-          const cloudStudents = cloud.sections._portal_meta.students || {};
+          if (!isAdmin && Array.isArray(cloud.docs) && cloud.docs.length > 0) {
+            docs = cloud.docs.map(d => ({ ...d, visible: d.visible !== false }));
+          }
+
+          const cloudStudents = cloudMeta.students || {};
           Object.keys(cloudStudents).forEach(u => {
             if (explicitlyDeletedStudents.has(u)) return;
             portalMeta.students[u] = mergeStudentRecords(portalMeta.students[u], cloudStudents[u], false);
@@ -3174,6 +3313,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       docs.forEach(d => {
         if ((secFilter === 'all' || d.section === secFilter) && (!q || d.title.toLowerCase().includes(q))) {
           d.visible = state;
+          d.updatedAt = new Date().toISOString();
         }
       });
       await pushToSupabase();
@@ -3503,30 +3643,42 @@ selene.vincent ; Sélène VINCENT (T11)`;
       exportData("sauvegarde_avant_restauration");
 
       const keepNewer = document.getElementById('keepNewerCheck').checked;
+      const restoredMeta = pendingRestoreData.sections._portal_meta || {};
+
       if (keepNewer) {
         Object.keys(pendingRestoreData.sections).forEach(k => {
           if (k === '_portal_meta') return;
           if (!sections[k]) sections[k] = pendingRestoreData.sections[k];
         });
-        if (pendingRestoreData.sections._portal_meta?.students) {
-          Object.entries(pendingRestoreData.sections._portal_meta.students).forEach(([u, st]) => {
+        const bestPass = pickNewestAdminPass(portalMeta, restoredMeta);
+        portalMeta.adminPass = bestPass.adminPass;
+        portalMeta.adminPassUpdatedAt = bestPass.adminPassUpdatedAt;
+
+        if (restoredMeta.students) {
+          Object.entries(restoredMeta.students).forEach(([u, st]) => {
+            explicitlyDeletedStudents.delete(u);
             portalMeta.students[u] = mergeStudentRecords(portalMeta.students[u], st, false);
           });
         }
         const existingMap = new Map(docs.map(d => [d.id, d]));
         pendingRestoreData.docs.forEach(d => {
+          explicitlyDeletedDocs.delete(d.id);
           if (!existingMap.has(d.id)) docs.push({ ...d, visible: d.visible !== false });
         });
       } else {
+        explicitlyDeletedDocs.clear();
+        explicitlyDeletedStudents.clear();
         loadSectionsAndMeta(pendingRestoreData.sections, pendingRestoreData.docs);
       }
 
       repairAllStudentsBadges();
-      await pushToSupabase();
-      initApp();
-      showPage(Object.keys(sections)[0]);
-      document.getElementById('backupModal').classList.remove('active');
-      alert("✅ Restauration effectuée avec succès et synchronisée sur le Cloud !");
+      const saved = await pushToSupabase();
+      if (saved) {
+        initApp();
+        showPage(Object.keys(sections)[0]);
+        document.getElementById('backupModal').classList.remove('active');
+        alert("✅ Restauration effectuée avec succès et synchronisée sur le Cloud !");
+      }
     }
 
     function openCategoryModal() { document.getElementById('categoryModal').classList.add('active'); }
