@@ -1240,6 +1240,11 @@ selene.vincent ; Sélène VINCENT (T11)`;
       adminPass: "perriand2026",
       adminPassUpdatedAt: "",
       defaultTheme: "classic",
+      sectionOrder: [],
+      sectionOrderUpdatedAt: "",
+      deletedStudents: {},
+      deletedDocs: {},
+      deletedSections: {},
       maintenance: { active: false, message: "DS en cours — L'accès aux ressources est temporairement suspendu." },
       students: {}
     };
@@ -1255,8 +1260,6 @@ selene.vincent ; Sélène VINCENT (T11)`;
     let badgesFilterMode = "all";
     let adminRevealAllSecrets = false;
     let activeQcmObject = null;
-    const explicitlyDeletedStudents = new Set();
-    const explicitlyDeletedDocs = new Set();
 
     let activeThemeName = "classic";
     let particles = [];
@@ -1280,6 +1283,79 @@ selene.vincent ; Sélène VINCENT (T11)`;
           throwOnError: false
         });
       } catch (e) {}
+    }
+
+    function ensureMetaIntegrity(meta) {
+      if (!meta || typeof meta !== 'object') return;
+      if (!meta.students || typeof meta.students !== 'object') meta.students = {};
+      if (!meta.deletedStudents || typeof meta.deletedStudents !== 'object') meta.deletedStudents = {};
+      if (!meta.deletedDocs || typeof meta.deletedDocs !== 'object') meta.deletedDocs = {};
+      if (!meta.deletedSections || typeof meta.deletedSections !== 'object') meta.deletedSections = {};
+      if (!Array.isArray(meta.sectionOrder)) meta.sectionOrder = [];
+      if (typeof meta.sectionOrderUpdatedAt !== 'string') meta.sectionOrderUpdatedAt = "";
+      if (typeof meta.adminPassUpdatedAt !== 'string') meta.adminPassUpdatedAt = "";
+      if (!meta.maintenance || typeof meta.maintenance !== 'object') {
+        meta.maintenance = { active: false, message: "DS en cours — L'accès aux ressources est temporairement suspendu." };
+      }
+    }
+
+    function mergeTombstones(mapA, mapB) {
+      const merged = {};
+      const keys = new Set([
+        ...Object.keys((mapA && typeof mapA === 'object') ? mapA : {}),
+        ...Object.keys((mapB && typeof mapB === 'object') ? mapB : {})
+      ]);
+      keys.forEach(k => {
+        const a = (mapA && mapA[k]) || "";
+        const b = (mapB && mapB[k]) || "";
+        if (a && b) merged[k] = (a >= b) ? a : b;
+        else merged[k] = a || b;
+      });
+      return merged;
+    }
+
+    function isDeletedByTombstone(tombstoneIso, itemTimestampIso) {
+      if (!tombstoneIso) return false;
+      if (!itemTimestampIso) return true;
+      return tombstoneIso >= itemTimestampIso;
+    }
+
+    function getOrderedSectionKeys(secObj, preferredList) {
+      const validKeys = Object.keys(secObj || {}).filter(k => k !== '_portal_meta' && secObj[k] && typeof secObj[k] === 'object');
+      const baseOrder = (Array.isArray(preferredList) && preferredList.length > 0) ? preferredList : PREFERRED_ORDER;
+      const ordered = [];
+      baseOrder.forEach(k => {
+        if (validKeys.includes(k) && !ordered.includes(k)) ordered.push(k);
+      });
+      validKeys.forEach(k => {
+        if (!ordered.includes(k)) ordered.push(k);
+      });
+      return ordered;
+    }
+
+    function buildOrderedSectionsObject(secObj, orderList) {
+      const ordered = {};
+      getOrderedSectionKeys(secObj, orderList).forEach(k => {
+        ordered[k] = secObj[k];
+      });
+      return ordered;
+    }
+
+    function pickNewestSectionOrder(metaA, metaB) {
+      const aOrder = (metaA && Array.isArray(metaA.sectionOrder)) ? metaA.sectionOrder : [];
+      const bOrder = (metaB && Array.isArray(metaB.sectionOrder)) ? metaB.sectionOrder : [];
+      const aTime = (metaA && typeof metaA.sectionOrderUpdatedAt === 'string') ? metaA.sectionOrderUpdatedAt : "";
+      const bTime = (metaB && typeof metaB.sectionOrderUpdatedAt === 'string') ? metaB.sectionOrderUpdatedAt : "";
+
+      if (aTime && bTime) {
+        return (aTime >= bTime)
+          ? { sectionOrder: aOrder, sectionOrderUpdatedAt: aTime }
+          : { sectionOrder: bOrder, sectionOrderUpdatedAt: bTime };
+      }
+      if (aTime && !bTime) return { sectionOrder: aOrder, sectionOrderUpdatedAt: aTime };
+      if (bTime && !aTime) return { sectionOrder: bOrder, sectionOrderUpdatedAt: bTime };
+      if (bOrder.length > 0) return { sectionOrder: bOrder, sectionOrderUpdatedAt: "" };
+      return { sectionOrder: aOrder, sectionOrderUpdatedAt: "" };
     }
 
     async function fetchFromSupabase() {
@@ -1324,19 +1400,9 @@ selene.vincent ; Sélène VINCENT (T11)`;
 
     function writeEmergencyBackups() {
       try {
-        if (portalMeta && typeof portalMeta === 'object') {
-          const existing = readEmergencyMetaBackup();
-          const hasStudents = portalMeta.students && Object.keys(portalMeta.students).length > 0;
-          if (hasStudents || !existing) {
-            localStorage.setItem('perriand_emergency_backup_meta', JSON.stringify(portalMeta));
-          } else if (portalMeta.adminPassUpdatedAt) {
-            const best = pickNewestAdminPass(existing, portalMeta);
-            existing.adminPass = best.adminPass;
-            existing.adminPassUpdatedAt = best.adminPassUpdatedAt;
-            localStorage.setItem('perriand_emergency_backup_meta', JSON.stringify(existing));
-          }
-        }
-        if (Array.isArray(docs) && docs.length > 0) {
+        ensureMetaIntegrity(portalMeta);
+        localStorage.setItem('perriand_emergency_backup_meta', JSON.stringify(portalMeta));
+        if (Array.isArray(docs)) {
           localStorage.setItem('perriand_emergency_backup_docs', JSON.stringify(docs));
         }
       } catch (e) {}
@@ -1365,19 +1431,21 @@ selene.vincent ; Sélène VINCENT (T11)`;
       return { adminPass: bPass || aPass || "perriand2026", adminPassUpdatedAt: "" };
     }
 
-    function mergeDocsLists(localDocs, cloudDocs, isAdminAction) {
+    function mergeDocsLists(localDocs, cloudDocs, isAdminAction, deletedDocsMap = {}) {
       if (!isAdminAction) {
         return (Array.isArray(cloudDocs) ? cloudDocs : (Array.isArray(localDocs) ? localDocs : []))
+          .filter(d => d && d.id && !isDeletedByTombstone(deletedDocsMap[d.id], d.updatedAt || d.createdAt))
           .map(d => ({ ...d, visible: d.visible !== false }));
       }
       const map = new Map();
       (Array.isArray(cloudDocs) ? cloudDocs : []).forEach(d => {
-        if (d && d.id && !explicitlyDeletedDocs.has(d.id)) {
-          map.set(d.id, { ...d, visible: d.visible !== false });
-        }
+        if (!d || !d.id) return;
+        if (isDeletedByTombstone(deletedDocsMap[d.id], d.updatedAt || d.createdAt)) return;
+        map.set(d.id, { ...d, visible: d.visible !== false });
       });
       (Array.isArray(localDocs) ? localDocs : []).forEach(d => {
-        if (!d || !d.id || explicitlyDeletedDocs.has(d.id)) return;
+        if (!d || !d.id) return;
+        if (isDeletedByTombstone(deletedDocsMap[d.id], d.updatedAt || d.createdAt)) return;
         const existing = map.get(d.id);
         if (!existing) {
           map.set(d.id, { ...d, visible: d.visible !== false });
@@ -1402,6 +1470,10 @@ selene.vincent ; Sélène VINCENT (T11)`;
         merged.password = cloudSt.password;
         merged.forceChange = false;
       }
+
+      merged.createdAt = (localSt.createdAt && (!cloudSt.createdAt || localSt.createdAt > cloudSt.createdAt))
+        ? localSt.createdAt
+        : (cloudSt.createdAt || localSt.createdAt || "");
 
       merged.loginsCount = Math.max(localSt.loginsCount || 0, cloudSt.loginsCount || 0);
       merged.activeMinutes = Math.max(localSt.activeMinutes || 0, cloudSt.activeMinutes || 0);
@@ -1462,41 +1534,60 @@ selene.vincent ; Sélène VINCENT (T11)`;
     }
 
     async function pushToSupabase(silent = false) {
-      const MAX_ATTEMPTS = 3;
+      ensureMetaIntegrity(portalMeta);
+      const MAX_ATTEMPTS = 4;
+      let useOptimisticLock = true;
+      let lastErrorDetail = "";
 
       for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
         try {
-          writeEmergencyBackups();
-
           const latestCloud = await fetchFromSupabase();
           if (!latestCloud || !latestCloud.sections) {
-            if (isAdmin && !silent && attempt === MAX_ATTEMPTS) {
-              alert("Impossible de synchroniser avec le Cloud pour le moment (vérification préalable interrompue). Réessayez dans quelques secondes.");
+            lastErrorDetail = "Connexion au Cloud Supabase momentanément interrompue.";
+            if (attempt < MAX_ATTEMPTS) {
+              await new Promise(r => setTimeout(r, 300 * attempt));
+              continue;
             }
-            return false;
+            break;
           }
 
           const cloudMeta = latestCloud.sections._portal_meta || {};
-          const cloudStudents = (cloudMeta.students && typeof cloudMeta.students === 'object') ? cloudMeta.students : {};
+          ensureMetaIntegrity(cloudMeta);
+          const cloudStudents = cloudMeta.students || {};
           const cloudDocs = Array.isArray(latestCloud.docs) ? latestCloud.docs : [];
+
+          const mergedDeletedStudents = mergeTombstones(portalMeta.deletedStudents, cloudMeta.deletedStudents);
+          const mergedDeletedDocs = mergeTombstones(portalMeta.deletedDocs, cloudMeta.deletedDocs);
+          const mergedDeletedSections = mergeTombstones(portalMeta.deletedSections, cloudMeta.deletedSections);
+
           let payload = null;
 
           if (!isAdmin) {
-            // SÉCURITÉ ÉLÈVE : ne touche JAMAIS aux documents, aux onglets, au mot de passe prof ni aux autres élèves
+            // SÉCURITÉ ÉLÈVE : ne modifie JAMAIS les documents, les onglets, le mot de passe prof ni les autres élèves
             if (!currentStudent || !portalMeta.students[currentStudent]) return false;
+
+            const cloudSt = cloudStudents[currentStudent];
+            const myLocalSt = portalMeta.students[currentStudent];
+            if (isDeletedByTombstone(mergedDeletedStudents[currentStudent], myLocalSt.createdAt) || !cloudSt) {
+              // Le compte a été supprimé par le professeur : déconnexion propre sans résurrection
+              localStorage.removeItem('perriand_student');
+              currentStudent = null;
+              checkSessionAndMaintenance();
+              return false;
+            }
 
             const safeCloudSections = JSON.parse(JSON.stringify(latestCloud.sections));
             safeCloudSections._portal_meta = safeCloudSections._portal_meta || {};
-            safeCloudSections._portal_meta.students = safeCloudSections._portal_meta.students || {};
+            ensureMetaIntegrity(safeCloudSections._portal_meta);
 
-            const mergedMe = mergeStudentRecords(
-              portalMeta.students[currentStudent],
-              safeCloudSections._portal_meta.students[currentStudent],
-              false
-            );
+            const mergedMe = mergeStudentRecords(myLocalSt, cloudSt, false);
             safeCloudSections._portal_meta.students[currentStudent] = mergedMe;
 
             portalMeta.students[currentStudent] = mergedMe;
+            portalMeta.deletedStudents = mergedDeletedStudents;
+            portalMeta.deletedDocs = mergedDeletedDocs;
+            portalMeta.deletedSections = mergedDeletedSections;
+
             const bestPass = pickNewestAdminPass(portalMeta, cloudMeta);
             portalMeta.adminPass = bestPass.adminPass;
             portalMeta.adminPassUpdatedAt = bestPass.adminPassUpdatedAt;
@@ -1504,52 +1595,68 @@ selene.vincent ; Sélène VINCENT (T11)`;
             portalMeta.defaultTheme = cloudMeta.defaultTheme || portalMeta.defaultTheme;
             if (cloudMeta.requireAuth !== undefined) portalMeta.requireAuth = cloudMeta.requireAuth;
             if (cloudDocs.length > 0) {
-              docs = cloudDocs.map(d => ({ ...d, visible: d.visible !== false }));
+              docs = cloudDocs
+                .filter(d => d && d.id && !isDeletedByTombstone(mergedDeletedDocs[d.id], d.updatedAt || d.createdAt))
+                .map(d => ({ ...d, visible: d.visible !== false }));
             }
 
             writeEmergencyBackups();
-            // On n'inclut PAS "docs" dans le PATCH élève : impossible d'effacer un document !
+            // Aucune clé "docs" envoyée par un élève : impossible d'effacer un document
             payload = { sections: safeCloudSections, updated_at: new Date().toISOString() };
           } else {
-            // SÉCURITÉ PROF : fusion stricte des documents, du mot de passe le plus récent et des élèves
-            const mergedDocs = mergeDocsLists(docs, cloudDocs, true);
-            if (mergedDocs.length === 0 && cloudDocs.length > 0 && explicitlyDeletedDocs.size === 0) {
-              if (!silent) alert("Protection anti-effacement activée : sauvegarde bloquée pour protéger vos documents.");
-              return false;
+            // SÉCURITÉ PROF : fusion des tombstones, ordre d'onglets, documents, mot de passe et élèves
+            portalMeta.deletedStudents = mergedDeletedStudents;
+            portalMeta.deletedDocs = mergedDeletedDocs;
+            portalMeta.deletedSections = mergedDeletedSections;
+
+            const mergedDocs = mergeDocsLists(docs, cloudDocs, true, mergedDeletedDocs);
+            const allCloudDocsDeleted = cloudDocs.every(d => d && isDeletedByTombstone(mergedDeletedDocs[d.id], d.updatedAt || d.createdAt));
+            if (mergedDocs.length === 0 && cloudDocs.length > 0 && !allCloudDocsDeleted) {
+              lastErrorDetail = "Protection anti-effacement activée sur les documents.";
+              break;
             }
             docs = mergedDocs;
 
+            // Fusion des onglets : on conserve ceux du prof + ceux du cloud non supprimés
+            const combinedSections = {};
             Object.keys(latestCloud.sections).forEach(k => {
-              if (k !== '_portal_meta' && !sections[k]) sections[k] = latestCloud.sections[k];
+              if (k === '_portal_meta') return;
+              const secObj = latestCloud.sections[k];
+              if (!secObj || isDeletedByTombstone(mergedDeletedSections[k], secObj.updatedAt || secObj.createdAt)) return;
+              combinedSections[k] = secObj;
+            });
+            Object.keys(sections).forEach(k => {
+              if (k === '_portal_meta') return;
+              const secObj = sections[k];
+              if (!secObj || isDeletedByTombstone(mergedDeletedSections[k], secObj.updatedAt || secObj.createdAt)) return;
+              combinedSections[k] = secObj;
             });
 
-            const emergencyMeta = readEmergencyMetaBackup();
-            const bestLocalPass = pickNewestAdminPass(portalMeta, emergencyMeta);
-            const bestPass = pickNewestAdminPass(bestLocalPass, cloudMeta);
+            const bestOrder = pickNewestSectionOrder(portalMeta, cloudMeta);
+            const finalOrderKeys = getOrderedSectionKeys(combinedSections, bestOrder.sectionOrder);
+            portalMeta.sectionOrder = finalOrderKeys;
+            portalMeta.sectionOrderUpdatedAt = bestOrder.sectionOrderUpdatedAt || new Date().toISOString();
+            sections = buildOrderedSectionsObject(combinedSections, finalOrderKeys);
+
+            const bestPass = pickNewestAdminPass(portalMeta, cloudMeta);
             portalMeta.adminPass = bestPass.adminPass;
             portalMeta.adminPassUpdatedAt = bestPass.adminPassUpdatedAt;
 
-            const emergencyStudents = (emergencyMeta && emergencyMeta.students) ? emergencyMeta.students : {};
-            const localStudents = (portalMeta && portalMeta.students) ? portalMeta.students : {};
-
+            // Fusion des élèves : uniquement Cloud + Local actif, JAMAIS d'ancien cache supprimé
+            const localStudents = portalMeta.students || {};
             const mergedStudents = {};
             const allUsernames = new Set([
               ...Object.keys(cloudStudents),
-              ...Object.keys(localStudents),
-              ...Object.keys(emergencyStudents)
+              ...Object.keys(localStudents)
             ]);
 
             allUsernames.forEach(u => {
-              if (explicitlyDeletedStudents.has(u)) return;
-              const candidateLocal = localStudents[u] || emergencyStudents[u];
+              const candidateLocal = localStudents[u];
               const candidateCloud = cloudStudents[u];
+              const newestCreated = (candidateLocal && candidateLocal.createdAt) || (candidateCloud && candidateCloud.createdAt) || "";
+              if (isDeletedByTombstone(mergedDeletedStudents[u], newestCreated)) return;
               mergedStudents[u] = mergeStudentRecords(candidateLocal, candidateCloud, true);
             });
-
-            const hadKnownStudents = Object.keys(cloudStudents).length > 0 || Object.keys(emergencyStudents).length > 0;
-            if (Object.keys(mergedStudents).length === 0 && hadKnownStudents && explicitlyDeletedStudents.size === 0) {
-              return false;
-            }
 
             portalMeta.students = mergedStudents;
             writeEmergencyBackups();
@@ -1559,7 +1666,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
           }
 
           let patchUrl = `${DEFAULT_SUPABASE_URL}/rest/v1/portal_state?id=eq.main`;
-          if (latestCloud.updated_at) {
+          if (useOptimisticLock && latestCloud.updated_at) {
             patchUrl += `&updated_at=eq.${encodeURIComponent(latestCloud.updated_at)}`;
           }
 
@@ -1574,39 +1681,60 @@ selene.vincent ; Sélène VINCENT (T11)`;
             body: JSON.stringify(payload)
           });
 
-          if (res.status === 400 && latestCloud.updated_at) {
-            res = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state?id=eq.main`, {
-              method: 'PATCH',
-              headers: {
-                'apikey': DEFAULT_SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${DEFAULT_SUPABASE_ANON_KEY}`,
-                'Content-Type': 'application/json',
-                'Prefer': 'return=representation'
-              },
-              body: JSON.stringify(payload)
-            });
+          if ((res.status === 400 || res.status === 405) && useOptimisticLock) {
+            useOptimisticLock = false;
+            continue;
           }
 
           if (res.ok) {
-            const updatedRows = await res.json();
+            let updatedRows = [];
+            try { updatedRows = await res.json(); } catch (e) { updatedRows = []; }
+
             if (Array.isArray(updatedRows) && updatedRows.length > 0) {
               cloudLoadedSuccessfully = true;
               document.getElementById('syncStatusBadge').className = 'sync-badge online';
               document.getElementById('syncStatusBadge').innerHTML = '☁️ Cloud Synchronisé';
               return true;
             }
-            // Conflit d'écriture simultanée détecté : on attend 250 ms puis on relit et refusionne
-            await new Promise(r => setTimeout(r, 250 * attempt));
+
+            // 0 ligne mise à jour : on vérifie si c'est un vrai conflit simultané ou un écart de format sur updated_at
+            await new Promise(r => setTimeout(r, 220 * attempt));
+            const probe = await fetchFromSupabase();
+            if (!probe || probe.updated_at === latestCloud.updated_at) {
+              // Même timestamp côté serveur : le filtre updated_at ne correspond pas au format Postgres -> on bascule sans filtre au tour suivant
+              useOptimisticLock = false;
+            }
+            lastErrorDetail = "Conflit de synchronisation simultané, nouvelle tentative...";
             continue;
           } else {
-            const errorMsg = await res.text();
-            if (isAdmin && !silent && attempt === MAX_ATTEMPTS) alert("Erreur lors de la sauvegarde : \n" + errorMsg);
-            return false;
+            lastErrorDetail = await res.text();
+            if (isAdmin && attempt === MAX_ATTEMPTS - 1) {
+              // Ultime repli sécurisé en POST merge-duplicates avec les données fraîchement fusionnées
+              const fallbackRes = await fetch(`${DEFAULT_SUPABASE_URL}/rest/v1/portal_state`, {
+                method: 'POST',
+                headers: {
+                  'apikey': DEFAULT_SUPABASE_ANON_KEY,
+                  'Authorization': `Bearer ${DEFAULT_SUPABASE_ANON_KEY}`,
+                  'Content-Type': 'application/json',
+                  'Prefer': 'resolution=merge-duplicates,return=representation'
+                },
+                body: JSON.stringify(Object.assign({ id: 'main' }, payload))
+              });
+              if (fallbackRes.ok) {
+                cloudLoadedSuccessfully = true;
+                document.getElementById('syncStatusBadge').className = 'sync-badge online';
+                document.getElementById('syncStatusBadge').innerHTML = '☁️ Cloud Synchronisé';
+                return true;
+              }
+            }
           }
         } catch (e) {
-          if (isAdmin && !silent && attempt === MAX_ATTEMPTS) alert("Problème de connexion internet.");
-          return false;
+          lastErrorDetail = e.message || "Problème de connexion internet.";
         }
+      }
+
+      if (isAdmin && !silent) {
+        alert("⚠️ La sauvegarde sur le Cloud Supabase n'a pas pu être confirmée :\n" + (lastErrorDetail || "Erreur réseau") + "\n\nVérifiez votre connexion puis réessayez.");
       }
       return false;
     }
@@ -1625,88 +1753,87 @@ selene.vincent ; Sélène VINCENT (T11)`;
       return null;
     }
 
-    function loadSectionsAndMeta(rawSections, rawDocs) {
+    function loadSectionsAndMeta(rawSections, rawDocs, isOfflineFallback = false) {
       const previousMeta = portalMeta ? Object.assign({}, portalMeta) : {};
-      const previousStudents = (previousMeta.students && typeof previousMeta.students === 'object')
-        ? Object.assign({}, previousMeta.students)
-        : {};
-      const emergencyMeta = readEmergencyMetaBackup();
-      const emergencyStudents = (emergencyMeta && emergencyMeta.students) ? emergencyMeta.students : {};
+      const emergencyMeta = isOfflineFallback ? readEmergencyMetaBackup() : null;
 
       if (rawSections && rawSections._portal_meta) {
         const incomingMeta = rawSections._portal_meta;
-        const incomingStudents = (incomingMeta.students && typeof incomingMeta.students === 'object')
-          ? incomingMeta.students
-          : {};
+        ensureMetaIntegrity(incomingMeta);
+
+        const mergedDeletedStudents = mergeTombstones(
+          isOfflineFallback ? previousMeta.deletedStudents : {},
+          incomingMeta.deletedStudents
+        );
+        const mergedDeletedDocs = mergeTombstones(
+          isOfflineFallback ? previousMeta.deletedDocs : {},
+          incomingMeta.deletedDocs
+        );
+        const mergedDeletedSections = mergeTombstones(
+          isOfflineFallback ? previousMeta.deletedSections : {},
+          incomingMeta.deletedSections
+        );
 
         portalMeta = Object.assign({
           requireAuth: true,
           adminPass: "perriand2026",
           adminPassUpdatedAt: "",
           defaultTheme: "classic",
+          sectionOrder: [],
+          sectionOrderUpdatedAt: "",
+          deletedStudents: {},
+          deletedDocs: {},
+          deletedSections: {},
           maintenance: { active: false, message: "DS en cours — L'accès aux ressources est temporairement suspendu." },
           students: {}
         }, incomingMeta);
 
-        const bestLocalPass = pickNewestAdminPass(previousMeta, emergencyMeta);
-        const bestPass = pickNewestAdminPass(bestLocalPass, incomingMeta);
+        portalMeta.deletedStudents = mergedDeletedStudents;
+        portalMeta.deletedDocs = mergedDeletedDocs;
+        portalMeta.deletedSections = mergedDeletedSections;
+
+        const bestPass = pickNewestAdminPass(previousMeta, incomingMeta);
         portalMeta.adminPass = bestPass.adminPass;
         portalMeta.adminPassUpdatedAt = bestPass.adminPassUpdatedAt;
 
-        const mergedStudents = {};
-        const allKeys = new Set([
-          ...Object.keys(emergencyStudents),
-          ...Object.keys(previousStudents),
-          ...Object.keys(incomingStudents)
-        ]);
-
-        allKeys.forEach(u => {
-          if (explicitlyDeletedStudents.has(u)) return;
-          const localCandidate = previousStudents[u] || emergencyStudents[u];
-          const cloudCandidate = incomingStudents[u];
-          mergedStudents[u] = mergeStudentRecords(localCandidate, cloudCandidate, false);
+        const cleanStudents = {};
+        Object.entries(incomingMeta.students || {}).forEach(([u, st]) => {
+          if (isDeletedByTombstone(mergedDeletedStudents[u], st && st.createdAt)) return;
+          cleanStudents[u] = st;
         });
-
-        portalMeta.students = mergedStudents;
+        portalMeta.students = cleanStudents;
+      } else if (isOfflineFallback && emergencyMeta) {
+        portalMeta = Object.assign(portalMeta, emergencyMeta);
+        ensureMetaIntegrity(portalMeta);
       } else {
-        const bestPass = pickNewestAdminPass(previousMeta, emergencyMeta);
-        portalMeta.adminPass = bestPass.adminPass;
-        portalMeta.adminPassUpdatedAt = bestPass.adminPassUpdatedAt;
-
-        const fallbackStudents = {};
-        const allKeys = new Set([
-          ...Object.keys(emergencyStudents),
-          ...Object.keys(previousStudents),
-          ...Object.keys((portalMeta && portalMeta.students) || {})
-        ]);
-        allKeys.forEach(u => {
-          if (explicitlyDeletedStudents.has(u)) return;
-          fallbackStudents[u] = (portalMeta && portalMeta.students && portalMeta.students[u]) || previousStudents[u] || emergencyStudents[u];
-        });
-        portalMeta.students = fallbackStudents;
+        ensureMetaIntegrity(portalMeta);
       }
 
-      let sortedSections = {};
+      const rawSecMap = {};
       if (rawSections && typeof rawSections === 'object') {
-        PREFERRED_ORDER.forEach(key => {
-          if (rawSections[key] && key !== '_portal_meta') sortedSections[key] = rawSections[key];
-        });
         Object.keys(rawSections).forEach(key => {
-          if (!sortedSections[key] && key !== '_portal_meta') sortedSections[key] = rawSections[key];
+          if (key === '_portal_meta') return;
+          const sObj = rawSections[key];
+          if (!sObj || typeof sObj !== 'object') return;
+          if (isDeletedByTombstone(portalMeta.deletedSections[key], sObj.updatedAt || sObj.createdAt)) return;
+          rawSecMap[key] = sObj;
         });
       }
-      if (Object.keys(sortedSections).length === 0) {
-        sortedSections = Object.assign({}, DEFAULT_SECTIONS);
-      }
-      sections = sortedSections;
 
-      const emergencyDocs = readEmergencyDocsBackup();
-      if (Array.isArray(rawDocs) && rawDocs.length > 0) {
-        docs = rawDocs.map(d => ({ ...d, visible: d.visible !== false }));
-      } else if (Array.isArray(docs) && docs.length > 0) {
-        docs = docs.map(d => ({ ...d, visible: d.visible !== false }));
-      } else if (Array.isArray(emergencyDocs) && emergencyDocs.length > 0) {
-        docs = emergencyDocs.map(d => ({ ...d, visible: d.visible !== false }));
+      const sourceSections = Object.keys(rawSecMap).length > 0 ? rawSecMap : Object.assign({}, DEFAULT_SECTIONS);
+      const orderedKeys = getOrderedSectionKeys(sourceSections, portalMeta.sectionOrder);
+      portalMeta.sectionOrder = orderedKeys;
+      sections = buildOrderedSectionsObject(sourceSections, orderedKeys);
+
+      const emergencyDocs = isOfflineFallback ? readEmergencyDocsBackup() : null;
+      if (Array.isArray(rawDocs)) {
+        docs = rawDocs
+          .filter(d => d && d.id && !isDeletedByTombstone(portalMeta.deletedDocs[d.id], d.updatedAt || d.createdAt))
+          .map(d => ({ ...d, visible: d.visible !== false }));
+      } else if (isOfflineFallback && Array.isArray(emergencyDocs)) {
+        docs = emergencyDocs
+          .filter(d => d && d.id && !isDeletedByTombstone(portalMeta.deletedDocs[d.id], d.updatedAt || d.createdAt))
+          .map(d => ({ ...d, visible: d.visible !== false }));
       } else {
         docs = [];
       }
@@ -1714,7 +1841,7 @@ selene.vincent ; Sélène VINCENT (T11)`;
       writeEmergencyBackups();
     }
 
-function repairAllStudentsBadges() {
+    function repairAllStudentsBadges() {
       if (!portalMeta.students) return;
       Object.keys(portalMeta.students).forEach(username => {
         ensureStudentProfileFields(portalMeta.students[username]);
@@ -1728,11 +1855,11 @@ function repairAllStudentsBadges() {
       const cloudData = await fetchFromSupabase();
       if (cloudData && cloudData.sections && Object.keys(cloudData.sections).length > 0) {
         cloudLoadedSuccessfully = true;
-        loadSectionsAndMeta(cloudData.sections, cloudData.docs);
+        loadSectionsAndMeta(cloudData.sections, cloudData.docs, false);
         document.getElementById('syncStatusBadge').className = 'sync-badge online';
         document.getElementById('syncStatusBadge').innerHTML = '☁️ Cloud Synchronisé';
       } else {
-        loadSectionsAndMeta(DEFAULT_SECTIONS, []);
+        loadSectionsAndMeta(DEFAULT_SECTIONS, [], true);
         document.getElementById('syncStatusBadge').innerHTML = '💾 Mode Hors-Ligne';
       }
 
@@ -1743,7 +1870,7 @@ function repairAllStudentsBadges() {
       document.getElementById('themeSelector').value = initialTheme;
       applyTheme(initialTheme, false);
 
-      currentPage = Object.keys(sections)[0];
+      currentPage = getOrderedSectionKeys(sections, portalMeta.sectionOrder)[0] || Object.keys(sections)[0];
       initApp();
       showPage(currentPage);
       checkSessionAndMaintenance();
@@ -2496,7 +2623,7 @@ function repairAllStudentsBadges() {
 
             if (p.y > canvas.height + 30) { p.y = -20; p.x = Math.random() * canvas.width; }
             if (p.y < -30) { p.y = canvas.height + 20; p.x = Math.random() * canvas.width; }
-            if (p.x > canvas.width + 30) { p.x = -20; p.x = Math.random() * canvas.width; }
+            if (p.x > canvas.width + 30) { p.x = -20; }
             if (p.x < -30) { p.x = canvas.width + 20; }
 
             ctx.save();
@@ -2543,7 +2670,7 @@ function repairAllStudentsBadges() {
       setTimeout(() => el.remove(), duration * 1000 + 200);
     }
 
-    function isPdfUrl(url, itemType) {
+  function isPdfUrl(url, itemType) {
       if (!url) return false;
       const clean = url.split('?')[0].toLowerCase();
       if (clean.endsWith('.pdf')) return true;
@@ -2690,6 +2817,7 @@ function repairAllStudentsBadges() {
         document.body.classList.add('is-admin');
         document.getElementById('loginOverlay').classList.remove('active');
         updateUserBadge("👨‍🏫 M. Poppe (Prof)");
+        ensureAdminTabsButton();
         renderSubFilters();
         renderPageCards();
         return;
@@ -2705,7 +2833,7 @@ function repairAllStudentsBadges() {
         document.getElementById('loginMaintenanceAlert').style.display = 'none';
       }
 
-      if (savedStudent && portalMeta.students[savedStudent]) {
+      if (savedStudent && portalMeta.students[savedStudent] && !isDeletedByTombstone(portalMeta.deletedStudents[savedStudent], portalMeta.students[savedStudent].createdAt)) {
         currentStudent = savedStudent;
         ensureStudentProfileFields(portalMeta.students[currentStudent]);
         recordStudentLogin(currentStudent, false);
@@ -2714,6 +2842,8 @@ function repairAllStudentsBadges() {
         renderSubFilters();
         renderPageCards();
         return;
+      } else if (savedStudent) {
+        localStorage.removeItem('perriand_student');
       }
 
       document.getElementById('loginOverlay').classList.add('active');
@@ -2733,6 +2863,7 @@ function repairAllStudentsBadges() {
         document.body.classList.add('is-admin');
         document.getElementById('loginOverlay').classList.remove('active');
         updateUserBadge("👨‍🏫 M. Poppe (Prof)");
+        ensureAdminTabsButton();
         renderSubFilters();
         renderPageCards();
         return;
@@ -2745,7 +2876,7 @@ function repairAllStudentsBadges() {
       }
 
       const st = portalMeta.students[user];
-      if (!st || st.password !== pass) {
+      if (!st || isDeletedByTombstone(portalMeta.deletedStudents[user], st.createdAt) || st.password !== pass) {
         err.textContent = "Identifiant ou mot de passe incorrect.";
         err.style.display = 'block';
         return;
@@ -2865,6 +2996,12 @@ function repairAllStudentsBadges() {
         const cloud = await fetchFromSupabase();
         if (cloud && cloud.sections && cloud.sections._portal_meta) {
           const cloudMeta = cloud.sections._portal_meta;
+          ensureMetaIntegrity(cloudMeta);
+
+          portalMeta.deletedStudents = mergeTombstones(portalMeta.deletedStudents, cloudMeta.deletedStudents);
+          portalMeta.deletedDocs = mergeTombstones(portalMeta.deletedDocs, cloudMeta.deletedDocs);
+          portalMeta.deletedSections = mergeTombstones(portalMeta.deletedSections, cloudMeta.deletedSections);
+
           portalMeta.maintenance = cloudMeta.maintenance || portalMeta.maintenance;
           portalMeta.defaultTheme = cloudMeta.defaultTheme || portalMeta.defaultTheme;
           if (cloudMeta.requireAuth !== undefined) portalMeta.requireAuth = cloudMeta.requireAuth;
@@ -2875,15 +3012,47 @@ function repairAllStudentsBadges() {
 
           if (!isAdmin && portalMeta.maintenance.active) checkSessionAndMaintenance();
 
-          if (!isAdmin && Array.isArray(cloud.docs) && cloud.docs.length > 0) {
-            docs = cloud.docs.map(d => ({ ...d, visible: d.visible !== false }));
+          if (!isAdmin) {
+            const prevKeysSig = Object.keys(sections).join('|');
+            const freshSecMap = {};
+            Object.keys(cloud.sections).forEach(k => {
+              if (k === '_portal_meta') return;
+              const sObj = cloud.sections[k];
+              if (!sObj || isDeletedByTombstone(portalMeta.deletedSections[k], sObj.updatedAt || sObj.createdAt)) return;
+              freshSecMap[k] = sObj;
+            });
+            if (Object.keys(freshSecMap).length > 0) {
+              const orderedKeys = getOrderedSectionKeys(freshSecMap, cloudMeta.sectionOrder);
+              portalMeta.sectionOrder = orderedKeys;
+              sections = buildOrderedSectionsObject(freshSecMap, orderedKeys);
+            }
+            if (Array.isArray(cloud.docs)) {
+              docs = cloud.docs
+                .filter(d => d && d.id && !isDeletedByTombstone(portalMeta.deletedDocs[d.id], d.updatedAt || d.createdAt))
+                .map(d => ({ ...d, visible: d.visible !== false }));
+            }
+            if (Object.keys(sections).join('|') !== prevKeysSig) {
+              initApp();
+              if (!sections[currentPage]) currentPage = Object.keys(sections)[0];
+              showPage(currentPage);
+            }
           }
 
           const cloudStudents = cloudMeta.students || {};
+          Object.keys(portalMeta.students).forEach(u => {
+            if (isDeletedByTombstone(portalMeta.deletedStudents[u], portalMeta.students[u]?.createdAt)) {
+              delete portalMeta.students[u];
+            }
+          });
           Object.keys(cloudStudents).forEach(u => {
-            if (explicitlyDeletedStudents.has(u)) return;
+            if (isDeletedByTombstone(portalMeta.deletedStudents[u], cloudStudents[u]?.createdAt)) return;
             portalMeta.students[u] = mergeStudentRecords(portalMeta.students[u], cloudStudents[u], false);
           });
+
+          if (currentStudent && (!portalMeta.students[currentStudent] || isDeletedByTombstone(portalMeta.deletedStudents[currentStudent], portalMeta.students[currentStudent]?.createdAt))) {
+            logoutUser();
+            return;
+          }
           writeEmergencyBackups();
         }
         if (currentStudent && !document.hidden && portalMeta.students[currentStudent]) {
@@ -2909,18 +3078,21 @@ function repairAllStudentsBadges() {
       submitBtn.disabled = true;
 
       try {
+        ensureMetaIntegrity(portalMeta);
         const editId = document.getElementById('editDocId').value;
+        const existingDoc = editId ? docs.find(d => d.id === editId) : null;
         let finalUrl = document.getElementById('newUrl').value.trim();
         let finalCover = document.getElementById('newCoverImg').value.trim();
 
         const pdfFile = document.getElementById('pdfFileInput').files[0];
         if (pdfFile) { const u = await uploadToSupabaseStorage(pdfFile); if (u) finalUrl = u; }
-        else if (finalUrl.includes("(Fichier prêt")) finalUrl = editId ? docs.find(d => d.id === editId).url : "";
+        else if (finalUrl.includes("(Fichier prêt")) finalUrl = existingDoc ? existingDoc.url : "";
 
         const coverFile = document.getElementById('coverFileInput').files[0];
         if (coverFile) { const c = await uploadToSupabaseStorage(coverFile); if (c) finalCover = c; }
-        else if (finalCover.includes("(Fichier prêt")) finalCover = editId ? docs.find(d => d.id === editId).coverImg : "";
+        else if (finalCover.includes("(Fichier prêt")) finalCover = existingDoc ? existingDoc.coverImg : "";
 
+        const now = new Date().toISOString();
         const docData = {
           id: editId || "doc_" + Date.now(),
           section: document.getElementById('newSection').value,
@@ -2931,23 +3103,28 @@ function repairAllStudentsBadges() {
           coverImg: finalCover,
           desc: document.getElementById('newDesc').value,
           url: finalUrl,
-          updatedAt: new Date().toISOString()
+          createdAt: (existingDoc && existingDoc.createdAt) ? existingDoc.createdAt : now,
+          updatedAt: now
         };
 
-        explicitlyDeletedDocs.delete(docData.id);
+        delete portalMeta.deletedDocs[docData.id];
 
+        const previousDocs = docs.slice();
         if (editId) {
           const idx = docs.findIndex(d => d.id === editId);
           if (idx !== -1) docs[idx] = docData;
+          else docs.unshift(docData);
         } else {
           docs.unshift(docData);
         }
 
-        const success = await pushToSupabase();
+        const success = await pushToSupabase(false);
         if (success) {
           closeAddModal();
           renderSubFilters();
           renderPageCards();
+        } else {
+          docs = previousDocs;
         }
       } finally {
         submitBtn.textContent = "Publier";
@@ -2958,22 +3135,46 @@ function repairAllStudentsBadges() {
     async function toggleDocVisibility(id) {
       const d = docs.find(item => item.id === id);
       if (!d) return;
+      const prevVis = d.visible;
       d.visible = (d.visible === false) ? true : false;
       d.updatedAt = new Date().toISOString();
-      await pushToSupabase(true);
+      const ok = await pushToSupabase(false);
+      if (!ok) d.visible = prevVis;
       renderSubFilters();
       renderPageCards();
       if (document.getElementById('visibilityModal').classList.contains('active')) renderVisibilityList();
     }
 
     async function deleteDoc(id) {
-      if (confirm("Supprimer définitivement ce document du Cloud ?")) {
-        explicitlyDeletedDocs.add(id);
-        docs = docs.filter(d => d.id !== id);
-        await pushToSupabase();
-        renderSubFilters();
-        renderPageCards();
+      if (!confirm("Supprimer définitivement ce document du Cloud ?")) return;
+      ensureMetaIntegrity(portalMeta);
+      const prevDocs = docs.slice();
+      const prevTombstone = portalMeta.deletedDocs[id];
+
+      portalMeta.deletedDocs[id] = new Date().toISOString();
+      docs = docs.filter(d => d.id !== id);
+      const ok = await pushToSupabase(false);
+      if (!ok) {
+        docs = prevDocs;
+        if (prevTombstone) portalMeta.deletedDocs[id] = prevTombstone;
+        else delete portalMeta.deletedDocs[id];
       }
+      renderSubFilters();
+      renderPageCards();
+    }
+
+    function ensureAdminTabsButton() {
+      if (document.getElementById('adminManageTabsQuickBtn')) return;
+      const refBtn = document.querySelector('button[onclick*="openStructureModal"], button[onclick*="openCategoryModal"], button[onclick*="openAddModal"]');
+      if (!refBtn || !refBtn.parentElement) return;
+      const btn = document.createElement('button');
+      btn.id = 'adminManageTabsQuickBtn';
+      btn.type = 'button';
+      btn.className = refBtn.className || 'btn';
+      btn.innerHTML = '📑 Onglets (+ / 🗑)';
+      btn.title = 'Ajouter, renommer, réorganiser ou supprimer des onglets';
+      btn.onclick = () => openStructureModal();
+      refBtn.parentElement.insertBefore(btn, refBtn.nextSibling);
     }
 
     function initApp() {
@@ -2981,8 +3182,10 @@ function repairAllStudentsBadges() {
       const pages = document.getElementById('mainPagesContainer');
       nav.innerHTML = ''; pages.innerHTML = '';
 
-      Object.keys(sections).forEach(secKey => {
-        if (secKey === '_portal_meta') return;
+      const orderedKeys = getOrderedSectionKeys(sections, portalMeta.sectionOrder);
+      sections = buildOrderedSectionsObject(sections, orderedKeys);
+
+      orderedKeys.forEach(secKey => {
         const sec = sections[secKey];
         const btn = document.createElement('button');
         btn.className = 'nav-btn' + (secKey === currentPage ? ' active' : '');
@@ -2996,11 +3199,13 @@ function repairAllStudentsBadges() {
         pageDiv.innerHTML = `<div class="page-header"><div><h2>${sec.title}</h2><p>${sec.desc || ''}</p></div></div><div class="sub-filter-bar" id="filters-${secKey}"></div><div class="cards-grid" id="grid-${secKey}"></div>`;
         pages.appendChild(pageDiv);
       });
+      ensureAdminTabsButton();
       renderSubFilters(); renderPageCards();
     }
 
     function showPage(pageKey) {
-      if (!sections[pageKey] || pageKey === '_portal_meta') pageKey = Object.keys(sections)[0];
+      const keys = getOrderedSectionKeys(sections, portalMeta.sectionOrder);
+      if (!sections[pageKey] || pageKey === '_portal_meta') pageKey = keys[0];
       currentPage = pageKey; activeSubFilter = "all"; pageSearchQuery = "";
       const hero = document.getElementById('heroBanner'); if (hero) hero.style.display = (pageKey === "communication") ? "flex" : "none";
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.textContent === sections[pageKey].title));
@@ -3214,6 +3419,7 @@ function repairAllStudentsBadges() {
         document.body.classList.add('is-admin');
         document.getElementById('loginOverlay').classList.remove('active');
         updateUserBadge("👨‍🏫 M. Poppe (Prof)");
+        ensureAdminTabsButton();
         renderSubFilters();
         renderPageCards();
       }
@@ -3244,7 +3450,9 @@ function repairAllStudentsBadges() {
       document.getElementById('addDocForm').reset(); document.getElementById('editDocId').value = "";
       document.getElementById('docModalTitle').textContent = "Ajouter un document";
       const sel = document.getElementById('newSection'); sel.innerHTML = '';
-      Object.keys(sections).forEach(k => { if (k === '_portal_meta') return; const opt = document.createElement('option'); opt.value = k; opt.textContent = sections[k].title; sel.appendChild(opt); });
+      getOrderedSectionKeys(sections, portalMeta.sectionOrder).forEach(k => {
+        const opt = document.createElement('option'); opt.value = k; opt.textContent = sections[k].title; sel.appendChild(opt);
+      });
       sel.value = currentPage; syncSubCategories();
       document.getElementById('newVisible').value = "true";
       document.getElementById('addModal').classList.add('active');
@@ -3272,8 +3480,7 @@ function repairAllStudentsBadges() {
     function openVisibilityModal() {
       const sel = document.getElementById('visFilterSection');
       sel.innerHTML = '<option value="all">Toutes les sections</option>';
-      Object.keys(sections).forEach(k => {
-        if (k === '_portal_meta') return;
+      getOrderedSectionKeys(sections, portalMeta.sectionOrder).forEach(k => {
         const o = document.createElement('option'); o.value = k; o.textContent = sections[k].title; sel.appendChild(o);
       });
       sel.value = currentPage;
@@ -3316,7 +3523,7 @@ function repairAllStudentsBadges() {
           d.updatedAt = new Date().toISOString();
         }
       });
-      await pushToSupabase();
+      await pushToSupabase(false);
       renderVisibilityList();
       renderSubFilters();
       renderPageCards();
@@ -3324,9 +3531,17 @@ function repairAllStudentsBadges() {
 
     async function openTrackingModal() {
       const cloud = await fetchFromSupabase();
-      if (cloud && cloud.sections && cloud.sections._portal_meta && cloud.sections._portal_meta.students) {
-        Object.entries(cloud.sections._portal_meta.students).forEach(([u, cSt]) => {
-          if (explicitlyDeletedStudents.has(u)) return;
+      if (cloud && cloud.sections && cloud.sections._portal_meta) {
+        const cMeta = cloud.sections._portal_meta;
+        ensureMetaIntegrity(cMeta);
+        portalMeta.deletedStudents = mergeTombstones(portalMeta.deletedStudents, cMeta.deletedStudents);
+        Object.keys(portalMeta.students).forEach(u => {
+          if (isDeletedByTombstone(portalMeta.deletedStudents[u], portalMeta.students[u]?.createdAt)) {
+            delete portalMeta.students[u];
+          }
+        });
+        Object.entries(cMeta.students || {}).forEach(([u, cSt]) => {
+          if (isDeletedByTombstone(portalMeta.deletedStudents[u], cSt?.createdAt)) return;
           portalMeta.students[u] = mergeStudentRecords(portalMeta.students[u], cSt, false);
         });
       }
@@ -3350,7 +3565,7 @@ function repairAllStudentsBadges() {
 
     async function toggleRequireAuth(checked) {
       portalMeta.requireAuth = checked;
-      await pushToSupabase(true);
+      await pushToSupabase(false);
     }
 
     function prefillCSVStudents() {
@@ -3453,11 +3668,13 @@ function repairAllStudentsBadges() {
     }
 
     async function addBulkStudents() {
+      ensureMetaIntegrity(portalMeta);
       const raw = document.getElementById('bulkStudentsInput').value.trim();
       const pass = document.getElementById('defaultBulkPass').value.trim() || "123456Azerty";
       const force = document.getElementById('bulkForceChange').checked;
       if (!raw) return;
 
+      const now = new Date().toISOString();
       let added = 0;
       raw.split('\n').forEach(line => {
         const clean = line.trim();
@@ -3472,9 +3689,10 @@ function repairAllStudentsBadges() {
           username = normalizeUsername(clean);
         }
         if (username && !portalMeta.students[username]) {
-          explicitlyDeletedStudents.delete(username);
+          delete portalMeta.deletedStudents[username];
           portalMeta.students[username] = {
             username, name: displayName, password: pass, forceChange: force,
+            createdAt: now, passUpdatedAt: now,
             lastLogin: null, lastSeen: null, loginsCount: 0, activeMinutes: 0,
             daysWorked: [], docsOpened: {}, favorites: [], unlockedBadges: [], profAwards: [], pendingProfToasts: [], qcmScores: {}, equippedBadge: "", themesTried: [], habits: {}
           };
@@ -3483,10 +3701,12 @@ function repairAllStudentsBadges() {
       });
 
       document.getElementById('bulkStudentsInput').value = '';
-      await pushToSupabase();
-      renderStudentsTrackTable();
-      renderAccountsManagement();
-      alert(`✅ ${added} compte(s) élève(s) ajouté(s) avec succès.`);
+      const ok = await pushToSupabase(false);
+      if (ok) {
+        renderStudentsTrackTable();
+        renderAccountsManagement();
+        alert(`✅ ${added} compte(s) élève(s) ajouté(s) et synchronisé(s) sur le Cloud.`);
+      }
     }
 
     function renderAccountsManagement() {
@@ -3522,18 +3742,32 @@ function repairAllStudentsBadges() {
       portalMeta.students[u].password = p;
       portalMeta.students[u].forceChange = f;
       portalMeta.students[u].passUpdatedAt = new Date().toISOString();
-      await pushToSupabase();
-      renderAccountsManagement();
-      alert(`✅ Mot de passe de ${portalMeta.students[u].name} réinitialisé à : ${p}`);
+      const ok = await pushToSupabase(false);
+      if (ok) {
+        renderAccountsManagement();
+        alert(`✅ Mot de passe de ${portalMeta.students[u].name} réinitialisé à : ${p}`);
+      }
     }
 
     async function deleteStudentAccount(username) {
-      if (!confirm(`Supprimer le compte élève ${username} ?`)) return;
-      explicitlyDeletedStudents.add(username);
+      if (!confirm(`Supprimer définitivement le compte élève ${username} ?`)) return;
+      ensureMetaIntegrity(portalMeta);
+      const backupStudent = portalMeta.students[username];
+      const prevTombstone = portalMeta.deletedStudents[username];
+
+      portalMeta.deletedStudents[username] = new Date().toISOString();
       delete portalMeta.students[username];
-      await pushToSupabase();
-      renderStudentsTrackTable();
-      renderAccountsManagement();
+
+      const ok = await pushToSupabase(false);
+      if (ok) {
+        renderStudentsTrackTable();
+        renderAccountsManagement();
+        alert(`✅ Le compte « ${username} » a été supprimé définitivement sur le Cloud.`);
+      } else {
+        if (backupStudent) portalMeta.students[username] = backupStudent;
+        if (prevTombstone) portalMeta.deletedStudents[username] = prevTombstone;
+        else delete portalMeta.deletedStudents[username];
+      }
     }
 
     function renderDocsStatsTable() {
@@ -3578,9 +3812,11 @@ function repairAllStudentsBadges() {
         message: document.getElementById('maintMessageInput').value.trim()
       };
       document.body.classList.toggle('maint-active', portalMeta.maintenance.active);
-      await pushToSupabase();
-      document.getElementById('maintenanceModal').classList.remove('active');
-      alert(portalMeta.maintenance.active ? "🛠 Mode Maintenance activé : l'accès des élèves est suspendu." : "✅ Mode Maintenance désactivé : l'accès des élèves est rétabli.");
+      const ok = await pushToSupabase(false);
+      if (ok) {
+        document.getElementById('maintenanceModal').classList.remove('active');
+        alert(portalMeta.maintenance.active ? "🛠 Mode Maintenance activé : l'accès des élèves est suspendu." : "✅ Mode Maintenance désactivé : l'accès des élèves est rétabli.");
+      }
     }
 
     function openBackupModal() {
@@ -3641,82 +3877,167 @@ function repairAllStudentsBadges() {
     async function executeSmartRestore() {
       if (!pendingRestoreData) return;
       exportData("sauvegarde_avant_restauration");
+      ensureMetaIntegrity(portalMeta);
 
+      const now = new Date().toISOString();
       const keepNewer = document.getElementById('keepNewerCheck').checked;
       const restoredMeta = pendingRestoreData.sections._portal_meta || {};
 
       if (keepNewer) {
         Object.keys(pendingRestoreData.sections).forEach(k => {
           if (k === '_portal_meta') return;
-          if (!sections[k]) sections[k] = pendingRestoreData.sections[k];
+          if (!sections[k]) {
+            delete portalMeta.deletedSections[k];
+            sections[k] = Object.assign({}, pendingRestoreData.sections[k], { updatedAt: now });
+          }
         });
+        portalMeta.sectionOrder = getOrderedSectionKeys(sections, portalMeta.sectionOrder);
+        portalMeta.sectionOrderUpdatedAt = now;
+
         const bestPass = pickNewestAdminPass(portalMeta, restoredMeta);
         portalMeta.adminPass = bestPass.adminPass;
         portalMeta.adminPassUpdatedAt = bestPass.adminPassUpdatedAt;
 
         if (restoredMeta.students) {
           Object.entries(restoredMeta.students).forEach(([u, st]) => {
-            explicitlyDeletedStudents.delete(u);
+            if (isDeletedByTombstone(portalMeta.deletedStudents[u], st?.createdAt)) return;
             portalMeta.students[u] = mergeStudentRecords(portalMeta.students[u], st, false);
           });
         }
         const existingMap = new Map(docs.map(d => [d.id, d]));
         pendingRestoreData.docs.forEach(d => {
-          explicitlyDeletedDocs.delete(d.id);
-          if (!existingMap.has(d.id)) docs.push({ ...d, visible: d.visible !== false });
+          if (!d || !d.id) return;
+          delete portalMeta.deletedDocs[d.id];
+          if (!existingMap.has(d.id)) {
+            docs.push({ ...d, visible: d.visible !== false, updatedAt: d.updatedAt || now });
+          }
         });
       } else {
-        explicitlyDeletedDocs.clear();
-        explicitlyDeletedStudents.clear();
-        loadSectionsAndMeta(pendingRestoreData.sections, pendingRestoreData.docs);
+        const preservedPass = pickNewestAdminPass(portalMeta, restoredMeta);
+        loadSectionsAndMeta(pendingRestoreData.sections, pendingRestoreData.docs, false);
+        portalMeta.adminPass = preservedPass.adminPass;
+        portalMeta.adminPassUpdatedAt = preservedPass.adminPassUpdatedAt;
+        portalMeta.deletedDocs = {};
+        portalMeta.deletedSections = {};
+        portalMeta.sectionOrder = getOrderedSectionKeys(sections, restoredMeta.sectionOrder);
+        portalMeta.sectionOrderUpdatedAt = now;
+        docs = docs.map(d => ({ ...d, updatedAt: now }));
       }
 
       repairAllStudentsBadges();
-      const saved = await pushToSupabase();
+      const saved = await pushToSupabase(false);
       if (saved) {
         initApp();
-        showPage(Object.keys(sections)[0]);
+        showPage(getOrderedSectionKeys(sections, portalMeta.sectionOrder)[0]);
         document.getElementById('backupModal').classList.remove('active');
         alert("✅ Restauration effectuée avec succès et synchronisée sur le Cloud !");
       }
     }
 
-    function openCategoryModal() { document.getElementById('categoryModal').classList.add('active'); }
-    function closeCategoryModal() { document.getElementById('categoryModal').classList.remove('active'); }
+    function openCategoryModal() {
+      document.getElementById('categoryModal').classList.add('active');
+    }
+
+    function closeCategoryModal() {
+      document.getElementById('categoryModal').classList.remove('active');
+    }
 
     async function saveNewCategory(e) {
-      e.preventDefault(); const key = "sec_" + Date.now();
-      sections[key] = { title: document.getElementById('catTitle').value.trim(), desc: document.getElementById('catDesc').value.trim(), subs: document.getElementById('catSubs').value.split(',').map(s => s.trim()).filter(s => s.length > 0) };
-      await pushToSupabase(); closeCategoryModal(); initApp(); showPage(key);
+      e.preventDefault();
+      ensureMetaIntegrity(portalMeta);
+      const title = document.getElementById('catTitle').value.trim();
+      const desc = document.getElementById('catDesc').value.trim();
+      const subs = document.getElementById('catSubs').value.split(',').map(s => s.trim()).filter(s => s.length > 0);
+      if (!title) return;
+
+      const key = "sec_" + Date.now();
+      const now = new Date().toISOString();
+      delete portalMeta.deletedSections[key];
+
+      const prevOrder = portalMeta.sectionOrder.slice();
+      const prevOrderTime = portalMeta.sectionOrderUpdatedAt;
+
+      sections[key] = { title, desc, subs: subs.length > 0 ? subs : ["Général"], createdAt: now, updatedAt: now };
+      portalMeta.sectionOrder = getOrderedSectionKeys(sections, portalMeta.sectionOrder);
+      portalMeta.sectionOrderUpdatedAt = now;
+
+      const ok = await pushToSupabase(false);
+      if (ok) {
+        document.getElementById('catTitle').value = '';
+        document.getElementById('catDesc').value = '';
+        document.getElementById('catSubs').value = '';
+        closeCategoryModal();
+        initApp();
+        showPage(key);
+        if (document.getElementById('structureModal').classList.contains('active')) openStructureModal();
+        alert(`✅ L'onglet « ${title} » est créé et verrouillé sur le Cloud !`);
+      } else {
+        delete sections[key];
+        portalMeta.sectionOrder = prevOrder;
+        portalMeta.sectionOrderUpdatedAt = prevOrderTime;
+      }
     }
 
     function openStructureModal() {
       renderTabsOrderList();
       const sel = document.getElementById('structSecSelect'); sel.innerHTML = '';
-      Object.keys(sections).forEach(k => { if (k === '_portal_meta') return; const o = document.createElement('option'); o.value = k; o.textContent = sections[k].title; sel.appendChild(o); });
-      sel.value = currentPage; renderSubEditor(); document.getElementById('structureModal').classList.add('active');
+      getOrderedSectionKeys(sections, portalMeta.sectionOrder).forEach(k => {
+        const o = document.createElement('option'); o.value = k; o.textContent = sections[k].title; sel.appendChild(o);
+      });
+      if (sections[currentPage]) sel.value = currentPage;
+      renderSubEditor();
+      document.getElementById('structureModal').classList.add('active');
     }
 
-    function closeStructureModal() { document.getElementById('structureModal').classList.remove('active'); }
+    function closeStructureModal() {
+      document.getElementById('structureModal').classList.remove('active');
+    }
 
-    function renderSubEditor() { document.getElementById('structSubsInput').value = (sections[document.getElementById('structSecSelect').value]?.subs || []).join(', '); }
+    function renderSubEditor() {
+      const sel = document.getElementById('structSecSelect');
+      document.getElementById('structSubsInput').value = (sections[sel.value]?.subs || []).join(', ');
+    }
 
     async function saveSubsEdit() {
-      sections[document.getElementById('structSecSelect').value].subs = document.getElementById('structSubsInput').value.split(',').map(s => s.trim()).filter(s => s.length > 0);
-      const success = await pushToSupabase();
-      if (success) { initApp(); showPage(document.getElementById('structSecSelect').value); }
+      const secKey = document.getElementById('structSecSelect').value;
+      if (!sections[secKey]) return;
+      sections[secKey].subs = document.getElementById('structSubsInput').value.split(',').map(s => s.trim()).filter(s => s.length > 0);
+      sections[secKey].updatedAt = new Date().toISOString();
+      const success = await pushToSupabase(false);
+      if (success) {
+        initApp();
+        showPage(secKey);
+        alert("✅ Sous-catégories enregistrées sur le Cloud !");
+      }
     }
 
     function renderTabsOrderList() {
-      const container = document.getElementById('tabsOrderList'); container.innerHTML = '';
-      const keys = Object.keys(sections).filter(k => k !== '_portal_meta');
+      const container = document.getElementById('tabsOrderList');
+      container.innerHTML = '';
+
+      const addBar = document.createElement('div');
+      addBar.style.cssText = 'display:flex; justify-content:space-between; align-items:center; gap:0.6rem; margin-bottom:0.75rem; padding-bottom:0.6rem; border-bottom:1px solid var(--border); flex-wrap:wrap;';
+      addBar.innerHTML = `
+        <span style="font-size:0.8rem; color:var(--muted);">Ajoutez, renommez, déplacez ou supprimez vos onglets :</span>
+        <button type="button" class="btn btn-primary" onclick="openCategoryModal()">➕ Ajouter un onglet</button>
+      `;
+      container.appendChild(addBar);
+
+      const keys = getOrderedSectionKeys(sections, portalMeta.sectionOrder);
       keys.forEach((k, idx) => {
-        const item = document.createElement('div'); item.className = 'struct-item';
+        const docCount = docs.filter(d => d.section === k).length;
+        const item = document.createElement('div');
+        item.className = 'struct-item';
         item.innerHTML = `
-          <span style="font-weight:600; font-size:0.85rem;">${sections[k].title}</span>
-          <div style="display:flex; gap:0.3rem;">
-            ${idx > 0 ? `<button class="btn" onclick="moveTab('${k}', -1)">▲</button>` : ''}
-            ${idx < keys.length - 1 ? `<button class="btn" onclick="moveTab('${k}', 1)">▼</button>` : ''}
+          <div>
+            <span style="font-weight:700; font-size:0.86rem;">${sections[k].title}</span>
+            <span style="font-size:0.73rem; color:var(--muted); margin-left:6px;">(${docCount} doc${docCount > 1 ? 's' : ''})</span>
+          </div>
+          <div style="display:flex; gap:0.3rem; flex-wrap:wrap;">
+            ${idx > 0 ? `<button type="button" class="btn" onclick="moveTab('${k}', -1)" title="Monter">▲</button>` : ''}
+            ${idx < keys.length - 1 ? `<button type="button" class="btn" onclick="moveTab('${k}', 1)" title="Descendre">▼</button>` : ''}
+            <button type="button" class="btn btn-edit" onclick="renameSectionTab('${k}')" title="Renommer cet onglet">✏️</button>
+            ${keys.length > 1 ? `<button type="button" class="btn btn-danger" onclick="deleteSectionTab('${k}')" title="Supprimer cet onglet">🗑</button>` : ''}
           </div>
         `;
         container.appendChild(item);
@@ -3724,17 +4045,123 @@ function repairAllStudentsBadges() {
     }
 
     async function moveTab(key, direction) {
-      const keys = Object.keys(sections).filter(k => k !== '_portal_meta'); const index = keys.indexOf(key);
+      const keys = getOrderedSectionKeys(sections, portalMeta.sectionOrder);
+      const index = keys.indexOf(key);
       const newIndex = index + direction;
+      if (newIndex < 0 || newIndex >= keys.length) return;
+
       const targetKey = keys[newIndex];
-      keys[newIndex] = key; keys[index] = targetKey;
+      keys[newIndex] = key;
+      keys[index] = targetKey;
 
-      const newSections = {};
-      keys.forEach(k => { newSections[k] = sections[k]; });
-      sections = newSections;
+      const prevOrder = portalMeta.sectionOrder.slice();
+      const prevTime = portalMeta.sectionOrderUpdatedAt;
 
-      await pushToSupabase();
-      initApp(); renderTabsOrderList();
+      portalMeta.sectionOrder = keys;
+      portalMeta.sectionOrderUpdatedAt = new Date().toISOString();
+      sections = buildOrderedSectionsObject(sections, keys);
+
+      const ok = await pushToSupabase(false);
+      if (ok) {
+        initApp();
+        openStructureModal();
+      } else {
+        portalMeta.sectionOrder = prevOrder;
+        portalMeta.sectionOrderUpdatedAt = prevTime;
+        sections = buildOrderedSectionsObject(sections, prevOrder);
+      }
+    }
+
+    async function renameSectionTab(key) {
+      const sec = sections[key];
+      if (!sec) return;
+      const newTitle = prompt("Nouveau nom de l'onglet :", sec.title);
+      if (!newTitle || !newTitle.trim()) return;
+      const newDesc = prompt("Description de l'onglet (facultatif) :", sec.desc || "");
+      const oldTitle = sec.title;
+      const oldDesc = sec.desc;
+
+      sec.title = newTitle.trim();
+      if (newDesc !== null) sec.desc = newDesc.trim();
+      sec.updatedAt = new Date().toISOString();
+
+      const ok = await pushToSupabase(false);
+      if (ok) {
+        initApp();
+        showPage(currentPage);
+        openStructureModal();
+      } else {
+        sec.title = oldTitle;
+        sec.desc = oldDesc;
+      }
+    }
+
+    async function deleteSectionTab(key) {
+      const keys = getOrderedSectionKeys(sections, portalMeta.sectionOrder);
+      if (keys.length <= 1) {
+        alert("Impossible de supprimer le dernier onglet restant.");
+        return;
+      }
+      const sec = sections[key];
+      if (!sec) return;
+
+      const tabDocs = docs.filter(d => d.section === key);
+      const fallbackKey = keys.find(k => k !== key);
+      const fallbackTitle = sections[fallbackKey]?.title || fallbackKey;
+
+      if (!confirm(`Supprimer définitivement l'onglet « ${sec.title} » ?`)) return;
+
+      let moveDocs = true;
+      if (tabDocs.length > 0) {
+        moveDocs = confirm(
+          `L'onglet « ${sec.title} » contient ${tabDocs.length} document(s).\n\n` +
+          `• OK : déplacer ces documents dans « ${fallbackTitle} »\n` +
+          `• Annuler : supprimer définitivement ces documents avec l'onglet`
+        );
+      }
+
+      ensureMetaIntegrity(portalMeta);
+      const now = new Date().toISOString();
+      const backupSection = Object.assign({}, sec);
+      const backupDocs = docs.slice();
+      const backupOrder = portalMeta.sectionOrder.slice();
+      const backupOrderTime = portalMeta.sectionOrderUpdatedAt;
+      const backupDeletedDocs = Object.assign({}, portalMeta.deletedDocs);
+
+      if (tabDocs.length > 0) {
+        if (moveDocs) {
+          docs.forEach(d => {
+            if (d.section === key) {
+              d.section = fallbackKey;
+              d.updatedAt = now;
+            }
+          });
+        } else {
+          tabDocs.forEach(d => { portalMeta.deletedDocs[d.id] = now; });
+          docs = docs.filter(d => d.section !== key);
+        }
+      }
+
+      portalMeta.deletedSections[key] = now;
+      delete sections[key];
+      portalMeta.sectionOrder = keys.filter(k => k !== key);
+      portalMeta.sectionOrderUpdatedAt = now;
+
+      const ok = await pushToSupabase(false);
+      if (ok) {
+        if (currentPage === key) currentPage = portalMeta.sectionOrder[0];
+        initApp();
+        showPage(currentPage);
+        openStructureModal();
+        alert(`✅ L'onglet « ${backupSection.title} » a été supprimé définitivement sur le Cloud.`);
+      } else {
+        sections[key] = backupSection;
+        docs = backupDocs;
+        portalMeta.sectionOrder = backupOrder;
+        portalMeta.sectionOrderUpdatedAt = backupOrderTime;
+        portalMeta.deletedDocs = backupDeletedDocs;
+        delete portalMeta.deletedSections[key];
+      }
     }
 
     let deferredPrompt = null;
